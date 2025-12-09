@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import progressIcon from "@/src/assets/progress.png"; 
+import { BASE_URL } from "@/src/lib/api";
 
 const RegisterSppgPage = () => {
     const router = useRouter();
@@ -89,7 +90,7 @@ const RegisterSppgPage = () => {
                 // jabatan: formData.jabatan // Field ini dikirim jika backend menerima, jika tidak bisa dihapus
             };
 
-            const res = await fetch("/auth/register/sppg", {
+            const res = await fetch(`${BASE_URL}/auth/register/sppg`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)

@@ -3,7 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import progress from "@/src/assets/progress.png"; 
+import progress from "@/src/assets/progress.png";
+import { BASE_URL } from "@/src/lib/api"; 
 
 const RegisterSekolahPage = () => {
     const router = useRouter();
@@ -125,7 +126,7 @@ const RegisterSekolahPage = () => {
                     }))
             };
 
-            const res = await fetch("/auth/register/sekolah", {
+            const res = await fetch(`${BASE_URL}/auth/register/sekolah`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
