@@ -59,7 +59,7 @@ const DaftarPenetapan = () => {
                 schoolsOnly.map(async (school) => {
                     try {
                         const detailRes = await fetchWithAuth(
-                            `https://api.inkluzi.my.id/api/v1/admin/users/${school.id}`,
+                            `/admin/users/${school.id}`,
                             { method: "GET" }
                         );
 
@@ -111,7 +111,7 @@ const DaftarPenetapan = () => {
         setDeletingId(itemToDelete.id); // Mulai loading di modal
         try {
             const response = await fetchWithAuth(
-                `https://api.inkluzi.my.id/api/v1/admin/schools/${itemToDelete.id}`,
+                `/admin/schools/${itemToDelete.id}`,
                 { method: "DELETE" }
             );
 

@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BASE_URL } from "@/src/lib/api";
 
 const LoginAdmin = () => {
     const router = useRouter();
@@ -17,7 +18,7 @@ const LoginAdmin = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch("https://api.inkluzi.my.id/api/v1/auth/login", {
+            const res = await fetch(`${BASE_URL}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

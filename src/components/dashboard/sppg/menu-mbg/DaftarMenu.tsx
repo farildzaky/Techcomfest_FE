@@ -72,7 +72,7 @@ const DaftarMenu = () => {
     useEffect(() => {
         const fetchAllMenuDetails = async () => {
             try {
-                const listResponse = await fetchWithAuth('https://api.inkluzi.my.id/api/v1/sppg/menus', {
+                const listResponse = await fetchWithAuth('/sppg/menus', {
                     method: 'GET'
                 });
 
@@ -127,7 +127,7 @@ const DaftarMenu = () => {
     const handleUpdateMenu = async (id: string, updatedComponents: Komponen[]) => {
         setIsUpdatingId(id); 
         try {
-            const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/sppg/menus/${id}`, {
+            const response = await fetchWithAuth(`/sppg/menus/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ komponen_menu: updatedComponents }),

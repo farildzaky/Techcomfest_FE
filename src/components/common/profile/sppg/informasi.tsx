@@ -28,7 +28,7 @@ const InformasiInstansiPage = () => {
         const loadProfileData = async () => {
             try {
                 setLoadingData(true);
-                const response = await fetchWithAuth("https://api.inkluzi.my.id/api/v1/profile", {
+                const response = await fetchWithAuth("/profile", {
                     method: "GET"
                 });
 

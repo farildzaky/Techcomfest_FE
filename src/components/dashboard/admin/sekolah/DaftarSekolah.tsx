@@ -27,7 +27,7 @@ const DaftarSekolahAdmin = () => {
         const fetchSchools = async () => {
             setLoading(true);
             try {
-                const res = await fetchWithAuth("https://api.inkluzi.my.id/api/v1/admin/users", {
+                const res = await fetchWithAuth("/admin/users", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
