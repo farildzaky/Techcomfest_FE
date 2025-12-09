@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+
+/* Definisikan Font Satoshi */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/SatoshiLight.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/SatoshiRegular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/SatoshiMedium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/SatoshiBold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/SatoshiBlack.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+.satoshiLight {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 300;
+}
+
+.satoshiRegular {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 400;
+}
+
+.satoshiMedium {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 500;
+}
+
+.satoshiBold {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 700;
+}
+
+.satoshiBlack {
+  font-family: 'Satoshi', sans-serif;
+  font-weight: 900;
+}
+
