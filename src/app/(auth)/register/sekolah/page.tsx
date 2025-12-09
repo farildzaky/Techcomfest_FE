@@ -125,7 +125,7 @@ const RegisterSekolahPage = () => {
                     }))
             };
 
-            const res = await fetch("https://api.inkluzi.my.id/api/v1/auth/register/sekolah", {
+            const res = await fetch("/auth/register/sekolah", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)

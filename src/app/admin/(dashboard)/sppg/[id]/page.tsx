@@ -36,7 +36,7 @@ const SppgDetailInformasiPage = () => {
         const loadData = async () => {
             try {
                 // Endpoint: GET /admin/users/{user_id}
-                const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/admin/users/${userId}`, {
+                const response = await fetchWithAuth(`/admin/users/${userId}`, {
                     method: "GET"
                 });
                 const result = await response.json();

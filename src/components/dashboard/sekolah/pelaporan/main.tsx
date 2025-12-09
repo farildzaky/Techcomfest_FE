@@ -152,17 +152,17 @@ const MainPelaporanSekolah = () => {
             {totalPages > 0 && (
                 <div className="flex justify-end mt-[1vw] mb-[2vw]">
                     <div className="flex items-center gap-[1vw]">
-                        <span className="text-[#E87E2F] satoshiMedium text-[1.2vw]">
-                            Halaman {currentPage} dari {totalPages}
-                        </span>
-                        <div className="flex gap-[0.5vw]">
-                            <button
+                        <button
                                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
                                 className={`w-[2vw] h-[2vw] cursor-pointer flex items-center justify-center rounded-full ${currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-[#E87E2F] text-white hover:bg-[#b06a33]'}`}
                             >
                                 &lt;
                             </button>
+                        <span className="text-[#E87E2F] satoshiMedium text-[1.2vw]">
+                            Halaman {currentPage} dari {totalPages}
+                        </span>
+                        <div className="flex gap-[0.5vw]">
                             <button
                                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}

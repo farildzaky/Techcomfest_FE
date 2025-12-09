@@ -89,7 +89,7 @@ const RegisterSppgPage = () => {
                 // jabatan: formData.jabatan // Field ini dikirim jika backend menerima, jika tidak bisa dihapus
             };
 
-            const res = await fetch("https://api.inkluzi.my.id/api/v1/auth/register/sppg", {
+            const res = await fetch("/auth/register/sppg", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)

@@ -64,7 +64,7 @@ const HasilDeteksiPage = () => {
             if (scanId) {
                 setIsHistoryView(true);
                 try {
-                    const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/school/food-scans/${scanId}`, {
+                    const response = await fetchWithAuth(`/school/food-scans/${scanId}`, {
                         method: 'GET'
                     });
 
@@ -179,7 +179,7 @@ const HasilDeteksiPage = () => {
                 ml_confidence: rawData.ml_confidence || 0
             };
 
-            const response = await fetchWithAuth("https://api.inkluzi.my.id/api/v1/school/food-scans/save", {
+            const response = await fetchWithAuth("/school/food-scans/save", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
