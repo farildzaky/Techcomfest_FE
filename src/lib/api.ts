@@ -6,9 +6,9 @@ import { getCookie, refreshAccessToken } from './auth'; // Pastikan path import 
 // Ini otomatis memilih jalur:
 // - Di Vercel (Production): Pakai "/api/proxy" agar lolos CORS.
 // - Di Localhost: Pakai URL asli backend.
-const BASE_URL = process.env.NODE_ENV === 'production' 
+export const BASE_URL = process.env.NODE_ENV === 'production' 
   ? "/api/proxy" 
-  : "https://api.inkluzi.my.id/api/v1"; 
+  : "https://api.inkluzi.my.id/api/v1";
 
 // =================================================================
 // 2. SISTEM ANTREAN (LOCKING) UNTUK REFRESH TOKEN

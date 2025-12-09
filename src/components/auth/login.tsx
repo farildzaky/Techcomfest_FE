@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BASE_URL } from "@/src/lib/api"; // Pastikan import ini benar
 
 const Login = () => {
     const router = useRouter();
@@ -17,7 +18,8 @@ const Login = () => {
         setIsLoading(true);
 
         try {
-            const res = await fetch("/v1/auth/login", {
+            // PERBAIKAN DI SINI: Menghapus '/api/v1' karena sudah ada di BASE_URL
+            const res = await fetch(`${BASE_URL}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -37,17 +39,19 @@ const Login = () => {
             const user = data.data.user;
             const userRole = user.role; 
 
-
-            document.cookie = `accessToken=${data.data.access_token}; path=/; max-age=86400; SameSite=Lax`;
+            // Simpan Cookie & LocalStorage
+            document.cookie = `accessToken=${data.data.access_token}; path=/; max-age=86400; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
 
             if (data.data.refresh_token) {
-                document.cookie = `refreshToken=${data.data.refresh_token}; path=/; max-age=604800; SameSite=Lax`;
+                // Refresh token sebaiknya HttpOnly jika memungkinkan, tapi untuk client-side sementara begini oke
+                document.cookie = `refreshToken=${data.data.refresh_token}; path=/; max-age=604800; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
             }
 
-            document.cookie = `userRole=${userRole}; path=/; max-age=86400; SameSite=Lax`;
+            document.cookie = `userRole=${userRole}; path=/; max-age=86400; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
 
             localStorage.setItem("user", JSON.stringify(user));
 
+            // Redirect sesuai Role
             if (userRole === "sekolah") {
                 router.push("/sekolah/dashboard");
             } else if (userRole === "sppg") {
@@ -56,7 +60,7 @@ const Login = () => {
                 router.push("/admin/dashboard");
             } else {
                 setError("Role akun tidak dikenali. Hubungi admin.");
-                
+                // Clear cookies jika role aneh
                 document.cookie = "accessToken=; Max-Age=0; path=/;";
                 document.cookie = "refreshToken=; Max-Age=0; path=/;";
                 document.cookie = "userRole=; Max-Age=0; path=/;";
