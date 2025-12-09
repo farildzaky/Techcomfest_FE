@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/(dashboard)/sekolah/menu-mbg/[id]/detail-informasi/[id]/page,tsx"  ],
   "exclude": ["node_modules"]
 }
