@@ -55,7 +55,7 @@ const DetailMenu = () => {
 
             try {
                 setLoading(true);
-                const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/sppg/menus/${id}`, {
+                const response = await fetchWithAuth(`/sppg/menus/${id}`, {
                     method: 'GET'
                 });
 

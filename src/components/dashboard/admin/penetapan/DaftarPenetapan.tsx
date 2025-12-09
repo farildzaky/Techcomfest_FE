@@ -42,7 +42,7 @@ const DaftarPenetapan = () => {
         setLoadingData(true);
         setError("");
         try {
-            const response = await fetchWithAuth("https://api.inkluzi.my.id/api/v1/admin/users", {
+            const response = await fetchWithAuth("/admin/users", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

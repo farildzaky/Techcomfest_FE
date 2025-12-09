@@ -50,7 +50,7 @@ const DetailMenu = () => {
             if (!id) return;
             setLoading(true);
             try {
-                const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/school/menus/${id}`, {
+                const response = await fetchWithAuth(`/school/menus/${id}`, {
                     method: 'GET'
                 });
 

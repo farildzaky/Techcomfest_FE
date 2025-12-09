@@ -55,7 +55,7 @@ const SidebarAdmin = () => {
 
         try {
             // 1. Panggil API logout backend
-            const response = await fetch("https://api.inkluzi.my.id/api/v1/auth/logout", {
+            const response = await fetch("/auth/logout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

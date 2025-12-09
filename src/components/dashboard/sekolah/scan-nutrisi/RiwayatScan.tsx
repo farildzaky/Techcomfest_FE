@@ -39,7 +39,7 @@ const RiwayatScan = () => {
         const fetchHistory = async () => {
             setLoading(true);
             try {
-                const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/school/food-scans?page=${currentPage}&limit=${itemsPerPage}`, {
+                const response = await fetchWithAuth(`/school/food-scans?page=${currentPage}&limit=${itemsPerPage}`, {
                     method: 'GET'
                 });
 

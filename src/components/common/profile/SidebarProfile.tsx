@@ -49,7 +49,7 @@ const SidebarProfile = () => {
 
         const loadProfile = async () => {
             try {
-                const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/admin/users/${userId}`, { 
+                const response = await fetchWithAuth(`/admin/users/${userId}`, { 
                     method: "GET"
                 });
                 const result: { data: UserDetailResponse, message: string } = await response.json();

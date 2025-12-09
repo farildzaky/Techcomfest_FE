@@ -77,7 +77,7 @@ const MenuMbgSekolah = () => {
             setLoading(true);
             try {
                 // Gunakan fetchWithAuth atau fetch biasa dengan header Authorization
-                const response = await fetchWithAuth('https://api.inkluzi.my.id/api/v1/school/menus', {
+                const response = await fetchWithAuth('/school/menus', {
                     method: 'GET'
                 });
                 

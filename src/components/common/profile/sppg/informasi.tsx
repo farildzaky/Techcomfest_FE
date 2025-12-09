@@ -75,7 +75,7 @@ const InformasiInstansiPage = () => {
         setIsSaving(true); // START LOADING MODAL
         try {
             // Mengubah method menjadi PATCH
-            const response = await fetchWithAuth("https://api.inkluzi.my.id/api/v1/profile", {
+            const response = await fetchWithAuth("/profile", {
                 method: "PATCH", 
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

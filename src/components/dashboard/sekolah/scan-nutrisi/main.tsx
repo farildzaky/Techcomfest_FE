@@ -86,7 +86,7 @@ const ScanNutrisiMain = () => {
             formData.append('image', compressedFile); 
 
             // 3. Upload (Native Fetch)
-            const response = await fetch("https://api.inkluzi.my.id/api/v1/school/food-scans", {
+            const response = await fetch("/school/food-scans", {
                 method: "POST",
                 headers: { "Authorization": `Bearer ${token}` },
                 body: formData 

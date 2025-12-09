@@ -93,7 +93,7 @@ const DaftarMenu = () => {
                 const detailedMenus: MenuDetailAPI[] = [];
                 for (const item of targetMenus) {
                     try {
-                        const detailResponse = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/sppg/menus/${item.menu_id}`, {
+                        const detailResponse = await fetchWithAuth(`/sppg/menus/${item.menu_id}`, {
                             method: 'GET'
                         });
                         

@@ -30,7 +30,7 @@ const AssignSekolah = () => {
         const fetchSekolah = async () => {
             setLoading(true);
             try {
-                const resList = await fetchWithAuth("https://api.inkluzi.my.id/api/v1/admin/users", {
+                const resList = await fetchWithAuth("/admin/users", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const AssignSekolah = () => {
                 const detailedChecks = await Promise.all(
                     candidateSchools.map(async (school: SchoolData) => {
                         try {
-                            const resDetail = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/admin/users/${school.id}`, {
+                            const resDetail = await fetchWithAuth(`/admin/users/${school.id}`, {
                                 method: "GET"
                             });
                             const detailJson = await resDetail.json();
@@ -98,7 +98,7 @@ const AssignSekolah = () => {
         }
         setSubmitting(true);
         try {
-            const res = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/admin/sppg/${sppgId}`, {
+            const res = await fetchWithAuth(`/admin/sppg/${sppgId}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

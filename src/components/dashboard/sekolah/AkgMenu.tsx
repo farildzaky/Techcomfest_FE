@@ -102,7 +102,7 @@ const AkgMenu = () => {
             setLoading(true);
             try {
                 // Endpoint: /nutrition/menus/{menu_id}
-                const response = await fetchWithAuth(`https://api.inkluzi.my.id/api/v1/nutrition/menus/${id}`, {
+                const response = await fetchWithAuth(`/nutrition/menus/${id}`, {
                     method: 'GET'
                 });
 

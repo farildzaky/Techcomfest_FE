@@ -45,7 +45,7 @@ const MainMenuMbg = () => {
 
             const results = await Promise.all(filledDaysEntries.map(async ([hari, menuData]) => {
                 try {
-                    const res = await fetchWithAuth("https://api.inkluzi.my.id/api/v1/sppg/menus", {
+                    const res = await fetchWithAuth("/sppg/menus", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

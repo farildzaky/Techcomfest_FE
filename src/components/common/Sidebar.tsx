@@ -118,7 +118,7 @@ const Sidebar = () => {
         setIsLoggingOut(true);
 
         try {
-            await fetch("/api/auth/logout", {
+            await fetch("/auth/logout", {
                 method: "POST",
             });
             
