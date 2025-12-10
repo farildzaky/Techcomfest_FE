@@ -73,29 +73,7 @@ const Hero = () => {
             .from(".hero-box-doctor", { y: 60, opacity: 0, scale: 0.95, duration: 1, ease: "back.out(1.2)" }, "-=0.8")
             .from(".hero-box-counter", { y: -60, opacity: 0, scale: 0.95, duration: 1, ease: "back.out(1.2)" }, "-=0.8");
 
-            const tlExit = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-
-                    start: "top top", 
-                    end: "bottom top", 
-                    scrub: 1, 
-                }
-            });
-
-            tlExit.to([".hero-title", ".hero-desc"], {
-                opacity: 0,
-                y: -50, 
-                ease: "none",
-                immediateRender: false 
-            })
-            .to([".hero-slider-container", ".hero-box-doctor", ".hero-box-counter"], {
-                opacity: 0,
-                y: -50,
-                ease: "none",
-                immediateRender: false
-            }, 0); 
-
+            
         }, containerRef);
 
         return () => ctx.revert();

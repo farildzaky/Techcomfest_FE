@@ -39,34 +39,7 @@ const Reason = () => {
                 .from(".reason-image", { x: 80, opacity: 0, duration: 1.2, ease: "power3.out" }, "-=1.0")
                 .from(".reason-subtitle", { y: 40, opacity: 0, duration: 0.9, ease: "power3.out" }, "-=0.6");
 
-            const tlExit = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top -10%",
-                    end: "bottom 20%",
-                    scrub: 1,
-                }
-            });
-
-            tlExit.to(".reason-title", {
-                opacity: 0,
-                y: -50,
-                immediateRender: false,
-                delay: 0.5
-            })
-                .to([".reason-left-group", ".reason-image"], {
-                    opacity: 0,
-                    y: -50,
-                    immediateRender: false,
-                    delay: 0.5
-                }, 0)
-                .to(".reason-subtitle", {
-                    opacity: 0,
-                    y: -50,
-                    immediateRender: false,
-                    delay: 0.5
-                }, 0);
-
+            
         }, containerRef);
 
         return () => ctx.revert();
