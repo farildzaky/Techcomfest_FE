@@ -6,7 +6,7 @@ import Image from 'next/image';
 import bg from "../../../../assets/bg.png"; 
 import loadingSpinner from "../../../../assets/loading.png"; 
 import jam from "../../../../assets/dashboard/sppg/jam.png"; 
-
+import { fetchWithAuth } from '@/src/lib/api';
 // --- CONFIGURATION ---
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const COMPRESSION_QUALITY = 0.8;
@@ -86,7 +86,7 @@ const ScanNutrisiMain = () => {
             formData.append('image', compressedFile); 
 
             // 3. Upload (Native Fetch)
-            const response = await fetch("/school/food-scans", {
+            const response = await fetchWithAuth("/school/food-scans", {
                 method: "POST",
                 headers: { "Authorization": `Bearer ${token}` },
                 body: formData 

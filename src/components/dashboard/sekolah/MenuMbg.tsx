@@ -23,6 +23,65 @@ interface MenuData {
     status_keamanan: string; // ex: "perlu_perhatian"
 }
 
+// --- Skeleton Card Component ---
+const SkeletonCard = () => {
+    return (
+        <div className="w-full bg-[#F5DDCA] rounded-[2vw] p-[2vw] flex flex-row gap-[2vw] animate-pulse"
+            style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
+        >
+            {/* Left Section */}
+            <div className="flex flex-col gap-[1vw] flex-1">
+                {/* Menu Name */}
+                <div className="h-[2vw] bg-gray-300 rounded w-[70%]" />
+                
+                {/* Date */}
+                <div className="h-[1.2vw] bg-gray-300 rounded w-[40%]" />
+                
+                {/* Status Badge */}
+                <div className="h-[2vw] bg-gray-300 rounded-full w-[30%] mt-[0.5vw]" />
+                
+                {/* Components Section */}
+                <div className="mt-[1vw]">
+                    <div className="h-[1.3vw] bg-gray-300 rounded w-[35%] mb-[0.5vw]" />
+                    <div className="flex flex-wrap gap-[0.5vw]">
+                        {[1, 2, 3, 4].map((i) => (
+                            <div key={i} className="h-[1.8vw] bg-gray-300 rounded-full w-[20%]" />
+                        ))}
+                    </div>
+                </div>
+                
+                {/* Risk Section */}
+                <div className="mt-[1vw]">
+                    <div className="h-[1.3vw] bg-gray-300 rounded w-[30%] mb-[0.5vw]" />
+                    <div className="space-y-[0.3vw]">
+                        {[1, 2].map((i) => (
+                            <div key={i} className="h-[1.2vw] bg-gray-300 rounded w-[85%]" />
+                        ))}
+                    </div>
+                </div>
+                
+                {/* Nutrition Section */}
+                <div className="mt-[1vw]">
+                    <div className="h-[1.3vw] bg-gray-300 rounded w-[35%] mb-[0.5vw]" />
+                    <div className="grid grid-cols-2 gap-[0.5vw]">
+                        {[1, 2, 3, 4].map((i) => (
+                            <div key={i} className="flex gap-[0.5vw]">
+                                <div className="h-[1.2vw] bg-gray-300 rounded w-[40%]" />
+                                <div className="h-[1.2vw] bg-gray-300 rounded w-[50%]" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            
+            {/* Right Section - Day Box */}
+            <div className="w-[15%] flex items-center justify-center">
+                <div className="w-[8vw] h-[8vw] bg-gray-300 rounded-[1.5vw]" />
+            </div>
+        </div>
+    );
+};
+
 const MenuMbgSekolah = () => {
     const [menus, setMenus] = useState<MenuData[]>([]);
     const [loading, setLoading] = useState(true);
@@ -114,7 +173,20 @@ const MenuMbgSekolah = () => {
     }, []);
 
     if (loading) {
-        return <div className="w-full h-full flex items-center justify-center bg-white"><span className="satoshiBold text-[#E87E2F] text-[1.5vw]">Memuat Menu...</span></div>;
+        return (
+            <div className="w-full h-screen grid grid-cols-7 bg-white relative">
+                <div className="col-span-5 p-[2vw] flex flex-col gap-[2vw]">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <SkeletonCard key={i} />
+                    ))}
+                </div>
+
+                <div className="col-span-2 h-screen relative z-20">
+                    <div className="w-full h-full fixed bg-[#F5DDCA] [clip-path:ellipse(45%_70%_at_50%_50%)]">
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     return (

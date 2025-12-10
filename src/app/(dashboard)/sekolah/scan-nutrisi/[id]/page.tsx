@@ -56,12 +56,16 @@ const HasilDeteksiPage = () => {
 
     const [rawData, setRawData] = useState<ScanResultData | null>(null);
 
-    useEffect(() => {
+   useEffect(() => {
         const loadData = async () => {
             setLoading(true);
 
-            // KASUS 1: Jika ada ID di URL, ambil dari API (Mode Riwayat)
-            if (scanId) {
+            // --- PERBAIKAN DISINI ---
+            // Cek: Apakah scanId ada DAN bukan string 'new'?
+            // Jika scanId adalah 'new', kita SKIP fetch API dan lanjut ke else (LocalStorage)
+            if (scanId && scanId !== 'new') {
+                
+                // === MODE RIWAYAT (AMBIL DARI SERVER) ===
                 setIsHistoryView(true);
                 try {
                     const response = await fetchWithAuth(`/school/food-scans/${scanId}`, {
@@ -71,13 +75,11 @@ const HasilDeteksiPage = () => {
                     if (!response.ok) throw new Error("Gagal mengambil detail scan");
 
                     const result = await response.json();
-                    const data = result.data; // Asumsi response data strukturnya mirip dengan payload save
+                    const data = result.data;
 
                     setRawData(data);
                     setImageSrc(data.image_url);
                     
-                    // Mapping data dari API ke State UI
-                    // Note: Pastikan API mengembalikan struktur kandungan_gizi yang sesuai
                     setMenuData({
                         namaMakanan: data.nama_makanan,
                         komponen: data.komponen_menu ? data.komponen_menu.map((k: any) => ({ nama: k.nama, berat: k.porsi })) : [],
@@ -92,7 +94,7 @@ const HasilDeteksiPage = () => {
                         ],
                         risiko: {
                             alergi: data.deteksi_risiko?.alergi || [],
-                            tekstur: data.deteksi_risiko?.pencernaan || [], // Mapping pencernaan ke tekstur sesuai UI sebelumnya
+                            tekstur: data.deteksi_risiko?.pencernaan || [],
                             porsi: data.deteksi_risiko?.porsi || []
                         },
                         rekomendasi: data.rekomendasi || "",
@@ -106,9 +108,11 @@ const HasilDeteksiPage = () => {
                     setLoading(false);
                 }
             } 
-            // KASUS 2: Jika TIDAK ada ID, ambil dari LocalStorage (Mode Scan Baru)
+            // === MODE SCAN BARU (AMBIL DARI LOCALSTORAGE) ===
+            // Masuk sini jika scanId tidak ada ATAU scanId === 'new'
             else {
-                setIsHistoryView(false);
+                setIsHistoryView(false); // Pastikan mode riwayat mati agar tombol Edit/Simpan muncul
+                
                 const storedResult = localStorage.getItem('scan_result_temp');
                 
                 if (storedResult) {
@@ -136,13 +140,16 @@ const HasilDeteksiPage = () => {
                         rekomendasi: parsedData.rekomendasi,
                         confidence: parsedData.ml_confidence || 0
                     });
+                } else {
+                    // Opsional: Jika user akses /new tapi tidak ada data di storage, kembalikan ke halaman upload
+                    // router.push('/sekolah/scan-nutrisi');
                 }
                 setLoading(false);
             }
         };
 
         loadData();
-    }, [scanId]);
+    }, [scanId]); // Dependency array tetap scanId
 
     const handleKomponenChange = (index: number, field: 'nama' | 'berat', value: string) => {
         const newKomponen = [...menuData.komponen];

@@ -88,11 +88,13 @@ const getLabelPosition = (startAngle: number, endAngle: number, radius: number) 
 
 const AkgMenu = () => {
     const params = useParams();
+    const router = useRouter();
     const id = params?.id as string;
     
     // --- STATE ---
     const [menuData, setMenuData] = useState<MenuNutritionResponse | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     // --- FETCH DATA ---
@@ -100,8 +102,8 @@ const AkgMenu = () => {
         const fetchData = async () => {
             if (!id) return;
             setLoading(true);
+            setError(null);
             try {
-                // Endpoint: /nutrition/menus/{menu_id}
                 const response = await fetchWithAuth(`/nutrition/menus/${id}`, {
                     method: 'GET'
                 });
@@ -110,17 +112,15 @@ const AkgMenu = () => {
 
                 const result = await response.json();
                 
-                // PERBAIKAN DISINI: 
-                // Cek apakah data ada di result.data (wrapper) atau langsung di result
                 if (result.data) {
                     setMenuData(result.data);
                 } else {
-                    // Jika JSON langsung mengembalikan objek menu tanpa wrapper "data"
                     setMenuData(result);
                 }
 
             } catch (error) {
                 console.error("Error fetching nutrition detail:", error);
+                setError(error instanceof Error ? error.message : "Terjadi kesalahan saat memuat data");
             } finally {
                 setLoading(false);
             }
@@ -129,17 +129,152 @@ const AkgMenu = () => {
         fetchData();
     }, [id]);
 
+    // --- LOADING STATE ---
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center bg-white"><span className="satoshiBold text-[#E87E2F] text-[1.5vw]">Memuat Data Nutrisi...</span></div>;
+        return (
+            <div className="flex flex-col gap-[5vw] w-full min-h-screen bg-white pb-[5vw] font-sans relative">
+                {/* Header Skeleton */}
+                <div className="w-full relative">
+                    <div className="satoshiBold text-[3vw] w-full p-[2vw] px-[3vw] bg-[#E87E2F] rounded-b-[2vw] flex"
+                        style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+                    >
+                        <div className="h-[3vw] bg-white/30 rounded animate-pulse w-[40%]" />
+                    </div>
+                </div>
+
+                <div className="px-[3vw] flex flex-col gap-[3vw]">
+                    {/* Diagram & Deskripsi Skeleton */}
+                    <div className="flex flex-row gap-[2vw] items-center">
+                        {/* KIRI: Diagram Skeleton */}
+                        <div className="w-full flex items-center justify-center relative">
+                            <div className="w-[25vw] h-[25vw] rounded-full relative bg-gray-300 animate-pulse"
+                                style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+                            >
+                                <div className="absolute inset-[5vw] bg-white rounded-full flex flex-col items-center justify-center shadow-inner z-20">
+                                    <div className="h-[3.5vw] bg-gray-300 rounded animate-pulse w-[8vw] mb-[0.5vw]" />
+                                    <div className="h-[1.2vw] bg-gray-300 rounded animate-pulse w-[4vw]" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* KANAN: Deskripsi Skeleton */}
+                        <div className="w-full bg-[#E87E2F] rounded-[2vw] gap-[1vw] p-[2vw] flex flex-col"
+                            style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
+                        >
+                            <div className="h-[3vw] bg-white/30 rounded animate-pulse w-[70%]" />
+                            <div className="flex flex-row gap-[1vw] items-center">
+                                <div className="w-full space-y-[0.5vw]">
+                                    <div className="h-[1.1vw] bg-white/30 rounded animate-pulse w-[100%]" />
+                                    <div className="h-[1.1vw] bg-white/30 rounded animate-pulse w-[95%]" />
+                                    <div className="h-[1.1vw] bg-white/30 rounded animate-pulse w-[90%]" />
+                                    <div className="h-[1.1vw] bg-white/30 rounded animate-pulse w-[85%]" />
+                                </div>
+                                <div className='w-[40%] flex flex-col p-[1vw] rounded-[1vw] gap-[1vw] items-center bg-[#FFF3EB] shrink-0'>
+                                    <div className="h-[2vw] bg-gray-300 rounded animate-pulse w-[80%]" />
+                                    <div className="h-[2.5vw] bg-gray-300 rounded animate-pulse w-[60%]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Persentase AKG Skeleton */}
+                    <div className="w-full flex flex-col gap-[1vw]">
+                        <div className="flex justify-between items-end">
+                            <div className='flex flex-row items-center gap-[1vw]'>
+                                <div className="h-[2vw] bg-gray-300 rounded animate-pulse w-[15vw]" />
+                                <div className="w-[2.5vw] h-[2.5vw] bg-gray-300 rounded-full animate-pulse" />
+                            </div>
+                            <div className="h-[1.2vw] bg-gray-300 rounded animate-pulse w-[12vw]" />
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-x-[3vw] gap-y-[1.5vw]">
+                            {[1, 2, 3, 4, 5, 6].map((i) => (
+                                <div key={i} className="flex justify-between items-center border-[0.2vw] border-[#E87E2F] bg-[#FFF3EB] rounded-[1vw] px-[1.5vw] py-[0.8vw]">
+                                    <div className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[40%]" />
+                                    <div className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[30%]" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Detail Komponen Skeleton */}
+                    <div className="w-full relative">
+                        <div className="absolute left-1/2 top-0 bottom-0 w-[2vw] bg-[#E87E2F] rounded-full -translate-x-1/2 hidden lg:block"></div>
+                        <div className="grid grid-cols-2 gap-x-[15vw] gap-y-[1.5vw]">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="bg-[#E87E2F] rounded-[1.5vw] p-[1.5vw] shadow-md flex flex-col gap-[1vw]">
+                                    <div className="flex justify-between items-start">
+                                        <div className="space-y-[0.3vw]">
+                                            <div className="h-[1.5vw] bg-white/30 rounded animate-pulse w-[10vw]" />
+                                            <div className="h-[1.2vw] bg-white/30 rounded animate-pulse w-[6vw]" />
+                                        </div>
+                                        <div className="space-y-[0.3vw]">
+                                            <div className="h-[1.5vw] bg-white/30 rounded animate-pulse w-[4vw]" />
+                                            <div className="h-[1.2vw] bg-white/30 rounded animate-pulse w-[5vw]" />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-[1vw]">
+                                        {[1, 2, 3, 4, 5, 6].map((j) => (
+                                            <div key={j} className="bg-[#FFF3E0] rounded-[1vw] py-[0.5vw] flex flex-col items-center justify-center h-[4vw]">
+                                                <div className="h-[1.2vw] bg-gray-300 rounded animate-pulse w-[50%] mb-[0.2vw]" />
+                                                <div className="h-[1vw] bg-gray-300 rounded animate-pulse w-[60%]" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
-    if (!menuData) {
-        return <div className="min-h-screen flex items-center justify-center bg-white"><span className="satoshiBold text-gray-500 text-[1.5vw]">Data tidak ditemukan.</span></div>;
+    // --- ERROR STATE ---
+    if (error || !menuData) {
+        return (
+            <div className="flex flex-col gap-[3vw] w-full min-h-screen bg-white items-center justify-center px-[3vw]">
+                <div className="flex flex-col items-center gap-[2vw] max-w-[50vw]">
+                    {/* Error Icon */}
+                    <div className="w-[10vw] h-[10vw] rounded-full bg-red-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[6vw] h-[6vw] text-red-500">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                        </svg>
+                    </div>
+                    
+                    {/* Error Message */}
+                    <div className="flex flex-col items-center gap-[1vw] text-center">
+                        <h2 className="satoshiBold text-[2.5vw] text-gray-800">Gagal Memuat Data</h2>
+                        <p className="satoshiMedium text-[1.3vw] text-gray-600">
+                            {error || "Data nutrisi tidak ditemukan atau terjadi kesalahan pada server."}
+                        </p>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-[1vw] mt-[1vw]">
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="bg-[#E87E2F] text-white rounded-[1vw] px-[2.5vw] py-[0.8vw] satoshiBold text-[1.3vw] shadow-md hover:bg-[#d06b1f] transition-all cursor-pointer flex items-center gap-[0.5vw]"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[1.5vw] h-[1.5vw]">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                            </svg>
+                            Muat Ulang
+                        </button>
+                        <button
+                            onClick={() => router.push('/sekolah/menu-mbg')}
+                            className="bg-gray-200 text-gray-700 rounded-[1vw] px-[2.5vw] py-[0.8vw] satoshiBold text-[1.3vw] shadow-md hover:bg-gray-300 transition-all cursor-pointer"
+                        >
+                            Kembali ke Menu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     // --- PERSIAPAN DATA CHART ---
     const chartData = menuData.info_nutrisi.donut_chart;
-    // Gunakan optional chaining (?.) atau nilai default 0 untuk keamanan jika data 0/null
     const karbo = chartData.karbohidrat?.persentase || 0;
     const protein = chartData.protein?.persentase || 0;
     const lemak = chartData.lemak?.persentase || 0;
@@ -147,7 +282,6 @@ const AkgMenu = () => {
 
     const colors = ['#E87E2F', '#FF8A34', '#FFA15D', '#FFC9A2'];
     
-    // Hitung Cumulative Percentage untuk Conic Gradient
     const p1 = karbo;
     const p2 = karbo + protein;
     const p3 = karbo + protein + lemak;
@@ -165,7 +299,6 @@ const AkgMenu = () => {
     const posLemak = getLabelPosition(p2 * 3.6, p3 * 3.6, labelRadius);
     const posLainnya = getLabelPosition(p3 * 3.6, 360, labelRadius);
 
-    // Helper Array untuk Render
     const tetapanAkgList = [
         `Energi ${menuData.informasi_akg.tetapan_akg.energi}`,
         `Lemak ${menuData.informasi_akg.tetapan_akg.lemak}`,
@@ -185,7 +318,7 @@ const AkgMenu = () => {
     ];
 
     return (
-        <div className="flex flex-col gap-[5vw] w-full min-h-screen bg-white pb-[5vw] font-sans relative">
+        <div className="flex flex-col gap-[5vw] w-full min-h-screen bg-white pb-[1vw] font-sans relative">
 
             {/* --- POPUP INFORMASI AKG --- */}
             {isPopupOpen && (
@@ -355,6 +488,13 @@ const AkgMenu = () => {
                         ))}
                     </div>
                 </div>
+
+                <button
+                        onClick={() => router.push('/sekolah/menu-mbg')}
+                        className="bg-[#D7762E] text-white rounded-[2vw] w-fit flex ml-auto px-[4vw] py-[0.8vw] satoshiBold text-[1.5vw] shadow-md hover:bg-[#b56225] transition-all cursor-pointer"
+                    >
+                        Kembali
+                    </button>
             </div>
         </div>
     );

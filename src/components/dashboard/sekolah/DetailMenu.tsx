@@ -72,8 +72,161 @@ const DetailMenu = () => {
 
     if (loading) {
         return (
-            <div className="w-full min-h-screen flex items-center justify-center bg-white">
-                <span className="satoshiBold text-[#D7762E] text-[1.5vw]">Memuat Detail Menu...</span>
+            <div className="flex flex-col min-h-screen items-center bg-white relative">
+
+                {/* Header: Nama Menu Skeleton */}
+                <div className='satoshiBold text-[3.5vw] text-black z-10 w-full bg-[#F5DDCA] text-center py-[2vw] flex justify-center'>
+                    <div className="h-[3.5vw] bg-gray-300 rounded animate-pulse w-[50%]" />
+                </div>
+
+                {/* Header: Hari Skeleton */}
+                <div className='relative w-full h-[15vw]'>
+                    <div className="w-full h-full bg-[#F5DDCA] [clip-path:ellipse(50%_50%_at_50%_0%)] relative z-0 flex items-center justify-center">
+                    </div>
+                    <div className='absolute top-[10%] left-[50%] translate-x-[-50%] z-10 bg-gray-300 w-[12vw] h-[12vw] rounded-full animate-pulse'>
+                    </div>
+                </div>
+
+                <div className='w-full flex flex-col gap-[1vw] px-[2vw] pb-[3vw] z-10 mt-[-2vw]'>
+
+                    {/* STATUS & ML CONFIDENCE Skeleton */}
+                    <div className="flex justify-end gap-[1vw] items-center ml-auto w-fit">
+                        <div className="h-[2.5vw] bg-gray-300 rounded-full animate-pulse w-[12vw]" />
+                        <div className="h-[2.5vw] bg-gray-300 rounded-full animate-pulse w-[10vw]" />
+                    </div>
+
+                    {/* GRID CONTENT Skeleton */}
+                    <div className='grid grid-cols-8 w-full z-10 gap-[2vw] items-stretch'>
+
+                        {/* --- LEFT COLUMN --- */}
+                        <div className='col-span-3 flex flex-col gap-[1vw]'>
+                            {/* Komponen Menu Skeleton */}
+                            <div className='bg-[#F5DDCA] rounded-[1vw]' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
+                                <div className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw] flex justify-center'>
+                                    <div className="h-[2vw] bg-white/30 rounded animate-pulse w-[60%]" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-x-[2vw] gap-y-[0.5vw] w-full p-[1vw]">
+                                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                                        <div key={i} className="h-[1.3vw] bg-gray-300 rounded animate-pulse" />
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Kandungan Gizi Skeleton */}
+                            <div className='flex flex-col'>
+                                <div className="h-[2vw] bg-gray-300 rounded animate-pulse w-[50%] mb-[0.5vw]" />
+                                <div className='w-full flex items-center justify-end mb-[0.5vw]'>
+                                    <div className="h-[1vw] bg-gray-300 rounded animate-pulse w-[30%]" />
+                                </div>
+
+                                <div className='w-full rounded-[1vw] overflow-hidden border-[0.15vw] border-[#D7762E]' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
+                                    <div className='flex bg-[#D7762E] text-white h-[3vw] items-center'>
+                                        <div className='w-[60%] pl-[1.5vw] flex'>
+                                            <div className="h-[1.2vw] bg-white/30 rounded animate-pulse w-[50%]" />
+                                        </div>
+                                        <div className='w-[0.3%] h-full bg-[#F5DDCA]'></div>
+                                        <div className='w-[40%] pl-[1.5vw] flex'>
+                                            <div className="h-[1.2vw] bg-white/30 rounded animate-pulse w-[50%]" />
+                                        </div>
+                                    </div>
+                                    <div className='bg-[#FBE4CF]'>
+                                        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                                            <div key={i} className='flex border-b-[0.1vw] border-[#E87E2F] last:border-0 h-[3vw] items-center'>
+                                                <div className='w-[60%] pl-[1.5vw] flex'>
+                                                    <div className="h-[1.1vw] bg-gray-300 rounded animate-pulse w-[70%]" />
+                                                </div>
+                                                <div className='w-[0.3%] h-full bg-[#E87E2F]'></div>
+                                                <div className='w-[40%] pl-[1.5vw] flex'>
+                                                    <div className="h-[1.1vw] bg-gray-300 rounded animate-pulse w-[60%]" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* --- RIGHT COLUMN --- */}
+                        <div className='col-span-5 flex flex-col gap-[1vw]'>
+                            {/* Deteksi Risiko Skeleton */}
+                            <div className='bg-[#F5DDCA] rounded-[1vw]' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
+                                <div className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw] flex justify-center'>
+                                    <div className="h-[2vw] bg-white/30 rounded animate-pulse w-[50%]" />
+                                </div>
+                                <div className='p-[1.5vw] flex flex-col gap-[1vw]'>
+                                    {/* Alergi */}
+                                    <div className='flex flex-col gap-[0.5vw]'>
+                                        <div className="h-[1.5vw] bg-gray-300 rounded animate-pulse w-[20%]" />
+                                        <div className="space-y-[0.3vw] pl-[0.5vw]">
+                                            {[1, 2].map((i) => (
+                                                <div key={i} className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[80%]" />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    {/* Tekstur */}
+                                    <div className='flex flex-col gap-[0.5vw]'>
+                                        <div className="h-[1.5vw] bg-gray-300 rounded animate-pulse w-[20%]" />
+                                        <div className="space-y-[0.3vw] pl-[0.5vw]">
+                                            {[1, 2].map((i) => (
+                                                <div key={i} className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[75%]" />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    {/* Porsi Gizi */}
+                                    <div className='flex flex-col gap-[0.5vw]'>
+                                        <div className="h-[1.5vw] bg-gray-300 rounded animate-pulse w-[25%]" />
+                                        <div className="space-y-[0.3vw] pl-[0.5vw]">
+                                            {[1, 2].map((i) => (
+                                                <div key={i} className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[70%]" />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className='grid grid-cols-3 gap-[1vw]'>
+                                {/* Rekomendasi Skeleton */}
+                                <div className='bg-[#F5DDCA] rounded-[1vw] col-span-2' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
+                                    <div className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw] flex justify-center'>
+                                        <div className="h-[2vw] bg-white/30 rounded animate-pulse w-[60%]" />
+                                    </div>
+                                    <div className="w-full p-[1vw] space-y-[0.5vw]">
+                                        <div className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[95%]" />
+                                        <div className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[90%]" />
+                                        <div className="h-[1.3vw] bg-gray-300 rounded animate-pulse w-[85%]" />
+                                    </div>
+                                </div>
+                                
+                                {/* Button Laporkan Skeleton */}
+                                <div className='col-span-1'>
+                                    <div className='flex flex-col items-center p-[1vw] bg-gray-300 rounded-[1vw] h-[16.5vw] animate-pulse' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
+                                        <div className="h-[3vw] bg-white/30 rounded w-[70%] mb-[1vw]" />
+                                        <div className="w-[8vw] h-[8vw] bg-white/30 rounded mt-[1vw]" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* --- FOOTER: CATATAN & TOMBOL KEMBALI --- */}
+                    <div className="w-full flex justify-between items-end mt-[2vw]">
+                        {/* Bagian Kiri: Catatan Skeleton */}
+                        <div className="flex-1 max-w-[70%]">
+                            <div className='flex flex-row gap-[1vw]'>
+                                <div className="mt-[0.2vw] shrink-0 w-[2.5vw] h-[2.5vw] bg-gray-300 rounded-full animate-pulse" />
+                                <div className="flex-1 space-y-[0.5vw]">
+                                    <div className="h-[1.2vw] bg-gray-300 rounded animate-pulse w-[90%]" />
+                                    <div className="h-[1.2vw] bg-gray-300 rounded animate-pulse w-[80%]" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Bagian Kanan: Tombol Kembali Skeleton */}
+                        <div className="bg-gray-300 rounded-[2vw] px-[4vw] py-[0.8vw] animate-pulse">
+                            <div className="h-[1.5vw] w-[6vw] bg-white/30 rounded" />
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

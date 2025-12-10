@@ -1,20 +1,15 @@
-import { getCookie, refreshAccessToken } from './auth'; // Pastikan path import ini sesuai dengan struktur folder Anda
+import { getCookie, refreshAccessToken } from './auth'; 
 
 // =================================================================
-// 1. KONFIGURASI BASE URL (SOLUSI CORS VERCEL)
+// 1. KONFIGURASI BASE URL
 // =================================================================
-// Ini otomatis memilih jalur:
-// - Di Vercel (Production): Pakai "/api/proxy" agar lolos CORS.
-// - Di Localhost: Pakai URL asli backend.
 export const BASE_URL = process.env.NODE_ENV === 'production' 
   ? "/api/proxy" 
   : "https://api.inkluzi.my.id/api/v1";
 
 // =================================================================
-// 2. SISTEM ANTREAN (LOCKING) UNTUK REFRESH TOKEN
+// 2. SISTEM ANTREAN (LOCKING)
 // =================================================================
-// Variable ini mencegah aplikasi melakukan refresh token berkali-kali
-// jika ada banyak request API yang gagal bersamaan.
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
 
@@ -28,24 +23,35 @@ const onRefreshed = (token: string) => {
 };
 
 // =================================================================
-// 3. FUNGSI UTAMA FETCH
+// 3. FUNGSI UTAMA FETCH (DIPERBAIKI)
 // =================================================================
 export const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {
-  // Normalisasi Endpoint: Pastikan diawali dengan "/"
+  // Normalisasi Endpoint
   const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  
-  // Gabungkan Base URL dengan Endpoint
   const url = `${BASE_URL}${path}`;
 
-  // Ambil token saat ini
   let token = getCookie('accessToken');
 
-  // Siapkan Header Authorization
-  const headers = {
-    'Content-Type': 'application/json',
-    ...options.headers,
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  } as HeadersInit;
+  // --- PERBAIKAN HEADER ---
+  // Kita ubah inisialisasi headers agar tidak langsung hardcode JSON
+  const headers: Record<string, string> = {
+    ...((options.headers as Record<string, string>) || {}),
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  // LOGIKA PENTING:
+  // Hanya tambahkan 'Content-Type: application/json' jika body BUKAN FormData.
+  // Jika ini adalah upload file (FormData), biarkan browser yang set Content-Type 
+  // secara otomatis (karena butuh boundary string).
+  if (options.body && options.body instanceof FormData) {
+      // Jangan set Content-Type, biarkan browser menanganinya
+  } else {
+      // Default ke JSON untuk request biasa
+      headers['Content-Type'] = 'application/json';
+  }
 
   // --- REQUEST PERTAMA ---
   let response = await fetch(url, { ...options, headers });
@@ -53,19 +59,15 @@ export const fetchWithAuth = async (endpoint: string, options: RequestInit = {})
   // --- JIKA TOKEN MATI (401 Unauthorized) ---
   if (response.status === 401) {
     if (!isRefreshing) {
-      // 1. Kunci proses refresh (hanya request pertama yang masuk sini)
       isRefreshing = true;
-      
       try {
         console.log("🔄 Access Token expired. Refreshing...");
         const newToken = await refreshAccessToken();
         isRefreshing = false;
 
         if (newToken) {
-          // Jika sukses, kabari semua request yang mengantre
           onRefreshed(newToken);
         } else {
-           // Jika refresh gagal, biarkan user logout (biasanya dihandle di refreshAccessToken)
            isRefreshing = false;
         }
       } catch (error) {
@@ -74,17 +76,17 @@ export const fetchWithAuth = async (endpoint: string, options: RequestInit = {})
       }
     }
 
-    // 2. Buat request lain menunggu (Queueing) sampai refresh selesai
     const retryToken = await new Promise<string>((resolve) => {
       subscribeTokenRefresh((newToken) => resolve(newToken));
     });
 
-    // 3. Ulangi request (Retry) dengan token baru
     if (retryToken) {
+      // Update header Authorization dengan token baru
       const newHeaders = {
         ...headers,
         Authorization: `Bearer ${retryToken}`,
       };
+      // Retry request
       return fetch(url, { ...options, headers: newHeaders });
     }
   }
