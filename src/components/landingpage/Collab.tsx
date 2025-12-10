@@ -68,7 +68,7 @@ const Collab = () => {
         return () => ctx.revert();
     }, []);
 
-    const orangeColor = '#B56225';
+    const orangeColor = '#E87E2F';
     
     const textShadowStyle = `
             10px -10px 14.4px rgba(255, 255, 255, 0.35), 

@@ -3,13 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import progressIcon from "@/src/assets/progress.png"; 
+import progressIcon from "@/src/assets/progress.png";
 import { BASE_URL } from "@/src/lib/api";
+import logoWhite from "../../../../assets/logo-white.png";
 
 const RegisterSppgPage = () => {
     const router = useRouter();
     const [step, setStep] = useState(1);
-    
+
     // State UI
     const [showPopup, setShowPopup] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +48,7 @@ const RegisterSppgPage = () => {
     // Validasi Step 1
     const handleNext = () => {
         const newErrors: { [key: string]: string } = {};
-        
+
         if (!formData.namaInstansi) newErrors.namaInstansi = "Nama instansi wajib diisi";
         if (!formData.wilayahKerja) newErrors.wilayahKerja = "Wilayah kerja wajib diisi";
         if (!formData.alamat) newErrors.alamat = "Alamat instansi wajib diisi";
@@ -115,7 +116,7 @@ const RegisterSppgPage = () => {
 
     return (
         <section className="flex flex-row h-screen w-full bg-white relative">
-            
+
             {/* Popup Sukses */}
             {showPopup && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
@@ -124,10 +125,10 @@ const RegisterSppgPage = () => {
                         <div className="text-center">
                             <h2 className="satoshiBold text-[2vw] text-[#B56225] mb-[0.5vw]">Pendaftaran Berhasil!</h2>
                             <p className="satoshiMedium text-[1.1vw] text-[#B56225]">
-                                 Akun Anda sedang diproses. Admin akan memverifikasi dalam waktu 1x24 jam.
+                                Akun Anda sedang diproses. Admin akan memverifikasi dalam waktu 1x24 jam.
                             </p>
                         </div>
-                        <button 
+                        <button
                             onClick={() => router.push('/login')}
                             className="w-full bg-[#E87E2F] text-white satoshiBold text-[1.2vw] py-[0.8vw] rounded-[0.8vw] hover:bg-[#c27233] transition-colors shadow-md mt-[1vw]"
                         >
@@ -137,15 +138,14 @@ const RegisterSppgPage = () => {
                 </div>
             )}
 
-            {/* Sisi Kiri */}
-            <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center justify-center gap-[2vw] text-white">
-                <h1 className="satoshiBold text-[4vw]">Logo</h1>
-                <h2 className="satoshiBold text-[2.5vw]">Tagline</h2>
+            <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center">
+                <Image src={logoWhite} alt="logo" className="w-[15vw]" />
+                <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
             </div>
 
             {/* Sisi Kanan */}
             <div className="flex flex-col w-[60vw] h-full items-center justify-start pt-[4vw] px-[8vw] gap-[3vw] relative overflow-y-auto pb-[5vw]">
-                
+
                 {/* Progress Bar */}
                 <div className="w-full flex flex-row items-center gap-[1vw] ">
                     <div className="w-full h-[0.8vw] bg-[#FADEC9] rounded-full overflow-hidden">
@@ -167,57 +167,57 @@ const RegisterSppgPage = () => {
                 )}
 
                 <div className="w-full flex flex-col gap-[1vw] ">
-                    
+
                     {/* STEP 1: Identitas Instansi & Akun */}
                     {step === 1 && (
                         <>
                             <h3 className="satoshiBold text-[#E87E2F] text-[1.5vw] mb-[0.5vw]">Identitas Instansi SPPG</h3>
-                            
-                            <InputGroup 
-                                label="Nama Instansi/Dinas" 
-                                name="namaInstansi" 
-                                value={formData.namaInstansi} 
-                                onChange={handleChange} 
-                                placeholder="Masukkan nama instansi" 
-                                error={errors.namaInstansi} 
+
+                            <InputGroup
+                                label="Nama Instansi/Dinas"
+                                name="namaInstansi"
+                                value={formData.namaInstansi}
+                                onChange={handleChange}
+                                placeholder="Masukkan nama instansi"
+                                error={errors.namaInstansi}
                             />
-                            
-                            <InputGroup 
-                                label="Wilayah Kerja" 
-                                name="wilayahKerja" 
-                                value={formData.wilayahKerja} 
-                                onChange={handleChange} 
-                                placeholder="Contoh: Kota Malang" 
-                                error={errors.wilayahKerja} 
+
+                            <InputGroup
+                                label="Wilayah Kerja"
+                                name="wilayahKerja"
+                                value={formData.wilayahKerja}
+                                onChange={handleChange}
+                                placeholder="Contoh: Kota Malang"
+                                error={errors.wilayahKerja}
                             />
-                            
-                            <InputGroup 
-                                label="Alamat Lengkap" 
-                                name="alamat" 
-                                value={formData.alamat} 
-                                onChange={handleChange} 
-                                placeholder="Jl. Veteran No. 10" 
-                                error={errors.alamat} 
+
+                            <InputGroup
+                                label="Alamat Lengkap"
+                                name="alamat"
+                                value={formData.alamat}
+                                onChange={handleChange}
+                                placeholder="Jl. Veteran No. 10"
+                                error={errors.alamat}
                             />
 
                             {/* FIELD AKUN (Wajib untuk API) */}
-                            <InputGroup 
-                                label="Email Instansi " 
-                                name="email" 
-                                value={formData.email} 
-                                onChange={handleChange} 
-                                placeholder="email@instansi.com" 
+                            <InputGroup
+                                label="Email Instansi "
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="email@instansi.com"
                                 type="email"
-                                error={errors.email} 
+                                error={errors.email}
                             />
-                            <InputGroup 
-                                label="Password" 
-                                name="password" 
-                                value={formData.password} 
-                                onChange={handleChange} 
-                                placeholder="Minimal 6 karakter" 
+                            <InputGroup
+                                label="Password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="Minimal 6 karakter"
                                 type="password"
-                                error={errors.password} 
+                                error={errors.password}
                             />
 
                             <div className="flex justify-end mt-[1vw]">
@@ -230,41 +230,41 @@ const RegisterSppgPage = () => {
                     {step === 2 && (
                         <>
                             <h3 className="satoshiBold text-[#E87E2F] text-[1.5vw] mb-[0.5vw]">Identitas Penanggung Jawab</h3>
-                            
-                            <InputGroup 
-                                label="Nama Penanggung Jawab" 
-                                name="penanggungJawab" 
-                                value={formData.penanggungJawab} 
-                                onChange={handleChange} 
-                                placeholder="Nama lengkap" 
-                                error={errors.penanggungJawab} 
+
+                            <InputGroup
+                                label="Nama Penanggung Jawab"
+                                name="penanggungJawab"
+                                value={formData.penanggungJawab}
+                                onChange={handleChange}
+                                placeholder="Nama lengkap"
+                                error={errors.penanggungJawab}
                             />
-                            
-                            <InputGroup 
-                                label="Jabatan" 
-                                name="jabatan" 
-                                value={formData.jabatan} 
-                                onChange={handleChange} 
-                                placeholder="Contoh: Staff Admin" 
-                                error={errors.jabatan} 
+
+                            <InputGroup
+                                label="Jabatan"
+                                name="jabatan"
+                                value={formData.jabatan}
+                                onChange={handleChange}
+                                placeholder="Contoh: Staff Admin"
+                                error={errors.jabatan}
                             />
-                            
-                            <InputGroup 
-                                label="Nomor WhatsApp Aktif" 
-                                name="nomor" 
-                                value={formData.nomor} 
-                                onChange={handleNumberChange} 
-                                placeholder="08123456789" 
+
+                            <InputGroup
+                                label="Nomor WhatsApp Aktif"
+                                name="nomor"
+                                value={formData.nomor}
+                                onChange={handleNumberChange}
+                                placeholder="08123456789"
                                 type="text"
-                                error={errors.nomor} 
+                                error={errors.nomor}
                             />
 
                             <div className="flex justify-start mt-[0.5vw] mb-[1vw]">
                                 <button onClick={() => setStep(1)} className="satoshiBold text-[#E87E2F] text-[1.2vw] hover:text-[#B56225] transition-colors">Kembali</button>
                             </div>
 
-                            <button 
-                                onClick={handleSubmit} 
+                            <button
+                                onClick={handleSubmit}
                                 disabled={isLoading}
                                 className={`w-full text-white satoshiBold text-[1.5vw] py-[1vw] rounded-[1vw] shadow-md mt-[1vw] transition-colors
                                     ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E87E2F] hover:bg-[#c27233]'}
@@ -302,12 +302,12 @@ const InputGroup = ({ label, placeholder, type = "text", name, value, onChange, 
     return (
         <div className="flex flex-col gap-[0.5vw]">
             <label className="satoshiMedium text-[#E87E2F] text-[1.1vw]">{label}</label>
-            <input 
-                type={type} 
+            <input
+                type={type}
                 name={name}
                 value={value}
                 onChange={onChange}
-                placeholder={placeholder} 
+                placeholder={placeholder}
                 className={`w-full border-[0.15vw] ${error ? 'border-red-500 focus:ring-red-200' : 'border-[#E87E2F] focus:ring-[#E87E2F]'} rounded-[0.6vw] px-[1vw] py-[0.8vw] text-[1vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-[0.15vw]`}
             />
             {error && <span className="text-red-500 text-[0.8vw] satoshiMedium">{error}</span>}

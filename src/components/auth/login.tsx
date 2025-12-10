@@ -1,8 +1,10 @@
 'use client'
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { BASE_URL } from "@/src/lib/api"; // Pastikan import ini benar
+import { BASE_URL } from "@/src/lib/api";
+import logoWhite from "../../assets/logo-white.png"; // Pastikan import ini benar
 
 const Login = () => {
     const router = useRouter();
@@ -75,7 +77,9 @@ const Login = () => {
 
     return (
         <section className="flex flex-row h-screen w-full bg-white">
-           <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full">
+           <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center">
+                <Image src={logoWhite} alt="logo" className="w-[15vw]" />
+                <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
             </div>
 
             <div className="flex flex-col w-[60vw] h-full justify-center items-center px-[8vw] gap-[3vw]">

@@ -5,6 +5,7 @@ import CardMenu from "./CardMenu";
 import report from "../../../assets/dashboard/sekolah/report.png";
 import scan from "../../../assets/dashboard/sekolah/scan.png";
 import { weeklyMenus } from "@/src/data/MenuMbg";
+import logoOrange from "../../../assets/logo-orange.png";
 
 const alertMessage = "Menu minggu ini sering mengandung susu. 11 siswa alergi susu.";
 
@@ -102,7 +103,12 @@ const MainDashboardSekolah = () => {
 
             {/* right section */}
             <div className="col-span-2 pr-[1vw] pt-[1vw] gap-[1vw] flex flex-col ">
-                <h1 className="w-full text-[2vw] satoshiBold bg-[#D7762E] text-center flex items-center justify-center text-white rounded-[1vw] p-[1.5vw]">Logo</h1>
+
+                {/* logo */}
+                <div className="w-full text-[4vw] satoshiBold flex flex-row items-center">
+                    <Image src={logoOrange} alt="logo" className="w-[5vw] mr-[1vw] " />
+                    <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
+                </div>
 
                 {/* risiko */}
                 <div className="bg-[#F5DDCA] rounded-[2vw]  flex flex-col items-center"

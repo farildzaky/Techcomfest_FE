@@ -3,6 +3,7 @@ import CardMenu from "../sekolah/CardMenu";
 import CardPelaporan from "./CardPelaporan";
 import information from "../../../assets/dashboard/sekolah/information.png";
 import menu from "../../../assets/dashboard/sekolah/menu.png";
+import logoOrange from "../../../assets/logo-orange.png";
 
 interface Menu {
     id: number;
@@ -67,7 +68,10 @@ const MainDashboardSppg = () => {
                     </div>
                 </div>
                 <div className="col-span-2 pr-[1vw] pt-[1vw] gap-[1vw] flex flex-col ">
-                    <h1 className="w-full text-[2vw] satoshiBold bg-[#D7762E] text-center flex items-center justify-center text-white rounded-[2vw] p-[1.5vw]">Logo</h1>
+                    <div className="w-full text-[4vw] satoshiBold flex flex-row items-center">
+                        <Image src={logoOrange} alt="logo" className="w-[5vw] mr-[1vw] " />
+                        <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
+                    </div>                    
                     <div className="bg-[#F5DDCA] rounded-[2vw]  flex flex-col items-center h-[38.7vw]"
                         style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
 
@@ -79,19 +83,19 @@ const MainDashboardSppg = () => {
                 </div>
             </div>
             <div className="flex-col flex gap-[1vw]">
-            <h2 className="satoshiBold text-[2vw] mx-[1vw] leadding-none">Pelaporan Terbaru</h2>
+                <h2 className="satoshiBold text-[2vw] mx-[1vw] leadding-none">Pelaporan Terbaru</h2>
 
-            <div className="bg-[#F5DDCA] p-[1vw] rounded-[1vw] flex flex-row gap-[1vw] items-start  mx-[1vw]"
-                style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
-            >
-                {pelaporan.map((item) => (
-                    <CardPelaporan
-                        key={item.id}
-                        sekolah={item.sekolah}
-                        pelaporan={item.pelaporan}
-                    />
-                ))}
-            </div>
+                <div className="bg-[#F5DDCA] p-[1vw] rounded-[1vw] flex flex-row gap-[1vw] items-start  mx-[1vw]"
+                    style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
+                >
+                    {pelaporan.map((item) => (
+                        <CardPelaporan
+                            key={item.id}
+                            sekolah={item.sekolah}
+                            pelaporan={item.pelaporan}
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );

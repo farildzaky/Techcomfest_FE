@@ -1,12 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
+import logoWhite from "../../assets/logo-white.png";
 
 const Register = () => {
     return (
         <section className="flex flex-row h-screen w-full bg-white">
 
-            <div className="flex flex-col bg-[#D9833E] w-[40vw] h-full items-center justify-center gap-[10vw] text-white">
-                <h1 className="satoshiBold text-[3vw]">Logo</h1>
-                <h2 className="satoshiBold text-[2.5vw]">Tagline</h2>
+           <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center">
+                <Image src={logoWhite} alt="logo" className="w-[15vw]" />
+                <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
             </div>
 
             <div className="flex flex-col w-[60vw] h-full items-center justify-center relative px-[8vw] gap-[3vw]">

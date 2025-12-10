@@ -104,7 +104,7 @@ const Feature = () => {
 
             <div className="flex flex-col items-center w-full justify-center relative gap-[5vw]">
 
-                <div className='center-circle absolute w-[60vw] h-[60vw] top-[50%] translate-y-[-50%] pointer-events-none z-0'>
+                <div className='center-circle absolute w-[70vw] h-[60vw] top-[50%] translate-x-[2%] translate-y-[-50%] pointer-events-none z-0'>
                     <Image src={mock} alt="circle" className="w-full h-full object-contain" />
                 </div>
 
