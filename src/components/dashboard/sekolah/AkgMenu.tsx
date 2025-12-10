@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api'; 
 import detailCircle from "../../../assets/dashboard/sekolah/detail-circle.png";
 
-// --- INTERFACES SESUAI JSON API ---
 interface ChartItem {
     label: string;
     persentase: number;
@@ -77,7 +76,6 @@ interface MenuNutritionResponse {
     komponen_detail: KomponenDetail[];
 }
 
-// --- FUNGSI HELPER TRIGONOMETRI ---
 const getLabelPosition = (startAngle: number, endAngle: number, radius: number) => {
     const middleAngle = startAngle + (endAngle - startAngle) / 2;
     const radian = (middleAngle - 90) * (Math.PI / 180);
@@ -91,13 +89,11 @@ const AkgMenu = () => {
     const router = useRouter();
     const id = params?.id as string;
     
-    // --- STATE ---
     const [menuData, setMenuData] = useState<MenuNutritionResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-    // --- FETCH DATA ---
     useEffect(() => {
         const fetchData = async () => {
             if (!id) return;
@@ -129,11 +125,9 @@ const AkgMenu = () => {
         fetchData();
     }, [id]);
 
-    // --- LOADING STATE ---
     if (loading) {
         return (
             <div className="flex flex-col gap-[5vw] w-full min-h-screen bg-white pb-[5vw] font-sans relative">
-                {/* Header Skeleton */}
                 <div className="w-full relative">
                     <div className="satoshiBold text-[3vw] w-full p-[2vw] px-[3vw] bg-[#E87E2F] rounded-b-[2vw] flex"
                         style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
@@ -143,9 +137,7 @@ const AkgMenu = () => {
                 </div>
 
                 <div className="px-[3vw] flex flex-col gap-[3vw]">
-                    {/* Diagram & Deskripsi Skeleton */}
                     <div className="flex flex-row gap-[2vw] items-center">
-                        {/* KIRI: Diagram Skeleton */}
                         <div className="w-full flex items-center justify-center relative">
                             <div className="w-[25vw] h-[25vw] rounded-full relative bg-gray-300 animate-pulse"
                                 style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
@@ -157,7 +149,6 @@ const AkgMenu = () => {
                             </div>
                         </div>
 
-                        {/* KANAN: Deskripsi Skeleton */}
                         <div className="w-full bg-[#E87E2F] rounded-[2vw] gap-[1vw] p-[2vw] flex flex-col"
                             style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
                         >
@@ -177,7 +168,6 @@ const AkgMenu = () => {
                         </div>
                     </div>
 
-                    {/* Persentase AKG Skeleton */}
                     <div className="w-full flex flex-col gap-[1vw]">
                         <div className="flex justify-between items-end">
                             <div className='flex flex-row items-center gap-[1vw]'>
@@ -197,7 +187,6 @@ const AkgMenu = () => {
                         </div>
                     </div>
 
-                    {/* Detail Komponen Skeleton */}
                     <div className="w-full relative">
                         <div className="absolute left-1/2 top-0 bottom-0 w-[2vw] bg-[#E87E2F] rounded-full -translate-x-1/2 hidden lg:block"></div>
                         <div className="grid grid-cols-2 gap-x-[15vw] gap-y-[1.5vw]">
@@ -230,19 +219,16 @@ const AkgMenu = () => {
         );
     }
 
-    // --- ERROR STATE ---
     if (error || !menuData) {
         return (
             <div className="flex flex-col gap-[3vw] w-full min-h-screen bg-white items-center justify-center px-[3vw]">
                 <div className="flex flex-col items-center gap-[2vw] max-w-[50vw]">
-                    {/* Error Icon */}
                     <div className="w-[10vw] h-[10vw] rounded-full bg-red-100 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[6vw] h-[6vw] text-red-500">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                         </svg>
                     </div>
                     
-                    {/* Error Message */}
                     <div className="flex flex-col items-center gap-[1vw] text-center">
                         <h2 className="satoshiBold text-[2.5vw] text-gray-800">Gagal Memuat Data</h2>
                         <p className="satoshiMedium text-[1.3vw] text-gray-600">
@@ -250,7 +236,6 @@ const AkgMenu = () => {
                         </p>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex gap-[1vw] mt-[1vw]">
                         <button
                             onClick={() => window.location.reload()}
@@ -273,7 +258,6 @@ const AkgMenu = () => {
         );
     }
 
-    // --- PERSIAPAN DATA CHART ---
     const chartData = menuData.info_nutrisi.donut_chart;
     const karbo = chartData.karbohidrat?.persentase || 0;
     const protein = chartData.protein?.persentase || 0;
@@ -320,7 +304,6 @@ const AkgMenu = () => {
     return (
         <div className="flex flex-col gap-[5vw] w-full min-h-screen bg-white pb-[1vw] font-sans relative">
 
-            {/* --- POPUP INFORMASI AKG --- */}
             {isPopupOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-[3vw]">
                     <div className="bg-white w-[50vw] rounded-[2vw] p-[3vw] shadow-2xl relative flex flex-col gap-[1.5vw] animate-in fade-in zoom-in duration-200">
@@ -370,9 +353,7 @@ const AkgMenu = () => {
 
             <div className="px-[3vw] flex flex-col gap-[3vw]">
 
-                {/* --- BAGIAN 1: DIAGRAM & DESKRIPSI --- */}
                 <div className="flex flex-row gap-[2vw] items-center">
-                    {/* KIRI: Diagram Lingkaran */}
                     <div className="w-full flex items-center justify-center relative">
                         <div className="w-[25vw] h-[25vw] rounded-full relative"
                             style={{ background: chartGradient, boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}
@@ -433,7 +414,6 @@ const AkgMenu = () => {
                     </div>
                 </div>
 
-                {/* --- BAGIAN 2: Persentase AKG --- */}
                 <div className="w-full flex flex-col gap-[1vw]">
                     <div className="flex justify-between items-end">
                         <div className='flex flex-row items-center gap-[1vw]'>
@@ -460,7 +440,6 @@ const AkgMenu = () => {
                     </div>
                 </div>
 
-                {/* --- BAGIAN 3: Detail Komponen --- */}
                 <div className="w-full relative">
                     <div className="absolute left-1/2 top-0 bottom-0 w-[2vw] bg-[#E87E2F] rounded-full -translate-x-1/2 hidden lg:block"></div>
                     <div className="grid grid-cols-2 gap-x-[15vw] gap-y-[1.5vw]"> 

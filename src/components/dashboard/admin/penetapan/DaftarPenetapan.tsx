@@ -5,7 +5,7 @@ import { fetchWithAuth } from '@/src/lib/api';
 import Image from 'next/image';
 import trash from "../../../../assets/trash.png"
 import bg from "../../../../assets/bg.png"
-import loading from "../../../../assets/loading.png" // Menggunakan asset loading.png
+import loading from "../../../../assets/loading.png"
 
 interface ProfileData {
     nama_sekolah: string;
@@ -28,9 +28,9 @@ interface TableRow {
 
 const DaftarPenetapan = () => {
     const [tableData, setTableData] = useState<TableRow[]>([]);
-    const [loadingData, setLoadingData] = useState(true); // Ganti nama state loading agar tidak konflik
+    const [loadingData, setLoadingData] = useState(true); 
     const [error, setError] = useState("");
-    const [deletingId, setDeletingId] = useState<string | null>(null); // Trigger status API delete
+    const [deletingId, setDeletingId] = useState<string | null>(null); 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState<{ id: string, namaSekolah: string } | null>(null);
@@ -108,7 +108,7 @@ const DaftarPenetapan = () => {
     const executeDelete = async () => {
         if (!itemToDelete) return;
 
-        setDeletingId(itemToDelete.id); // Mulai loading di modal
+        setDeletingId(itemToDelete.id);
         try {
             const response = await fetchWithAuth(
                 `/admin/schools/${itemToDelete.id}`,
@@ -118,13 +118,13 @@ const DaftarPenetapan = () => {
             if (!response.ok) throw new Error("Gagal menghapus data");
 
             setTableData(prev => prev.filter(row => row.id !== itemToDelete.id));
-            setIsModalOpen(false); // Tutup modal saat sukses
+            setIsModalOpen(false); 
             setItemToDelete(null);
 
         } catch (error: any) {
             alert("Gagal menghapus: " + error.message);
         } finally {
-            setDeletingId(null); // Selesai loading
+            setDeletingId(null); 
         }
     };
 
@@ -256,7 +256,6 @@ const DaftarPenetapan = () => {
                 </div>
             </Link>
 
-            {/* --- MODAL POPUP HAPUS --- */}
             {isModalOpen && itemToDelete && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div
@@ -266,13 +265,10 @@ const DaftarPenetapan = () => {
 
                     <div className="relative bg-white rounded-[2vw] p-[3vw] w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-[2vw]">
 
-                        {/* KONTEN BERGANTUNG PADA LOADING STATE */}
                         {deletingId === itemToDelete.id ? (
                             
-                            // === LOADING STATE: Sedang Diproses ===
                             <div className="flex flex-col items-center justify-center py-[4vw] px-[2vw]">
                                 
-                                {/* Ikon Loading berputar */}
                                 <div className="relative w-[10vw] h-[10vw] flex items-center justify-center">
                                     <Image 
                                         src={bg} 
@@ -288,7 +284,6 @@ const DaftarPenetapan = () => {
                                     />
                                 </div>
                                 
-                                {/* Teks Loading */}
                                 <h3 className="satoshiBold text-[2.5vw] text-[#E87E2F] mt-[2vw]">Sedang Diproses</h3>
                                 <p className="satoshiMedium text-[1.2vw] text-gray-500 mt-[0.5vw]">
                                     Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
@@ -296,10 +291,7 @@ const DaftarPenetapan = () => {
                             </div>
 
                         ) : (
-
-                            // === CONFIRMATION STATE: Yakin Hapus? ===
                             <>
-                                {/* Gambar Hapus (Struktur Normal) */}
                                 <div className="relative w-[10vw] h-[10vw] flex items-center justify-center">
                                     <Image 
                                         src={bg} 
@@ -314,7 +306,6 @@ const DaftarPenetapan = () => {
                                     />
                                 </div>
 
-                                {/* Judul & Deskripsi */}
                                 <div className="flex flex-col ">
                                     <h3 className="satoshiBold text-[2vw] text-[#B56225]">Yakin Ingin Menghapus?</h3>
                                     <p className="satoshiMedium text-[1.2vw] text-[#B56225]">
@@ -323,7 +314,6 @@ const DaftarPenetapan = () => {
                                     </p>
                                 </div>
 
-                                {/* Tombol Aksi */}
                                 <div className="flex w-full gap-[1.5vw] mt-[1vw]">
                                     <button
                                         onClick={closeDeleteModal}
@@ -346,7 +336,6 @@ const DaftarPenetapan = () => {
                     </div>
                 </div>
             )}
-            {/* --- END MODAL POPUP --- */}
 
         </div>
     )

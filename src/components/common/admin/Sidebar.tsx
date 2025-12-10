@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname, useRouter } from "next/navigation"; // 1. Hook untuk ambil URL aktif
-import Link from "next/link"; // 2. Komponen untuk navigasi
+import { usePathname, useRouter } from "next/navigation"; 
+import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import sppgWhite from "../../../assets/common/sidebar/sppg-white.png";
@@ -49,12 +49,11 @@ const SidebarAdmin = () => {
     ];
 
     const handleLogout = async () => {
-        if (isLoggingOut) return; // Prevent double click
+        if (isLoggingOut) return; 
 
         setIsLoggingOut(true);
 
         try {
-            // 1. Panggil API logout backend
             const response = await fetch("/auth/logout", {
                 method: "POST",
                 headers: {
@@ -65,24 +64,19 @@ const SidebarAdmin = () => {
                 }),
             });
 
-            // Walaupun API gagal, tetap clear cookies client-side
             if (!response.ok) {
                 console.warn("Backend logout failed, but clearing local session anyway");
             }
 
         } catch (error) {
             console.error("Logout error:", error);
-            // Tetap lanjut clear cookies meskipun API error
         } finally {
-            // 2. Hapus semua cookies client-side
             document.cookie = "accessToken=; Max-Age=0; path=/;";
             document.cookie = "refreshToken=; Max-Age=0; path=/;";
             document.cookie = "userRole=; Max-Age=0; path=/;";
 
-            // 3. Hapus data localStorage
             localStorage.removeItem("user");
 
-            // 4. Redirect ke login
             router.push("/admin/login");
         }
     };
@@ -100,7 +94,6 @@ const SidebarAdmin = () => {
             }}
         >
 
-            {/* --- Profile Section --- */}
             <div className="w-full py-[1vw] flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-[1vw]">
                 <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0" />
                 <div className="flex flex-col px-[1vw]">
@@ -118,7 +111,7 @@ const SidebarAdmin = () => {
                         <Link
                             key={index}
                             href={item.href}
-                            className="block" // Pastikan Link membungkus div
+                            className="block" 
                         >
                             <div className="relative flex items-center p-[1.2vw] cursor-pointer rounded-r-[2vw] group">
                                 <div
@@ -148,7 +141,6 @@ const SidebarAdmin = () => {
                 })}
             </div>
 
-            {/* logout (Biasanya tidak pakai Link, tapi tombol aksi) */}
             <div className="flex flex-row justify-center items-center px-[2vw] mt-auto mb-[2vw] border-t-[0.1vw] border-white pt-[1vw]">
                 <button
                     onClick={handleLogout}

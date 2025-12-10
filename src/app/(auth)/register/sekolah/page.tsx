@@ -15,7 +15,6 @@ const RegisterSekolahPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [apiError, setApiError] = useState("");
 
-    // State Form Data
     const [formData, setFormData] = useState({
         namaSekolah: "",
         jenisSekolah: "",
@@ -62,21 +61,17 @@ const RegisterSekolahPage = () => {
         setDisabilitasList([...disabilitasList, { jenis: "", jumlah: "" }]);
     };
 
-    // --- VALIDASI STEP 1 (Termasuk Email & Password) ---
     const handleNext = () => {
         const newErrors: { [key: string]: string } = {};
 
-        // Data Sekolah
         if (!formData.namaSekolah) newErrors.namaSekolah = "Nama sekolah wajib diisi";
         if (!formData.jenisSekolah) newErrors.jenisSekolah = "Jenis sekolah wajib diisi";
         if (!formData.npsn) newErrors.npsn = "NPSN wajib diisi";
         if (!formData.alamat) newErrors.alamat = "Alamat wajib diisi";
 
-        // Data Akun (Sekarang di Step 1)
         if (!formData.email) newErrors.email = "Email wajib diisi";
         if (!formData.password) newErrors.password = "Password wajib diisi";
 
-        // Disabilitas & Jumlah
         if (!formData.jumlahSiswa) newErrors.jumlahSiswa = "Total siswa wajib diisi";
         const validDisabilitas = disabilitasList.filter(d => d.jenis !== "" && d.jumlah !== "");
         if (validDisabilitas.length === 0) {
@@ -91,12 +86,10 @@ const RegisterSekolahPage = () => {
         }
     };
 
-    // --- SUBMIT DATA (Step 2 Selesai) ---
     const handleSubmit = async () => {
         setApiError("");
         const newErrors: { [key: string]: string } = {};
 
-        // Validasi Step 2 (Penanggung Jawab)
         if (!formData.penanggungJawab) newErrors.penanggungJawab = "Nama wajib diisi";
         if (!formData.jabatan) newErrors.jabatan = "Jabatan wajib diisi";
         if (!formData.nomor) newErrors.nomor = "Nomor HP wajib diisi";
@@ -152,7 +145,6 @@ const RegisterSekolahPage = () => {
     return (
         <section className="flex flex-row h-screen w-full bg-white relative">
 
-            {/* Popup Sukses */}
             {showPopup && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="bg-white w-[40vw] rounded-[1.5vw] p-[3vw] flex flex-col items-center justify-center gap-[1.5vw] shadow-2xl animate-in zoom-in duration-300">
@@ -178,7 +170,6 @@ const RegisterSekolahPage = () => {
                 <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
             </div>
 
-            {/* Sisi Kanan */}
             <div className="flex flex-col w-[60vw] h-full items-center justify-start pt-[4vw] px-[8vw] gap-[3vw] relative overflow-y-auto pb-[5vw]">
 
                 <div className="w-full flex flex-row items-center gap-[1vw] ">
@@ -201,7 +192,6 @@ const RegisterSekolahPage = () => {
 
                 <div className="w-full flex flex-col gap-[1vw] ">
 
-                    {/* --- STEP 1: Identitas Sekolah & Akun --- */}
                     {step === 1 && (
                         <>
                             <h3 className="satoshiBold text-[#D9833E] text-[1.5vw] mb-[0.5vw]">Identitas Sekolah</h3>
@@ -237,7 +227,6 @@ const RegisterSekolahPage = () => {
                         </>
                     )}
 
-                    {/* --- STEP 2: Penanggung Jawab --- */}
                     {step === 2 && (
                         <>
                             <h3 className="satoshiBold text-[#D9833E] text-[1.5vw] mb-[0.5vw]">Identitas Penanggung Jawab</h3>
@@ -270,7 +259,6 @@ const RegisterSekolahPage = () => {
     );
 }
 
-// Komponen Input
 interface InputGroupProps {
     label: string;
     placeholder: string;

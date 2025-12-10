@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api'; 
 import SidebarProfile from "@/src/components/common/profile/SidebarProfile"; // Sidebar Profile untuk SPPG
 
-// Interface untuk menampung data yang akan ditampilkan
 interface DetailData {
     namaInstansi: string;
     wilayahKerja: string;
@@ -18,14 +17,12 @@ interface DetailData {
 const SppgDetailInformasiPage = () => {
     const pathname = usePathname();
     const pathSegments = pathname.split('/');
-    // ID adalah segmen keempat: ['', 'admin', 'sppg', 'ID', 'informasi-instansi']
     const userId = pathSegments[3] || ''; 
 
     const [data, setData] = useState<DetailData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // --- FETCH DATA DETAIL SPPG ---
     useEffect(() => {
         if (!userId) {
             setLoading(false);
@@ -35,7 +32,6 @@ const SppgDetailInformasiPage = () => {
 
         const loadData = async () => {
             try {
-                // Endpoint: GET /admin/users/{user_id}
                 const response = await fetchWithAuth(`/admin/users/${userId}`, {
                     method: "GET"
                 });
@@ -52,7 +48,7 @@ const SppgDetailInformasiPage = () => {
                     namaInstansi: profile.nama_instansi || 'N/A',
                     wilayahKerja: profile.wilayah_kerja || 'N/A',
                     alamat: profile.alamat || 'N/A',
-                    email: result.data.email || 'N/A', // Email dari root object
+                    email: result.data.email || 'N/A', 
                     penanggungJawab: profile.penanggung_jawab || 'N/A',
                     nomorKontak: profile.nomor_kontak || 'N/A',
                 });
@@ -67,7 +63,6 @@ const SppgDetailInformasiPage = () => {
         loadData();
     }, [userId]);
 
-    // --- RENDER LOADING / ERROR STATE ---
     if (loading) {
         return (
             <div className="grid grid-cols-9 min-h-screen bg-white w-full">
@@ -90,7 +85,6 @@ const SppgDetailInformasiPage = () => {
         );
     }
     
-    // Helper untuk menampilkan baris data
     const DataField = ({ label, value }: { label: string, value: string }) => (
         <div className="flex flex-col gap-[0.5vw]">
             <label className="satoshiBold text-[1.2vw] text-white opacity-90">{label}</label>
@@ -104,19 +98,16 @@ const SppgDetailInformasiPage = () => {
     return (
          <div className="grid grid-cols-9 min-h-screen bg-[#E87E2F] w-full">
             
-            {/* Sidebar SPPG Detail */}
             <div className="col-span-3 sticky top-0 h-screen z-50">
                 <SidebarProfile/>
             </div>
 
-            {/* Konten Utama */}
             <div className="col-span-6 overflow-y-auto h-screen ">
                 <div className="p-[3vw] flex flex-col gap-[2vw]">
                     <h1 className="satoshiBold text-[2.5vw] text-white leading-tight">
                         Detail Informasi Instansi
                     </h1>
                     
-                    {/* Daftar Field Data */}
                     <div className="flex flex-col gap-[1.5vw] w-[80%]">
                         <DataField label="Nama Instansi" value={data?.namaInstansi || ''} />
                         <DataField label="Wilayah Kerja" value={data?.wilayahKerja || ''} />

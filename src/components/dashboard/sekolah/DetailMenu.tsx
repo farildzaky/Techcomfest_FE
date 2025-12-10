@@ -6,7 +6,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api'; 
 import warning from '../../../assets/dashboard/sekolah/warning.png'; 
 
-// --- Interface Sesuai Response API ---
 interface APIKomponen {
     nama: string;
     porsi: string;
@@ -74,12 +73,10 @@ const DetailMenu = () => {
         return (
             <div className="flex flex-col min-h-screen items-center bg-white relative">
 
-                {/* Header: Nama Menu Skeleton */}
                 <div className='satoshiBold text-[3.5vw] text-black z-10 w-full bg-[#F5DDCA] text-center py-[2vw] flex justify-center'>
                     <div className="h-[3.5vw] bg-gray-300 rounded animate-pulse w-[50%]" />
                 </div>
 
-                {/* Header: Hari Skeleton */}
                 <div className='relative w-full h-[15vw]'>
                     <div className="w-full h-full bg-[#F5DDCA] [clip-path:ellipse(50%_50%_at_50%_0%)] relative z-0 flex items-center justify-center">
                     </div>
@@ -89,18 +86,14 @@ const DetailMenu = () => {
 
                 <div className='w-full flex flex-col gap-[1vw] px-[2vw] pb-[3vw] z-10 mt-[-2vw]'>
 
-                    {/* STATUS & ML CONFIDENCE Skeleton */}
                     <div className="flex justify-end gap-[1vw] items-center ml-auto w-fit">
                         <div className="h-[2.5vw] bg-gray-300 rounded-full animate-pulse w-[12vw]" />
                         <div className="h-[2.5vw] bg-gray-300 rounded-full animate-pulse w-[10vw]" />
                     </div>
 
-                    {/* GRID CONTENT Skeleton */}
                     <div className='grid grid-cols-8 w-full z-10 gap-[2vw] items-stretch'>
 
-                        {/* --- LEFT COLUMN --- */}
                         <div className='col-span-3 flex flex-col gap-[1vw]'>
-                            {/* Komponen Menu Skeleton */}
                             <div className='bg-[#F5DDCA] rounded-[1vw]' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
                                 <div className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw] flex justify-center'>
                                     <div className="h-[2vw] bg-white/30 rounded animate-pulse w-[60%]" />
@@ -112,7 +105,6 @@ const DetailMenu = () => {
                                 </div>
                             </div>
 
-                            {/* Kandungan Gizi Skeleton */}
                             <div className='flex flex-col'>
                                 <div className="h-[2vw] bg-gray-300 rounded animate-pulse w-[50%] mb-[0.5vw]" />
                                 <div className='w-full flex items-center justify-end mb-[0.5vw]'>
@@ -146,15 +138,12 @@ const DetailMenu = () => {
                             </div>
                         </div>
 
-                        {/* --- RIGHT COLUMN --- */}
                         <div className='col-span-5 flex flex-col gap-[1vw]'>
-                            {/* Deteksi Risiko Skeleton */}
                             <div className='bg-[#F5DDCA] rounded-[1vw]' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
                                 <div className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw] flex justify-center'>
                                     <div className="h-[2vw] bg-white/30 rounded animate-pulse w-[50%]" />
                                 </div>
                                 <div className='p-[1.5vw] flex flex-col gap-[1vw]'>
-                                    {/* Alergi */}
                                     <div className='flex flex-col gap-[0.5vw]'>
                                         <div className="h-[1.5vw] bg-gray-300 rounded animate-pulse w-[20%]" />
                                         <div className="space-y-[0.3vw] pl-[0.5vw]">
@@ -163,7 +152,6 @@ const DetailMenu = () => {
                                             ))}
                                         </div>
                                     </div>
-                                    {/* Tekstur */}
                                     <div className='flex flex-col gap-[0.5vw]'>
                                         <div className="h-[1.5vw] bg-gray-300 rounded animate-pulse w-[20%]" />
                                         <div className="space-y-[0.3vw] pl-[0.5vw]">
@@ -172,7 +160,6 @@ const DetailMenu = () => {
                                             ))}
                                         </div>
                                     </div>
-                                    {/* Porsi Gizi */}
                                     <div className='flex flex-col gap-[0.5vw]'>
                                         <div className="h-[1.5vw] bg-gray-300 rounded animate-pulse w-[25%]" />
                                         <div className="space-y-[0.3vw] pl-[0.5vw]">
@@ -185,7 +172,6 @@ const DetailMenu = () => {
                             </div>
 
                             <div className='grid grid-cols-3 gap-[1vw]'>
-                                {/* Rekomendasi Skeleton */}
                                 <div className='bg-[#F5DDCA] rounded-[1vw] col-span-2' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
                                     <div className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw] flex justify-center'>
                                         <div className="h-[2vw] bg-white/30 rounded animate-pulse w-[60%]" />
@@ -197,7 +183,6 @@ const DetailMenu = () => {
                                     </div>
                                 </div>
                                 
-                                {/* Button Laporkan Skeleton */}
                                 <div className='col-span-1'>
                                     <div className='flex flex-col items-center p-[1vw] bg-gray-300 rounded-[1vw] h-[16.5vw] animate-pulse' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
                                         <div className="h-[3vw] bg-white/30 rounded w-[70%] mb-[1vw]" />
@@ -208,9 +193,7 @@ const DetailMenu = () => {
                         </div>
                     </div>
 
-                    {/* --- FOOTER: CATATAN & TOMBOL KEMBALI --- */}
                     <div className="w-full flex justify-between items-end mt-[2vw]">
-                        {/* Bagian Kiri: Catatan Skeleton */}
                         <div className="flex-1 max-w-[70%]">
                             <div className='flex flex-row gap-[1vw]'>
                                 <div className="mt-[0.2vw] shrink-0 w-[2.5vw] h-[2.5vw] bg-gray-300 rounded-full animate-pulse" />
@@ -221,7 +204,6 @@ const DetailMenu = () => {
                             </div>
                         </div>
 
-                        {/* Bagian Kanan: Tombol Kembali Skeleton */}
                         <div className="bg-gray-300 rounded-[2vw] px-[4vw] py-[0.8vw] animate-pulse">
                             <div className="h-[1.5vw] w-[6vw] bg-white/30 rounded" />
                         </div>
@@ -239,7 +221,6 @@ const DetailMenu = () => {
         );
     }
 
-    // --- LOGIC MAPPING & FORMATTING ---
     const getBgColor = (status: string): string => {
         const s = status || "";
         switch (s.toLowerCase()) {
@@ -266,12 +247,10 @@ const DetailMenu = () => {
     return (
         <div className="flex flex-col min-h-screen items-center bg-white relative">
 
-            {/* Header: Nama Menu */}
             <h1 className='satoshiBold text-[3.5vw] text-black z-10 w-full bg-[#F5DDCA] text-center py-[2vw]'>
                 {menuData.nama_menu}
             </h1>
 
-            {/* Header: Hari */}
             <div className='relative w-full h-[15vw]'>
                 <div className="w-full h-full bg-[#F5DDCA] [clip-path:ellipse(50%_50%_at_50%_0%)] relative z-0 flex items-center justify-center">
                 </div>
@@ -282,7 +261,6 @@ const DetailMenu = () => {
 
             <div className='w-full flex flex-col gap-[1vw] px-[2vw] pb-[3vw] z-10 mt-[-2vw]'>
 
-                {/* STATUS & ML CONFIDENCE */}
                 <div className="flex justify-end gap-[1vw] items-center ml-auto w-fit">
                     {confidencePercentage > 0 && (
                         <div className="flex items-center gap-[0.5vw] bg-[#E8F5E9] px-[1vw] py-[0.5vw] rounded-full border border-[#C8E6C9]">
@@ -301,10 +279,8 @@ const DetailMenu = () => {
                     </h4>
                 </div>
 
-                {/* GRID CONTENT */}
                 <div className='grid grid-cols-8 w-full z-10 gap-[2vw] items-stretch'>
 
-                    {/* --- LEFT COLUMN --- */}
                     <div className='col-span-3 flex flex-col gap-[1vw]'>
                         <div className='bg-[#F5DDCA] rounded-[1vw]' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
                             <h2 className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw]'>Komponen Menu</h2>
@@ -342,7 +318,6 @@ const DetailMenu = () => {
                         </div>
                     </div>
 
-                    {/* --- RIGHT COLUMN --- */}
                     <div className='col-span-5 flex flex-col gap-[1vw]'>
                         <div className='bg-[#F5DDCA] rounded-[1vw]' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
                             <h2 className='satoshiBold text-[2vw] p-[1vw] bg-[#E87E2F] text-white rounded-[1vw]'>Deteksi Risiko</h2>
@@ -388,7 +363,6 @@ const DetailMenu = () => {
                                 </ul>
                             </div>
                             
-                            {/* --- BUTTON LAPORKAN --- */}
                             <Link href="/sekolah/pelaporan/form-pelaporan" className='col-span-1 block'>
                                 <div className='flex flex-col items-center p-[1vw] bg-[#D7762E] rounded-[1vw] h-[16.5vw] hover:bg-[#b56225] transition-colors cursor-pointer' style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
                                     <h2 className='satoshiBold text-[3vw] text-white'>Laporkan</h2>
@@ -399,10 +373,8 @@ const DetailMenu = () => {
                     </div>
                 </div>
 
-                {/* --- FOOTER: CATATAN & TOMBOL KEMBALI --- */}
                 <div className="w-full flex justify-between items-end mt-[2vw]">
                     
-                    {/* Bagian Kiri: Catatan Tambahan */}
                     <div className="flex-1 max-w-[70%]">
                         {additionalNote ? (
                             <div className='flex flex-row gap-[1vw]'>
@@ -433,7 +405,6 @@ const DetailMenu = () => {
                         )}
                     </div>
 
-                    {/* Bagian Kanan: Tombol Kembali */}
                     <button
                         onClick={() => router.push('/sekolah/menu-mbg')}
                         className="bg-[#D7762E] text-white rounded-[2vw] px-[4vw] py-[0.8vw] satoshiBold text-[1.5vw] shadow-md hover:bg-[#b56225] transition-all cursor-pointer"

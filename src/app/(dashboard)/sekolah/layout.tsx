@@ -18,7 +18,6 @@ export default function SekolahLayout({
     ].includes(pathname);
 
 
-    // Gabungkan semua kondisi
     const isFullScreen = isMenuDetail || isScanResult || isSpecificPage;
 
 

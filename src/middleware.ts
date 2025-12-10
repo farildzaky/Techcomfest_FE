@@ -1,6 +1,4 @@
-// ==================== MIDDLEWARE (ROUTE PROTECTION) ====================
-// Fungsi: Protect routes & redirect berdasarkan authentication + role
-// OPTIONAL: Bisa di-skip kalau cuma mau client-side refresh
+
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
@@ -13,7 +11,6 @@ export async function middleware(request: NextRequest) {
 
   const isAuthPage = pathname === '/login' || pathname.startsWith('/admin/login');
 
-  // --- REFRESH TOKEN KALAU ACCESS TOKEN KOSONG ---
   if (!accessToken && refreshToken && !isAuthPage) {
     try {
       const refreshResponse = await fetch(new URL('/api/auth/refresh', request.url), {
@@ -27,10 +24,8 @@ export async function middleware(request: NextRequest) {
         const data = await refreshResponse.json();
         const newAccessToken = data.accessToken;
 
-        // Update variable accessToken
         accessToken = newAccessToken;
 
-        // Set cookie baru
         const response = NextResponse.next();
         response.cookies.set('accessToken', newAccessToken, {
           httpOnly: false,
@@ -40,7 +35,6 @@ export async function middleware(request: NextRequest) {
           secure: process.env.NODE_ENV === 'production',
         });
 
-        // JANGAN return di sini, biar lanjut ke role checking
       }
     } catch (error) {
       console.error('Middleware refresh error:', error);
@@ -49,7 +43,6 @@ export async function middleware(request: NextRequest) {
 
   const isAuthenticated = !!(accessToken || refreshToken);
 
-  // --- REDIRECT KALAU SUDAH LOGIN ---
   if (isAuthPage && isAuthenticated) {
     if (userRole === 'admin') {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url));
@@ -60,7 +53,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // --- PROTECT ADMIN ROUTES ---
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
     if (!isAuthenticated) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
@@ -75,7 +67,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
     
-    // Return dengan cookie baru kalau ada refresh
     if (accessToken && !request.cookies.get('accessToken')?.value) {
       const response = NextResponse.next();
       response.cookies.set('accessToken', accessToken, {
@@ -89,7 +80,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // --- PROTECT SEKOLAH ROUTES ---
   if (pathname.startsWith('/sekolah')) {
     if (!isAuthenticated) {
       return NextResponse.redirect(new URL('/login', request.url));
@@ -104,7 +94,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
     
-    // Return dengan cookie baru kalau ada refresh
     if (accessToken && !request.cookies.get('accessToken')?.value) {
       const response = NextResponse.next();
       response.cookies.set('accessToken', accessToken, {
@@ -118,7 +107,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // --- PROTECT SPPG ROUTES ---
   if (pathname.startsWith('/sppg')) {
     if (!isAuthenticated) {
       return NextResponse.redirect(new URL('/login', request.url));
@@ -133,7 +121,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
     
-    // Return dengan cookie baru kalau ada refresh
     if (accessToken && !request.cookies.get('accessToken')?.value) {
       const response = NextResponse.next();
       response.cookies.set('accessToken', accessToken, {

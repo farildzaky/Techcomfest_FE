@@ -35,7 +35,6 @@ const MainDashboardSekolah = () => {
 
     return (
         <div className="grid-cols-7 grid pb-[1vw]">
-            {/* mid section */}
             <div className="col-span-5 p-[1vw] pt-[1vw] gap-[2vw] flex flex-col ">
 
                 <div className="bg-[#D7762E] w-full rounded-full px-[1vw] py-[0.5vw] satoshiMedium text-white text-[1vw] items-center flex flex-row "
@@ -56,7 +55,6 @@ const MainDashboardSekolah = () => {
                     <Image src={menu} alt="menu image" className="w-[55%] " />
                 </div>
 
-                {/* weekly menu */}
                 <h2 className="satoshiBold text-[2vw]">Menu Minggu Depan</h2>
                 <div className="bg-[#F5DDCA] p-[2vw] rounded-[2vw] flex flex-row gap-[1vw] items-start pt-[4vw]"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
@@ -72,7 +70,6 @@ const MainDashboardSekolah = () => {
                 </div>
 
                 <div className="flex flex-row justfiy-center items-center w-full  gap-[1vw] ">
-                    {/* scan */}
                     <div className="bg-[#F5DDCA] relative rounded-[2vw] flex flex-row items-center w-[80%] h-[10vw] justify-end gap-[3vw] ml-[4vw] pr-[1vw]">
 
                         <div className="w-[10vw] h-[10vw] bg-[#E87E2F] rounded-full mr-[1vw] absolute left-[-3vw] flex justify-center items-center">
@@ -85,7 +82,6 @@ const MainDashboardSekolah = () => {
 
                     </div>
 
-                    {/* report */}
                     <div className="bg-[#F5DDCA] relative rounded-[2vw] flex flex-row items-center w-[80%] h-[10vw] justify-end gap-[3vw] ml-[4vw] pr-[1vw] text-justify">
 
                         <div className="w-[10vw] h-[10vw] bg-[#E87E2F] rounded-full mr-[1vw] absolute left-[-3vw] flex justify-center items-center">
@@ -101,16 +97,13 @@ const MainDashboardSekolah = () => {
 
             </div>
 
-            {/* right section */}
             <div className="col-span-2 pr-[1vw] pt-[1vw] gap-[1vw] flex flex-col ">
 
-                {/* logo */}
                 <div className="w-full text-[4vw] satoshiBold flex flex-row items-center">
                     <Image src={logoOrange} alt="logo" className="w-[5vw] mr-[1vw] " />
                     <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
                 </div>
 
-                {/* risiko */}
                 <div className="bg-[#F5DDCA] rounded-[2vw]  flex flex-col items-center"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
 

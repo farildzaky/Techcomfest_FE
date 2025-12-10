@@ -11,33 +11,29 @@ const RegisterSppgPage = () => {
     const router = useRouter();
     const [step, setStep] = useState(1);
 
-    // State UI
     const [showPopup, setShowPopup] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [apiError, setApiError] = useState("");
 
-    // State Data Form
     const [formData, setFormData] = useState({
-        namaInstansi: "",   // nama_instansi
-        wilayahKerja: "",   // wilayah_kerja
-        alamat: "",         // alamat
-        email: "",          // email (Untuk Login)
-        password: "",       // password (Untuk Login)
-        penanggungJawab: "",// penanggung_jawab
-        jabatan: "",        // jabatan (Opsional di API docs, tapi ada di UI)
-        nomor: ""           // nomor_kontak
+        namaInstansi: "",   
+        wilayahKerja: "",  
+        alamat: "",        
+        email: "",          
+        password: "",      
+        penanggungJawab: "",
+        jabatan: "",        
+        nomor: ""           
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    // Handler Input Teks
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
     };
 
-    // Handler Input Angka
     const handleNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         const sanitizedValue = value.replace(/[^0-9]/g, '');
@@ -45,7 +41,6 @@ const RegisterSppgPage = () => {
         if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
     };
 
-    // Validasi Step 1
     const handleNext = () => {
         const newErrors: { [key: string]: string } = {};
 
@@ -62,7 +57,6 @@ const RegisterSppgPage = () => {
         }
     };
 
-    // Submit ke API
     const handleSubmit = async () => {
         setApiError("");
         const newErrors: { [key: string]: string } = {};
@@ -79,7 +73,6 @@ const RegisterSppgPage = () => {
         setIsLoading(true);
 
         try {
-            // Mapping Payload sesuai API Docs
             const payload = {
                 email: formData.email,
                 password: formData.password,
@@ -88,7 +81,6 @@ const RegisterSppgPage = () => {
                 alamat: formData.alamat,
                 penanggung_jawab: formData.penanggungJawab,
                 nomor_kontak: formData.nomor,
-                // jabatan: formData.jabatan // Field ini dikirim jika backend menerima, jika tidak bisa dihapus
             };
 
             const res = await fetch(`${BASE_URL}/auth/register/sppg`, {
@@ -103,7 +95,6 @@ const RegisterSppgPage = () => {
                 throw new Error(data.message || "Gagal mendaftar. Silakan coba lagi.");
             }
 
-            // Sukses
             setShowPopup(true);
 
         } catch (err: any) {
@@ -117,7 +108,6 @@ const RegisterSppgPage = () => {
     return (
         <section className="flex flex-row h-screen w-full bg-white relative">
 
-            {/* Popup Sukses */}
             {showPopup && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="bg-white w-[40vw] rounded-[1.5vw] p-[3vw] flex flex-col items-center justify-center gap-[1.5vw] shadow-2xl animate-in zoom-in duration-300">
@@ -143,10 +133,8 @@ const RegisterSppgPage = () => {
                 <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
             </div>
 
-            {/* Sisi Kanan */}
             <div className="flex flex-col w-[60vw] h-full items-center justify-start pt-[4vw] px-[8vw] gap-[3vw] relative overflow-y-auto pb-[5vw]">
 
-                {/* Progress Bar */}
                 <div className="w-full flex flex-row items-center gap-[1vw] ">
                     <div className="w-full h-[0.8vw] bg-[#FADEC9] rounded-full overflow-hidden">
                         <div className={`h-full bg-[#B56225] transition-all duration-500 ease-in-out ${step === 1 ? 'w-1/2' : 'w-full'}`}></div>
@@ -159,7 +147,6 @@ const RegisterSppgPage = () => {
                     <p className="satoshiMedium text-[#B56225] text-[1.5vw]">Daftar SPPG untuk Bergabung!</p>
                 </div>
 
-                {/* Error Message */}
                 {apiError && (
                     <div className="w-full bg-red-100 border border-red-400 text-red-700 px-[1vw] py-[0.8vw] rounded-[0.5vw] text-center satoshiMedium text-[1vw]">
                         {apiError}
@@ -168,7 +155,6 @@ const RegisterSppgPage = () => {
 
                 <div className="w-full flex flex-col gap-[1vw] ">
 
-                    {/* STEP 1: Identitas Instansi & Akun */}
                     {step === 1 && (
                         <>
                             <h3 className="satoshiBold text-[#E87E2F] text-[1.5vw] mb-[0.5vw]">Identitas Instansi SPPG</h3>
@@ -200,7 +186,6 @@ const RegisterSppgPage = () => {
                                 error={errors.alamat}
                             />
 
-                            {/* FIELD AKUN (Wajib untuk API) */}
                             <InputGroup
                                 label="Email Instansi "
                                 name="email"
@@ -226,7 +211,6 @@ const RegisterSppgPage = () => {
                         </>
                     )}
 
-                    {/* STEP 2: Penanggung Jawab */}
                     {step === 2 && (
                         <>
                             <h3 className="satoshiBold text-[#E87E2F] text-[1.5vw] mb-[0.5vw]">Identitas Penanggung Jawab</h3>
@@ -287,7 +271,6 @@ const RegisterSppgPage = () => {
     );
 }
 
-// Reusable Input Component
 interface InputGroupProps {
     label: string;
     placeholder: string;

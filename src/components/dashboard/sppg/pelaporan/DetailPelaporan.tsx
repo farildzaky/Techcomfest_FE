@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 
-// Data Dummy Laporan dari Sekolah
 const DATA_PELAPORAN = [
     { 
         id: 1, no: 1, tanggal: "4", bulan: "Januari", tahun: "2026", 
@@ -40,15 +39,13 @@ const DetailPelaporanSekolahSppg = () => {
     const router = useRouter();
     const params = useParams();
     
-    // Anggap kita ambil nama sekolah dari ID atau API nantinya
-    // Untuk dummy, kita hardcode atau pakai ID untuk simulasi
+
     const schoolName = "SLB-B YTPB Malang"; 
 
     const [selectedItem, setSelectedItem] = useState<any>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4; 
 
-    // Filter States
     const [selectedDate, setSelectedDate] = useState("Tanggal");
     const [selectedMonth, setSelectedMonth] = useState("Bulan");
     const [selectedYear, setSelectedYear] = useState("Tahun");
@@ -58,7 +55,6 @@ const DetailPelaporanSekolahSppg = () => {
     const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const years = ["2025", "2026", "2027"];
 
-    // Filter Logic
     const filteredData = DATA_PELAPORAN.filter(item => {
         const matchDate = selectedDate === "Tanggal" || item.tanggal === selectedDate;
         const matchMonth = selectedMonth === "Bulan" || item.bulan === selectedMonth;
@@ -66,7 +62,6 @@ const DetailPelaporanSekolahSppg = () => {
         return matchDate && matchMonth && matchYear;
     });
 
-    // Pagination Logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
@@ -87,13 +82,11 @@ const DetailPelaporanSekolahSppg = () => {
     return (
         <div className="w-full min-h-screen p-[3vw] flex flex-col font-sans relative" onClick={() => setOpenDropdown(null)}>
             
-            {/* Header: Judul & Nama Sekolah */}
             <div className="mb-[2vw]">
                 <h1 className="satoshiBold text-[2.5vw] text-black">Pelaporan Sekolah</h1>
                 <h2 className="satoshiMedium text-[1.5vw] text-gray-600">{schoolName}</h2>
             </div>
 
-            {/* Filter Section */}
             <div className="flex gap-[1.5vw] mb-[2vw] relative z-20" onClick={(e) => e.stopPropagation()}>
                 <CustomDropdown 
                     label={selectedDate} 
@@ -118,7 +111,6 @@ const DetailPelaporanSekolahSppg = () => {
                 />
             </div>
 
-            {/* Tabel Data */}
             <div className="w-full bg-[#E87E2F] rounded-[1.5vw] overflow-hidden border-[0.2vw] border-[#E87E2F] relative z-10">
                 <div className="flex bg-[#E87E2F] text-white">
                     <div className="w-[10%] py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-[1.5vw]">No</div>
@@ -165,7 +157,6 @@ const DetailPelaporanSekolahSppg = () => {
                 </div>
             </div>
 
-            {/* Pagination Info */}
             {totalPages > 0 && (
                 <div className="flex justify-end mt-[1vw] mb-[2vw]">
                     <div className="flex items-center gap-[1vw]">
@@ -192,9 +183,6 @@ const DetailPelaporanSekolahSppg = () => {
                 </div>
             )}
 
-            {/* Note: Tombol "Laporkan Menu" dihilangkan di halaman SPPG karena SPPG hanya menerima laporan */}
-
-            {/* Popup Detail */}
             {selectedItem && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-[3vw]">
                     <div className="bg-[#E87E2F] w-[50vw] rounded-[2vw] p-[3vw] shadow-2xl relative flex flex-col gap-[1.5vw]">

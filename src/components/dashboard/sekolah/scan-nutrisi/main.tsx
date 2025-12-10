@@ -7,12 +7,10 @@ import bg from "../../../../assets/bg.png";
 import loadingSpinner from "../../../../assets/loading.png"; 
 import jam from "../../../../assets/dashboard/sppg/jam.png"; 
 import { fetchWithAuth } from '@/src/lib/api';
-// --- CONFIGURATION ---
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 const COMPRESSION_QUALITY = 0.8;
 const MAX_IMG_WIDTH = 1024;
 
-// --- HELPERS ---
 const getCookie = (name: string) => {
     if (typeof document === 'undefined') return null;
     const value = `; ${document.cookie}`;
@@ -77,15 +75,12 @@ const ScanNutrisiMain = () => {
             const token = getCookie('accessToken'); 
             if (!token) throw new Error("Sesi habis, silakan login ulang.");
 
-            // 1. Kompresi
             const compressedBlob = await compressImage(fileObj);
             const compressedFile = new File([compressedBlob], fileObj.name, { type: 'image/jpeg' });
 
-            // 2. Prepare FormData
             const formData = new FormData();
             formData.append('image', compressedFile); 
 
-            // 3. Upload (Native Fetch)
             const response = await fetchWithAuth("/school/food-scans", {
                 method: "POST",
                 headers: { "Authorization": `Bearer ${token}` },
@@ -96,7 +91,6 @@ const ScanNutrisiMain = () => {
 
             if (!response.ok) throw new Error(responseJson.message || `Gagal: ${response.status}`);
             
-            // 4. Simpan & Redirect
             const scanResult = responseJson.data;
             const scanId = scanResult?.id || 'new'; 
 
@@ -116,7 +110,6 @@ const ScanNutrisiMain = () => {
     return (
         <div className="w-full h-screen px-[3vw] py-[2vw] flex flex-col gap-[1vw] relative">
             
-            {/* --- HEADER SECTION --- */}
             <div className="flex justify-between items-start">
                 <div className="flex flex-col gap-[0.5vw]">
                     <h1 className="satoshiBold text-[3vw] text-black leading-tight">
@@ -128,10 +121,8 @@ const ScanNutrisiMain = () => {
                     </p>
                 </div>
 
-                {/* --- TOMBOL RIWAYAT PEMINDAIAN (HOVER EFFECT) --- */}
                 <Link href="/sekolah/riwayat-scan" className="group flex items-center bg-white/50 backdrop-blur-sm rounded-full p-[0.5vw] hover:bg-white transition-all duration-500 shadow-sm border border-[#E87E2F]/20 h-fit">
                     <div className="w-[3vw] h-[3vw] flex items-center justify-center  transition-transform duration-700 ease-in-out group-hover:rotate-[360deg] shrink-0 relative">
-                        {/* Menggunakan Image jam.png */}
                         <Image 
                             src={jam} 
                             alt="Riwayat" 
@@ -145,7 +136,6 @@ const ScanNutrisiMain = () => {
                 </Link>
             </div>
 
-            {/* --- UPLOAD AREA --- */}
             <div className="relative w-[90%] h-[35vw] bg-[#E87E2F] rounded-[1.5vw] flex items-center justify-center overflow-hidden hover:opacity-95 transition-opacity cursor-pointer shadow-md mt-[1vw]">
                 {imagePreview ? (
                     <img src={imagePreview} alt="Preview Menu" className="w-full h-full object-cover" />
@@ -170,7 +160,6 @@ const ScanNutrisiMain = () => {
 
             {fileName && <p className="text-[1.2vw] text-gray-600 italic mt-[0.5vw]">File terpilih: <span className="text-[#E87E2F] font-bold">{fileName}</span></p>}
 
-            {/* --- ACTION BUTTON --- */}
             <div className="flex justify-end mt-[1vw]">
                 <button
                     onClick={handleKirim}
@@ -183,7 +172,6 @@ const ScanNutrisiMain = () => {
                 </button>
             </div>
             
-            {/* --- MODAL LOADING --- */}
             {loading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="relative bg-white rounded-[2vw] p-[3vw] w-[35vw] shadow-2xl flex flex-col items-center text-center">

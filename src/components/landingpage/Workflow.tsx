@@ -38,7 +38,6 @@ const Workflow = () => {
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             
-            // Memaksa refresh layout agar posisi scroll trigger akurat
             ScrollTrigger.refresh();
 
             const itemElements = gsap.utils.toArray<HTMLElement>('.workflow-item');
@@ -47,16 +46,14 @@ const Workflow = () => {
                 const content = el.querySelector(".content-group");
                 const icon = el.querySelector(".icon-wrapper");
 
-                // Timeline untuk Item List (Kanan)
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: el,
-                        start: "top 90%", // Trigger lebih awal (90% dari viewport) agar lebih cepat muncul
+                        start: "top 90%", 
                         toggleActions: "play none none reverse"
                     }
                 });
 
-                // PERBAIKAN: Gunakan fromTo agar state akhirnya (scale 1) terjamin
                 tl.fromTo(icon, 
                     { scale: 0, opacity: 0 }, 
                     { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }
@@ -67,7 +64,6 @@ const Workflow = () => {
                     "-=0.3"
                 );
 
-                // Animasi Garis
                 const line = el.querySelector(".dashed-line");
                 if (line) {
                     gsap.fromTo(line, 
@@ -86,7 +82,6 @@ const Workflow = () => {
                 }
             });
 
-            // Timeline Parallax Kiri
             const tlParallax = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
@@ -111,7 +106,6 @@ const Workflow = () => {
 
             <div className="w-full px-[6vw] flex flex-row items-start gap-[15vw] relative">
 
-                {/* BAGIAN KIRI */}
                 <div className="w-[30vw] h-fit sticky top-[20vh] relative mt-[2vw]">
                     <div className="mock-1 relative z-0">
                         <Image 
@@ -131,20 +125,14 @@ const Workflow = () => {
                     </div>
                 </div>
 
-                {/* BAGIAN KANAN */}
                 <div className="flex flex-col w-[40vw] pt-[5vw]">
                     {items.map((item, index) => (
                         <div key={index} className="flex flex-row gap-[3vw] workflow-item relative">
                             <div className="flex flex-col items-center">
 
-                                {/* ICON WRAPPER */}
                                 <div className="icon-wrapper group flex justify-center items-center w-[8vw] h-[8vw] bg-[#E87E2F] border-[0.2vw] border-[#E87E2F] hover:bg-white rounded-full z-10 shrink-0 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
                                     <div className="relative w-[4vw] h-[4vw]">
                                         
-                                        {/* IMAGE ICON
-                                            - Added 'sizes' prop: Agar browser tidak bingung merender ukuran fill
-                                            - Added 'priority': Agar dimuat instan bersama halaman (karena icon kecil)
-                                        */}
                                         <Image
                                             src={item.icon}
                                             alt="icon"

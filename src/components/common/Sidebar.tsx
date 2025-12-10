@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from '@/src/lib/api';
-// --- ASSET IMPORTS ---
 import scanWhite from "../../assets/common/sidebar/scan-white.png";
 import scanOrange from "../../assets/common/sidebar/scan-orange.png";
 import reportWhite from "../../assets/common/sidebar/report-white.png";
@@ -18,7 +17,6 @@ import riwayatWhite from "../../assets/common/sidebar/riwayat-white.png";
 import riwayatOrange from "../../assets/common/sidebar/riwayat-orange.png";
 import logout from "../../assets/common/sidebar/logout.png";
 
-// --- INTERFACE PROFIL SEKOLAH ---
 interface DisabilityType {
     jenis_disabilitas: string;
     jumlah_siswa: number;
@@ -30,7 +28,6 @@ interface SchoolProfileData {
     disability_types: DisabilityType[];
     photo_url: string | null;
 }
-// ------------------------------
 
 
 const Sidebar = () => {
@@ -43,7 +40,6 @@ const Sidebar = () => {
     const [loadingProfile, setLoadingProfile] = useState(true);
 
 
-    // --- FETCH DATA PROFIL SEKOLAH ---
     useEffect(() => {
         const loadProfile = async () => {
             try {
@@ -77,7 +73,6 @@ const Sidebar = () => {
 
         loadProfile();
     }, []);
-    // --- END FETCH DATA ---
 
     const menuItems = [
         {
@@ -134,7 +129,6 @@ const Sidebar = () => {
         }
     };
 
-    // --- SKELETON LOADING STATE ---
     if (loadingProfile) {
         return (
             <div className="min-h-screen flex flex-col bg-[#E87E2F] rounded-tr-[4vw] rounded-br-[4vw] overflow-hidden sticky top-0"
@@ -142,25 +136,19 @@ const Sidebar = () => {
                     boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)"
                 }}
             >
-                {/* Profile Section Skeleton */}
                 <div className="w-full py-[1vw] flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-[1vw] animate-pulse">
-                    {/* Avatar Skeleton */}
                     <div className="w-[10vw] h-[10vw] bg-gray-400 rounded-full shrink-0" />
 
                     <div className="flex flex-col px-[1vw] gap-[0.5vw] items-center">
-                        {/* Name Line Skeleton */}
                         <div className="h-[1.8vw] w-[12vw] bg-gray-400 rounded" />
 
                         <div className="text-[1.1vw] opacity-90 mt-[0.5vw] flex flex-col gap-[0.2vw] items-center">
-                            {/* Category Line Skeleton */}
                             <div className="h-[1vw] w-[10vw] bg-gray-400 rounded" />
-                            {/* Student Count Line Skeleton */}
                             <div className="h-[1vw] w-[6vw] bg-gray-400 rounded" />
                         </div>
                     </div>
                 </div>
 
-                {/* Menu Items Skeleton */}
                 <div className="flex flex-col gap-[0.5vw] mt-[1vw] pr-[2vw] px-[1vw]">
                     {menuItems.map((_, i) => (
                         <div key={i} className="flex items-center p-[1.2vw] rounded-r-[2vw]">
@@ -169,14 +157,12 @@ const Sidebar = () => {
                     ))}
                 </div>
 
-                {/* Logout Skeleton */}
                 <div className="flex flex-row justify-center items-center px-[2vw] mt-auto mb-[2vw] border-t-[0.1vw] border-white pt-[1vw]">
                     <div className="h-[1.5vw] w-[80%] bg-gray-400/50 rounded" />
                 </div>
             </div>
         );
     }
-    // --- END SKELETON LOADING STATE ---
 
 
     return (
@@ -186,10 +172,8 @@ const Sidebar = () => {
             }}
         >
 
-            {/* --- Profile Section --- */}
             <div className="w-full py-[1vw] flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-[1vw]">
 
-                {/* Photo URL / Placeholder */}
                 <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0 relative overflow-hidden">
                     {profile?.photoUrl ? (
                         <Image
@@ -200,7 +184,6 @@ const Sidebar = () => {
                             className="rounded-full"
                         />
                     ) : (
-                        // Default Avatar (Jika tidak ada foto)
                         <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-[5vw] h-[5vw]">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -210,7 +193,6 @@ const Sidebar = () => {
                 </div>
 
                 <div className="flex flex-col px-[1vw]">
-                    {/* Data Dinamis */}
                     <h1 className="text-[1.8vw] leading-tight">{profile?.name || "Nama Sekolah"}</h1>
                     <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
                         <p>{profile?.categories || "Jenis Disabilitas"}</p>
@@ -258,7 +240,6 @@ const Sidebar = () => {
                 })}
             </div>
 
-            {/* logout (Tombol aksi) */}
             <div className="flex flex-row justify-center items-center px-[2vw] mt-auto mb-[2vw] border-t-[0.1vw] border-white pt-[1vw]">
                 <button
                     onClick={handleLogout}

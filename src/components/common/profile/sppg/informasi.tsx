@@ -1,18 +1,16 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { fetchWithAuth } from '@/src/lib/api'; 
-// --- Imports Tambahan untuk Modal Loading ---
 import Image from 'next/image';
 import bg from "../../../../assets/bg.png"; 
 import loadingSpinner from "../../../../assets/loading.png"; 
-// ------------------------------------------
 
 const InformasiInstansiPage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [loadingData, setLoadingData] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false); 
-    const [successMessage, setSuccessMessage] = useState<string | null>(null); // State untuk konfirmasi sukses
+    const [successMessage, setSuccessMessage] = useState<string | null>(null); 
 
     const [formData, setFormData] = useState({
         namaInstansi: "",
@@ -23,7 +21,6 @@ const InformasiInstansiPage = () => {
         nomorKontak: ""
     });
 
-    // --- FUNGSI FETCH DATA PROFIL ---
     useEffect(() => {
         const loadProfileData = async () => {
             try {
@@ -38,7 +35,6 @@ const InformasiInstansiPage = () => {
                 const profile = result.data.profile_data || {};
                 const userEmail = result.data.email || ''; 
                 
-                // Inisialisasi form dengan data API
                 setFormData({
                     namaInstansi: profile.nama_instansi || '',
                     wilayahKerja: profile.wilayah_kerja || '',
@@ -63,23 +59,18 @@ const InformasiInstansiPage = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // --- FUNGSI TUTUP MODAL SUKSES ---
     const handleSuccessConfirm = () => {
         setSuccessMessage(null);
-        // Setelah simpan, form akan tetap terisi data yang baru dan keluar dari mode edit
         setIsEditing(false); 
     };
 
-    // --- FUNGSI SIMPAN (PATCH REQUEST) ---
     const handleSave = async () => {
-        setIsSaving(true); // START LOADING MODAL
+        setIsSaving(true); 
         try {
-            // Mengubah method menjadi PATCH
             const response = await fetchWithAuth("/profile", {
                 method: "PATCH", 
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    // Mengirim hanya field yang relevan untuk update profile_data
                     nama_instansi: formData.namaInstansi,
                     wilayah_kerja: formData.wilayahKerja,
                     alamat: formData.alamat,
@@ -93,17 +84,15 @@ const InformasiInstansiPage = () => {
                 throw new Error(errorData.message || "Gagal menyimpan perubahan.");
             }
 
-            // Ganti alert dengan modal sukses
             setSuccessMessage("Data profil instansi berhasil diperbarui!");
 
         } catch (error: any) {
-            alert(error.message); // Gunakan alert untuk error
+            alert(error.message); 
         } finally {
-            setIsSaving(false); // STOP LOADING MODAL
+            setIsSaving(false); 
         }
     };
 
-    // --- RENDER KONDISIONAL ---
     if (loadingData) {
         return <div className="w-full min-h-screen flex justify-center items-center bg-[#D9833E] text-white satoshiBold text-[2vw]">Memuat informasi instansi...</div>;
     }
@@ -139,7 +128,6 @@ const InformasiInstansiPage = () => {
 
                 <div className="flex flex-col gap-[1.5vw] w-[80%]">
                     
-                    {/* EMAIL (ReadOnly) */}
                     <div className="flex flex-col gap-[0.5vw]">
                         <label className="satoshiBold text-[1.2vw] text-white">Email</label>
                         <input 
@@ -152,7 +140,6 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-                    {/* Nama Instansi */}
                     <div className="flex flex-col gap-[0.5vw]">
                         <label className="satoshiBold text-[1.2vw] text-white">Nama Instansi</label>
                         <input 
@@ -169,7 +156,6 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-                    {/* Wilayah Kerja */}
                     <div className="flex flex-col gap-[0.5vw]">
                         <label className="satoshiBold text-[1.2vw] text-white">Wilayah Kerja</label>
                         <input 
@@ -186,7 +172,6 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-                    {/* Penanggung Jawab */}
                     <div className="flex flex-col gap-[0.5vw]">
                         <label className="satoshiBold text-[1.2vw] text-white">Penanggung Jawab</label>
                         <input 
@@ -203,7 +188,6 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-                    {/* Nomor Kontak */}
                     <div className="flex flex-col gap-[0.5vw]">
                         <label className="satoshiBold text-[1.2vw] text-white">Nomor Kontak</label>
                         <input 
@@ -221,7 +205,6 @@ const InformasiInstansiPage = () => {
                     </div>
 
 
-                    {/* Alamat */}
                     <div className="flex flex-col gap-[0.5vw]">
                         <label className="satoshiBold text-[1.2vw] text-white">Alamat</label>
                         <input 
@@ -256,12 +239,10 @@ const InformasiInstansiPage = () => {
 
             </div>
             
-            {/* --- MODAL LOADING (Sedang Diproses) --- */}
             {isSaving && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="relative bg-white rounded-[2vw] p-[3vw] w-[35vw] shadow-2xl flex flex-col items-center text-center">
                         
-                        {/* Ikon Loading */}
                         <div className="relative w-[12vw] h-[12vw] flex items-center justify-center">
                             <Image 
                                 src={bg} 
@@ -276,7 +257,6 @@ const InformasiInstansiPage = () => {
                             />
                         </div>
                         
-                        {/* Text */}
                         <h3 className="satoshiBold text-[2.5vw] text-[#E87E2F] mt-[2vw]">Sedang Diproses</h3>
                         <p className="satoshiMedium text-[1.2vw] text-gray-500 mt-[0.5vw]">
                             Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
@@ -284,24 +264,19 @@ const InformasiInstansiPage = () => {
                     </div>
                 </div>
             )}
-            {/* --- END MODAL LOADING --- */}
-            
-            {/* --- MODAL SUKSES (Centang Hijau) --- */}
+
             {successMessage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="relative bg-white rounded-[1.5vw] p-[3vw] w-[28vw] shadow-2xl flex flex-col items-center text-center gap-[2vw]">
                         
-                        {/* Ikon Centang Hijau */}
                         <div className="w-[5vw] h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-green-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                         </div>
                         
-                        {/* Pesan Sukses */}
                         <h3 className="satoshiBold text-[1.8vw] text-gray-800">{successMessage}</h3>
                         
-                        {/* Tombol OK */}
                         <button
                             onClick={handleSuccessConfirm}
                             className="py-[0.8vw] px-[3vw] rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
@@ -311,7 +286,6 @@ const InformasiInstansiPage = () => {
                     </div>
                 </div>
             )}
-            {/* --- END MODAL SUKSES --- */}
         </div>
     );
 }

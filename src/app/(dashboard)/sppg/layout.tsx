@@ -26,7 +26,6 @@ export default function SppgLayout({
         );
     }
 
-    // Default: Tampilkan Sidebar
     return (
         <div className="grid grid-cols-6 min-h-screen w-full bg-white">
             <div className="col-span-1 sticky top-0 h-screen z-50">

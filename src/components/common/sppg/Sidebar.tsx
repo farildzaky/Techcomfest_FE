@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from "@/src/lib/api"; 
 
-// Assets
 import scanWhite from "../../../assets/common/sidebar/scan-white.png";
 import scanOrange from "../../../assets/common/sidebar/scan-orange.png";
 import reportWhite from "../../../assets/common/sidebar/report-white.png";
@@ -29,21 +28,17 @@ const SidebarSppg = () => {
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-    // State Profile
     const [profile, setProfile] = useState<ProfileData>({
         nama_instansi: "", 
         photo_url: null
     });
 
-    // State Count (Dinamis)
     const [schoolCount, setSchoolCount] = useState(0);
-    const [studentCount, setStudentCount] = useState(0); // Masih statis/dummy
+    const [studentCount, setStudentCount] = useState(0); 
 
-    // --- FETCH DATA (Profile & Total Schools) ---
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // 1. Fetch Profile
                 const resProfile = await fetchWithAuth("/profile");
                 if (resProfile.ok) {
                     const json = await resProfile.json();
@@ -57,13 +52,10 @@ const SidebarSppg = () => {
                     }
                 }
 
-                // 2. Fetch Total Schools (Ambil limit 1 saja cukup untuk metadata)
                 const resSchools = await fetchWithAuth("/sppg/schools?page=1&limit=1");
                 if (resSchools.ok) {
                     const jsonSchools = await resSchools.json();
-                    // Struktur: { data: [{ total_schools: 2, ... }, ...] }
                     if (jsonSchools.success && Array.isArray(jsonSchools.data) && jsonSchools.data.length > 0) {
-                        // Ambil total_schools dari item pertama
                         setSchoolCount(jsonSchools.data[0].total_schools || 0);
                     } else {
                         setSchoolCount(0);
@@ -141,7 +133,6 @@ const SidebarSppg = () => {
             }}
         >
             
-            {/* --- Profile Section --- */}
             <Link href="/sppg/profile/informasi-instansi" className="w-full block">
                 <div className="w-full py-[2vw] flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300">
                     
@@ -151,19 +142,17 @@ const SidebarSppg = () => {
                         </svg>
                     </div>
 
-                    {/* Foto Profil */}
                     <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative border-[0.2vw] border-white">
                         {profile.photo_url ? (
                             <Image 
                                 src={profile.photo_url}
                                 alt="Profil SPPG"
-                                fill // Menggunakan fill agar responsif
+                                fill 
                                 sizes="(max-width: 768px) 100vw, 10vw"
                                 className="object-cover"
                                 unoptimized={true} 
                             />
                         ) : (
-                            // Default Avatar (Jika tidak ada foto)
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-[5vw] h-[5vw]">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -178,14 +167,12 @@ const SidebarSppg = () => {
                         </h1>
                         
                         <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
-                            {/* Menampilkan Total Sekolah Dinamis */}
                             {schoolCount} Sekolah | {studentCount} Siswa 
                         </div>
                     </div>
                 </div>
             </Link>
 
-            {/* --- Menu Items --- */}
             <div className="flex flex-col gap-[0.5vw] mt-[1vw] pr-[2vw]">
                 {menuItems.map((item, index) => {
                     const isActive = pathname === item.href || pathname.startsWith(item.href);
@@ -223,7 +210,6 @@ const SidebarSppg = () => {
                 })}
             </div>
 
-            {/* --- Logout Section --- */}
             <div className="flex flex-row justify-center items-center px-[2vw] mt-auto mb-[2vw] border-t-[0.1vw] border-white pt-[1vw]">
                 <button
                     onClick={handleLogout}

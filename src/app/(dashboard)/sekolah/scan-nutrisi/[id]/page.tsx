@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api'; 
-import warning from '../../../../../assets/dashboard/sekolah/warning-orange.png'; // Pastikan path ini sesuai
+import warning from '../../../../../assets/dashboard/sekolah/warning-orange.png'; 
 
 interface ScanResultData {
     image_url: string;
@@ -33,13 +33,12 @@ interface ScanResultData {
 const HasilDeteksiPage = () => {
     const router = useRouter();
     const params = useParams(); 
-    // Mengambil ID dari URL jika ada (contoh: /sekolah/scan-nutrisi/123)
     const scanId = params?.id as string | undefined;
 
     const [loading, setLoading] = useState(true);
     const [imageSrc, setImageSrc] = useState<string>("");
     const [isEditing, setIsEditing] = useState(false);
-    const [isHistoryView, setIsHistoryView] = useState(false); // State untuk menandai mode riwayat
+    const [isHistoryView, setIsHistoryView] = useState(false); 
     
     const [menuData, setMenuData] = useState({
         namaMakanan: "",
@@ -60,12 +59,8 @@ const HasilDeteksiPage = () => {
         const loadData = async () => {
             setLoading(true);
 
-            // --- PERBAIKAN DISINI ---
-            // Cek: Apakah scanId ada DAN bukan string 'new'?
-            // Jika scanId adalah 'new', kita SKIP fetch API dan lanjut ke else (LocalStorage)
             if (scanId && scanId !== 'new') {
                 
-                // === MODE RIWAYAT (AMBIL DARI SERVER) ===
                 setIsHistoryView(true);
                 try {
                     const response = await fetchWithAuth(`/school/food-scans/${scanId}`, {
@@ -108,10 +103,9 @@ const HasilDeteksiPage = () => {
                     setLoading(false);
                 }
             } 
-            // === MODE SCAN BARU (AMBIL DARI LOCALSTORAGE) ===
-            // Masuk sini jika scanId tidak ada ATAU scanId === 'new'
+
             else {
-                setIsHistoryView(false); // Pastikan mode riwayat mati agar tombol Edit/Simpan muncul
+                setIsHistoryView(false);
                 
                 const storedResult = localStorage.getItem('scan_result_temp');
                 
@@ -141,15 +135,14 @@ const HasilDeteksiPage = () => {
                         confidence: parsedData.ml_confidence || 0
                     });
                 } else {
-                    // Opsional: Jika user akses /new tapi tidak ada data di storage, kembalikan ke halaman upload
-                    // router.push('/sekolah/scan-nutrisi');
+
                 }
                 setLoading(false);
             }
         };
 
         loadData();
-    }, [scanId]); // Dependency array tetap scanId
+    }, [scanId]); 
 
     const handleKomponenChange = (index: number, field: 'nama' | 'berat', value: string) => {
         const newKomponen = [...menuData.komponen];
@@ -268,7 +261,6 @@ const HasilDeteksiPage = () => {
                             ))}
                         </div>
 
-                        {/* Fitur Edit disembunyikan jika dalam Mode Riwayat (hanya view) */}
                         {!isHistoryView && !isEditing && (
                             <p onClick={() => setIsEditing(true)} className='text-white italic text-[1vw] hover:underline cursor-pointer opacity-90 flex ml-auto flex-row mt-[0.5vw]'>
                                 Edit Menu
@@ -344,7 +336,6 @@ const HasilDeteksiPage = () => {
 
             <div className='flex justify-between px-[3vw] items-center'>
                 
-                {/* --- ML CONFIDENCE --- */}
                 {menuData.confidence > 0 && (
                     <div className="bg-white/20 text-white px-[1.5vw] py-[0.5vw] rounded-full satoshiBold text-[1.1vw] flex items-center gap-[0.5vw]">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[1.2vw] h-[1.2vw]">
@@ -371,7 +362,6 @@ const HasilDeteksiPage = () => {
                                 Kembali
                             </button>
                             
-                            {/* Tombol Simpan hanya muncul jika BUKAN mode riwayat */}
                             {!isHistoryView && (
                                 <button
                                     onClick={handleSimpanHasil}
