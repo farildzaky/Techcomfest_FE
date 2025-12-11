@@ -10,46 +10,42 @@ interface MenuData {
     komponen_menu: string[] | string; 
 }
 
+// --- Skeleton Responsive ---
 const FormPelaporanSkeleton = () => {
     return (
-        <div className="w-full h-full p-[3vw] bg-white animate-pulse">
-            <div className="mb-[2.5vw]">
-                <div className="h-[3vw] w-[20vw] bg-gray-300 rounded mb-[0.5vw]"></div>
-                <div className="h-[1vw] w-[30vw] bg-gray-200 rounded"></div>
+        <div className="w-full min-h-screen p-4 md:p-6 lg:p-[3vw] bg-white animate-pulse">
+            {/* Header Skeleton */}
+            <div className="mb-6 lg:mb-[2.5vw]">
+                <div className="h-8 lg:h-[3vw] w-1/2 lg:w-[20vw] bg-gray-300 rounded mb-2 lg:mb-[0.5vw]"></div>
+                <div className="h-4 lg:h-[1vw] w-3/4 lg:w-[30vw] bg-gray-200 rounded"></div>
             </div>
 
-            <div className="flex gap-[4vw]">
-                <div className="flex-1 flex flex-col gap-[1.5vw]">
-                    <div>
-                        <div className="h-[1.2vw] w-[12vw] bg-gray-300 rounded mb-[0.5vw]"></div>
-                        <div className="h-[0.9vw] w-[18vw] bg-gray-200 rounded mb-[0.5vw]"></div>
-                        <div className="w-full h-[3.5vw] bg-gray-300 rounded-[0.8vw]"></div>
-                    </div>
-
-                    <div>
-                        <div className="h-[1.2vw] w-[12vw] bg-gray-300 rounded mb-[0.5vw]"></div>
-                        <div className="h-[0.9vw] w-[18vw] bg-gray-200 rounded mb-[0.5vw]"></div>
-                        <div className="w-full h-[3.5vw] bg-gray-300 rounded-[0.8vw]"></div>
-                    </div>
-
-                    <div>
-                        <div className="h-[1.2vw] w-[15vw] bg-gray-300 rounded mb-[0.5vw]"></div>
-                        <div className="h-[0.9vw] w-[20vw] bg-gray-200 rounded mb-[0.5vw]"></div>
-                        <div className="w-full h-[8vw] bg-gray-300 rounded-[0.8vw]"></div>
-                    </div>
+            {/* Content Skeleton: Flex Col on Mobile, Row on Desktop */}
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-[4vw]">
+                {/* Left Column */}
+                <div className="flex-1 flex flex-col gap-6 lg:gap-[1.5vw]">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i}>
+                            <div className="h-4 lg:h-[1.2vw] w-32 lg:w-[12vw] bg-gray-300 rounded mb-2 lg:mb-[0.5vw]"></div>
+                            <div className="h-3 lg:h-[0.9vw] w-48 lg:w-[18vw] bg-gray-200 rounded mb-2 lg:mb-[0.5vw]"></div>
+                            <div className={`w-full bg-gray-300 rounded-lg lg:rounded-[0.8vw] ${i === 3 ? 'h-32 lg:h-[8vw]' : 'h-12 lg:h-[3.5vw]'}`}></div>
+                        </div>
+                    ))}
                 </div>
 
+                {/* Right Column */}
                 <div className="flex-1 flex flex-col">
                      <div className="flex flex-col h-full">
-                        <div className="h-[1.2vw] w-[10vw] bg-gray-300 rounded mb-[0.5vw]"></div>
-                        <div className="h-[0.9vw] w-[22vw] bg-gray-200 rounded mb-[0.5vw]"></div>
-                        <div className="w-full flex-1 bg-gray-300 rounded-[0.8vw] min-h-[15vw]"></div>
+                        <div className="h-4 lg:h-[1.2vw] w-24 lg:w-[10vw] bg-gray-300 rounded mb-2 lg:mb-[0.5vw]"></div>
+                        <div className="h-3 lg:h-[0.9vw] w-56 lg:w-[22vw] bg-gray-200 rounded mb-2 lg:mb-[0.5vw]"></div>
+                        <div className="w-full flex-1 bg-gray-300 rounded-lg lg:rounded-[0.8vw] min-h-[200px] lg:min-h-[15vw]"></div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex justify-end mt-[2.5vw]">
-                <div className="w-[10vw] h-[3.5vw] bg-gray-300 rounded-[2vw]"></div>
+            {/* Button Skeleton */}
+            <div className="flex justify-end mt-6 lg:mt-[2.5vw]">
+                <div className="w-full lg:w-[10vw] h-12 lg:h-[3.5vw] bg-gray-300 rounded-full lg:rounded-[2vw]"></div>
             </div>
         </div>
     );
@@ -84,9 +80,7 @@ const FormPelaporan = () => {
                 if (response.ok) {
                     const result = await response.json();
                     const allMenus: MenuData[] = result.data || [];
-
                     const sortedMenus = allMenus.slice(0, 10); 
-
                     setMenuOptions(sortedMenus);
                 }
             } catch (error) {
@@ -168,15 +162,10 @@ const FormPelaporan = () => {
 
         setIsSubmitting(true);
         try {
-
             const combinedNote = `Komponen: ${formData.komponen}\n\nCatatan: ${formData.catatan}`;
-
             const payload = new FormData();
             payload.append('menu_id', formData.menuId);
-            
             payload.append('catatan', combinedNote);
-
-
             if (fileObj) {
                 payload.append('foto_menu', fileObj); 
             }
@@ -208,127 +197,159 @@ const FormPelaporan = () => {
     if (loadingMenu) return <FormPelaporanSkeleton />;
 
     return (
-        <div className="w-full h-full p-[3vw] bg-white">
+        // Wrapper Utama: Padding responsive (p-4 mobile, p-[3vw] desktop)
+        <div className="w-full min-h-screen p-4 md:p-6 lg:p-[3vw] bg-white">
             
-            <div className="mb-[2.5vw]">
-                <h1 className="satoshiBold text-[3vw] text-black leading-tight">Lapor Menu Makanan</h1>
-                <p className="satoshiMedium text-[1.1vw] text-black mt-[0.5vw]">
+            {/* Header Section */}
+            <div className="mb-6 lg:mb-[2.5vw]">
+                {/* Text Size Responsive: text-2xl mobile -> text-[3vw] desktop */}
+                <h1 className="satoshiBold text-2xl md:text-3xl lg:text-[3vw] text-black leading-tight">
+                    Lapor Menu Makanan
+                </h1>
+                <p className="satoshiMedium text-sm md:text-base lg:text-[1.1vw] text-black mt-2 lg:mt-[0.5vw]">
                     Pilih menu mingguan dan unggah bukti laporan.
                 </p>
             </div>
 
-            <div className="flex gap-[4vw]">
+            {/* Main Grid: Flex Col (Mobile) -> Flex Row (Desktop) */}
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-[4vw]">
                 
-                <div className="flex-1 flex flex-col gap-[1.5vw]">
+                {/* Left Column (Inputs) */}
+                <div className="flex-1 flex flex-col gap-5 lg:gap-[1.5vw]">
                     
+                    {/* Input Foto */}
                     <div>
-                        <label className="block satoshiBold text-[1.2vw] text-black mb-[0.2vw]">Foto Menu Makanan</label>
-                        <p className="satoshiMedium text-[0.9vw] text-gray-500 mb-[0.5vw]">Unggah foto menu (Opsional, Max 5MB)</p>
+                        <label className="block satoshiBold text-sm lg:text-[1.2vw] text-black mb-1 lg:mb-[0.2vw]">
+                            Foto Menu Makanan
+                        </label>
+                        <p className="satoshiMedium text-xs lg:text-[0.9vw] text-gray-500 mb-2 lg:mb-[0.5vw]">
+                            Unggah foto menu (Opsional, Max 5MB)
+                        </p>
                         
-                        <div className={`relative w-full border-[0.15vw] ${errors.file ? 'border-red-500' : 'border-[#E87E2F]'} rounded-[0.8vw] flex items-center px-[1vw] py-[0.8vw] cursor-pointer hover:bg-orange-50 transition-colors`}>
-                            <span className="text-[#E87E2F] mr-[0.8vw]">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[1.5vw] h-[1.5vw]">
+                        <div className={`relative w-full border-2 lg:border-[0.15vw] ${errors.file ? 'border-red-500' : 'border-[#E87E2F]'} rounded-lg lg:rounded-[0.8vw] flex items-center px-3 py-3 lg:px-[1vw] lg:py-[0.8vw] cursor-pointer hover:bg-orange-50 transition-colors`}>
+                            <span className="text-[#E87E2F] mr-3 lg:mr-[0.8vw]">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 lg:w-[1.5vw] lg:h-[1.5vw]">
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                                 </svg>
                             </span>
-                            <span className='bg-[#D7762E] w-[0.1vw] h-[1.5vw] mr-[0.5vw] '/>
-                            <span className={`satoshiMedium text-[1vw] truncate mr-[1vw] ${fotoName ? 'text-black' : 'text-gray-400'}`}>
+                            {/* Divider Line */}
+                            <span className='bg-[#D7762E] w-[1px] h-6 lg:w-[0.1vw] lg:h-[1.5vw] mr-3 lg:mr-[0.5vw]'/>
+                            
+                            <span className={`satoshiMedium text-sm lg:text-[1vw] truncate mr-2 lg:mr-[1vw] ${fotoName ? 'text-black' : 'text-gray-400'}`}>
                                 {fotoName || "Unggah dokumen .jpg, .png"}
                             </span>
                             <input type="file" accept=".jpg, .jpeg, .png" onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
                         </div>
-                        {errors.file && <p className="text-red-500 text-[0.9vw] mt-[0.3vw] satoshiMedium">{errors.file}</p>}
+                        {errors.file && <p className="text-red-500 text-xs lg:text-[0.9vw] mt-1 lg:mt-[0.3vw] satoshiMedium">{errors.file}</p>}
                         
                         {fotoPreview && (
-                            <div className="mt-[1vw] w-full h-[15vw] border-[0.15vw] border-[#E87E2F] rounded-[0.8vw] overflow-hidden bg-gray-100 flex items-center justify-center relative group">
+                            <div className="mt-3 lg:mt-[1vw] w-full h-48 lg:h-[15vw] border-2 lg:border-[0.15vw] border-[#E87E2F] rounded-lg lg:rounded-[0.8vw] overflow-hidden bg-gray-100 flex items-center justify-center relative group">
                                 <img src={fotoPreview} alt="Preview" className="w-full h-full object-cover"/>
-                                <button onClick={() => { setFotoName(""); setFotoPreview(null); setFileObj(null); }} className="absolute top-[0.5vw] right-[0.5vw] bg-red-500 text-white rounded-full p-[0.3vw] opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[1vw] h-[1vw]"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                                <button onClick={() => { setFotoName(""); setFotoPreview(null); setFileObj(null); }} className="absolute top-2 right-2 lg:top-[0.5vw] lg:right-[0.5vw] bg-red-500 text-white rounded-full p-1 lg:p-[0.3vw] opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-10">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 lg:w-[1vw] lg:h-[1vw]"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                                 </button>
                             </div>
                         )}
                     </div>
 
+                    {/* Dropdown Menu Utama */}
                     <div ref={dropdownRef} className="relative">
-                        <label className="block satoshiBold text-[1.2vw] text-black mb-[0.2vw]">Menu Makanan Utama</label>
-                        <p className="satoshiMedium text-[0.9vw] text-gray-500 mb-[0.5vw]">Pilih dari daftar menu (Mulai Senin)</p>
+                        <label className="block satoshiBold text-sm lg:text-[1.2vw] text-black mb-1 lg:mb-[0.2vw]">
+                            Menu Makanan Utama
+                        </label>
+                        <p className="satoshiMedium text-xs lg:text-[0.9vw] text-gray-500 mb-2 lg:mb-[0.5vw]">
+                            Pilih dari daftar menu (Mulai Senin)
+                        </p>
                         
                         <div 
                             onClick={() => !loadingMenu && setIsDropdownOpen(!isDropdownOpen)}
-                            className={`w-full px-[1vw] py-[0.8vw] rounded-[0.8vw] flex justify-between items-center border-[0.15vw] cursor-pointer hover:bg-orange-50 transition-colors ${formData.menuId ? 'border-[#E87E2F]' : 'border-[#E87E2F]'}`}
+                            className={`w-full px-3 py-3 lg:px-[1vw] lg:py-[0.8vw] rounded-lg lg:rounded-[0.8vw] flex justify-between items-center border-2 lg:border-[0.15vw] cursor-pointer hover:bg-orange-50 transition-colors ${formData.menuId ? 'border-[#E87E2F]' : 'border-[#E87E2F]'}`}
                         >
-                            <div className="flex flex-col">
+                            <div className="flex flex-col w-full">
                                 {formData.menuId ? (
-                                    <span className="satoshiMedium text-[1vw] opacity-90">{formData.menuUtama}</span>
+                                    <span className="satoshiMedium text-sm lg:text-[1vw] opacity-90 truncate">{formData.menuUtama}</span>
                                 ) : (
-                                    <span className={`satoshiMedium text-[1vw] truncate mr-[1vw] ${fotoName ? 'text-black' : 'text-gray-400'}`}>{loadingMenu ? "Memuat..." : "Pilih Menu Makanan"}</span>
+                                    <span className={`satoshiMedium text-sm lg:text-[1vw] truncate ${fotoName ? 'text-black' : 'text-gray-400'}`}>
+                                        {loadingMenu ? "Memuat..." : "Pilih Menu Makanan"}
+                                    </span>
                                 )}
                             </div>
                         </div>
 
                         {isDropdownOpen && (
-                            <div className="absolute z-10 top-full mt-[0.5vw] left-0 w-full bg-white border border-gray-200 rounded-[0.5vw] shadow-xl max-h-[15vw] overflow-y-auto">
+                            <div className="absolute z-20 top-full mt-2 lg:mt-[0.5vw] left-0 w-full bg-white border border-gray-200 rounded-lg lg:rounded-[0.5vw] shadow-xl max-h-60 lg:max-h-[15vw] overflow-y-auto">
                                 {menuOptions.length > 0 ? (
                                     menuOptions.map((menu) => (
                                         <div 
                                             key={menu.id}
                                             onClick={() => handleSelectMenu(menu)}
-                                            className="px-[1.5vw] py-[1vw] hover:bg-[#FFF3EB] cursor-pointer border-b border-gray-100 last:border-0 transition-colors group"
+                                            className="px-4 py-3 lg:px-[1.5vw] lg:py-[1vw] hover:bg-[#FFF3EB] cursor-pointer border-b border-gray-100 last:border-0 transition-colors group"
                                         >
-                                            <p className="satoshiBold text-[1.1vw] text-[#6A655F] group-hover:text-[#E87E2F]">
+                                            <p className="satoshiBold text-sm lg:text-[1.1vw] text-[#6A655F] group-hover:text-[#E87E2F]">
                                                 {menu.nama_menu}
                                             </p>
-                                            <p className="satoshiMedium text-[0.9vw] text-gray-400">
+                                            <p className="satoshiMedium text-xs lg:text-[0.9vw] text-gray-400">
                                                 {menu.tanggal}
                                             </p>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="p-[1.5vw] text-center text-gray-500 satoshiMedium text-[1vw]">
+                                    <div className="p-4 lg:p-[1.5vw] text-center text-gray-500 satoshiMedium text-sm lg:text-[1vw]">
                                         Tidak ada menu tersedia
                                     </div>
                                 )}
                             </div>
                         )}
                         
-                        {errors.menuId && <p className="text-red-500 text-[0.9vw] mt-[0.3vw] satoshiMedium">{errors.menuId}</p>}
+                        {errors.menuId && <p className="text-red-500 text-xs lg:text-[0.9vw] mt-1 lg:mt-[0.3vw] satoshiMedium">{errors.menuId}</p>}
                     </div>
 
+                    {/* Textarea Komponen */}
                     <div>
-                        <label className="block satoshiBold text-[1.2vw] text-black mb-[0.2vw]">Komponen Menu Makanan</label>
-                        <p className="satoshiMedium text-[0.9vw] text-gray-500 mb-[0.5vw]">Komponen menu (Otomatis terisi, silakan koreksi)</p>
+                        <label className="block satoshiBold text-sm lg:text-[1.2vw] text-black mb-1 lg:mb-[0.2vw]">
+                            Komponen Menu Makanan
+                        </label>
+                        <p className="satoshiMedium text-xs lg:text-[0.9vw] text-gray-500 mb-2 lg:mb-[0.5vw]">
+                            Komponen menu (Otomatis terisi, silakan koreksi)
+                        </p>
                         <textarea 
                              name="komponen"
                              value={formData.komponen}
                              onChange={handleInputChange}
                              placeholder="Pilih menu terlebih dahulu..."
-                             className={`w-full border-[0.15vw] ${errors.komponen ? 'border-red-500' : 'border-[#E87E2F]'} rounded-[0.8vw] px-[1vw] py-[0.8vw] satoshiMedium text-[1vw] outline-none placeholder-gray-300 h-[8vw] resize-none focus:ring-1 focus:ring-[#E87E2F]`}
+                             className={`w-full border-2 lg:border-[0.15vw] ${errors.komponen ? 'border-red-500' : 'border-[#E87E2F]'} rounded-lg lg:rounded-[0.8vw] px-3 py-3 lg:px-[1vw] lg:py-[0.8vw] satoshiMedium text-sm lg:text-[1vw] outline-none placeholder-gray-300 h-32 lg:h-[8vw] resize-none focus:ring-1 focus:ring-[#E87E2F]`}
                         />
-                        {errors.komponen && <p className="text-red-500 text-[0.9vw] mt-[0.3vw] satoshiMedium">{errors.komponen}</p>}
+                        {errors.komponen && <p className="text-red-500 text-xs lg:text-[0.9vw] mt-1 lg:mt-[0.3vw] satoshiMedium">{errors.komponen}</p>}
                     </div>
                 </div>
 
+                {/* Right Column (Catatan) */}
                 <div className="flex-1 flex flex-col">
                      <div className="flex flex-col h-full">
-                        <label className="block satoshiBold text-[1.2vw] text-black mb-[0.2vw]">Catatan</label>
-                        <p className="satoshiMedium text-[0.9vw] text-gray-500 mb-[0.5vw]">Masukkan catatan detail mengenai pelaporan ini</p>
+                        <label className="block satoshiBold text-sm lg:text-[1.2vw] text-black mb-1 lg:mb-[0.2vw]">
+                            Catatan
+                        </label>
+                        <p className="satoshiMedium text-xs lg:text-[0.9vw] text-gray-500 mb-2 lg:mb-[0.5vw]">
+                            Masukkan catatan detail mengenai pelaporan ini
+                        </p>
                         <textarea 
                              name="catatan"
                              value={formData.catatan}
                              onChange={handleInputChange}
                              placeholder="Tulis catatan di sini..."
-                             className={`w-full flex-1 border-[0.15vw] ${errors.catatan ? 'border-red-500' : 'border-[#E87E2F]'} rounded-[0.8vw] p-[1vw] satoshiMedium text-[1vw] outline-none placeholder-gray-300 resize-none focus:ring-1 focus:ring-[#E87E2F] min-h-[15vw]`}
+                             className={`w-full flex-1 border-2 lg:border-[0.15vw] ${errors.catatan ? 'border-red-500' : 'border-[#E87E2F]'} rounded-lg lg:rounded-[0.8vw] p-3 lg:p-[1vw] satoshiMedium text-sm lg:text-[1vw] outline-none placeholder-gray-300 resize-none focus:ring-1 focus:ring-[#E87E2F] min-h-[150px] lg:min-h-[15vw]`}
                         />
-                        {errors.catatan && <p className="text-red-500 text-[0.9vw] mt-[0.3vw] satoshiMedium">{errors.catatan}</p>}
+                        {errors.catatan && <p className="text-red-500 text-xs lg:text-[0.9vw] mt-1 lg:mt-[0.3vw] satoshiMedium">{errors.catatan}</p>}
                     </div>
                 </div>
             </div>
 
-            <div className="flex justify-end mt-[2.5vw]">
+            {/* Button Section */}
+            <div className="flex justify-end mt-6 lg:mt-[2.5vw]">
                 <button 
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className={`bg-[#E87E2F] text-white satoshiBold text-[1.3vw] py-[0.8vw] px-[5vw] rounded-[2vw] transition-all shadow-md 
+                    className={`w-full lg:w-auto bg-[#E87E2F] text-white satoshiBold text-lg lg:text-[1.3vw] py-3 lg:py-[0.8vw] px-8 lg:px-[5vw] rounded-xl lg:rounded-[2vw] transition-all shadow-md 
                         ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#b06a33] active:scale-95'}`}
                 >
                     {isSubmitting ? "Mengirim..." : "Kirim"}

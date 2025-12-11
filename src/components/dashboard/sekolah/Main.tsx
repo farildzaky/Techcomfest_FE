@@ -213,7 +213,7 @@ const MainDashboardSekolah = () => {
                 </div>
 
                 {/* Menu Minggu Depan */}
-                <h2 className="satoshiBold text-[4.5vw] lg:text-[2vw] mt-2 lg:mt-0">Menu Minggu Depan</h2>
+                <h2 className="satoshiBold text-[4.5vw] md:text-[3vw] lg:text-[2vw] mt-2 lg:mt-0">Menu Minggu Depan</h2>
                 <div className="bg-[#F5DDCA] p-4 lg:p-[2vw] rounded-2xl lg:rounded-[2vw]
 flex flex-row gap-4 lg:gap-[1vw]
 items-start pt-8 lg:pt-[4vw] min-h-[15vw] w-full
@@ -226,7 +226,7 @@ overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth
                             <Link
                                 key={item.id}
                                 href={`/sekolah/menu-mbg/${item.id}`}
-                                className="w-[30%] flex-shrink-0 lg:w-auto lg:flex-1 min-w-0 hover:scale-105 transition-transform duration-200"
+                                className="w-[30%] md:w-[22%] flex-shrink-0 lg:w-auto lg:flex-1 min-w-0 hover:scale-105 transition-transform duration-200"
                             >
                                 <CardMenu
                                     day={item.day}
@@ -242,30 +242,30 @@ overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth
                 </div>
 
                 {/* Tombol Aksi (Scan & Lapor) */}
-                <div className="flex flex-col lg:flex-row justify-center items-center w-full gap-4 lg:gap-[1vw] mt-2 lg:mt-0">
+                <div className="flex flex-col md:flex-row justify-center items-center w-full gap-4 lg:gap-[1vw] mt-2 lg:mt-0">
                     <Link
                         href="/sekolah/scan-nutrisi"
-                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-[95%] lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-[5vw] lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
+                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-[90%] md:w-[80%] h-[23vw] md:h-[15vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-[5vw] lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
                     >
-                        <div className="w-[24vw] h-[24vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-[-5vw] lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
+                        <div className="w-[24vw] h-[24vw]   md:w-[16vw] md:h-[16vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-[-7vw] md:left-[-5vw] lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
                             <Image src={scan} alt="scan icon" className="w-[10vw] h-[10vw] lg:w-[5vw] lg:h-[5vw]" />
                         </div>
                         <div className="w-[70%] lg:w-[15vw] items-start">
-                            <h1 className="satoshiBold text-[4.5vw] lg:text-[1.5vw]">Scan Nutrisi</h1>
-                            <p className="satoshiMedium text-[3vw] lg:text-[1vw] text-justify">Unggah foto menu makanan untuk cek gizi, tekstur, dan potensi alergi secara otomatis.</p>
+                            <h1 className="satoshiBold text-[4.5vw] md:text-[2.5vw] lg:text-[1.5vw]">Scan Nutrisi</h1>
+                            <p className="satoshiMedium text-[3vw] md:text-[1.5vw] lg:text-[1vw] ">Unggah foto menu makanan untuk cek gizi, tekstur, dan potensi alergi secara otomatis.</p>
                         </div>
                     </Link>
 
                     <Link
                         href="/sekolah/pelaporan"
-                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-[95%] lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-[5vw] lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
+                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-[90%] md:w-[80%] h-[23vw] md:h-[15vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-[5vw] lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
                     >
-                        <div className="w-[24vw] h-[24vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-[-5vw] lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
+                        <div className="w-[24vw] h-[24vw] md:w-[16vw] md:h-[16vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-[-7vw] md:left-[-5vw] lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
                             <Image src={report} alt="report icon" className="w-[10vw] h-[10vw] lg:w-[5vw] lg:h-[5vw]" />
                         </div>
                         <div className="w-[70%] lg:w-[15vw] items-start ">
-                            <h1 className="satoshiBold text-[4.5vw] lg:text-[1.5vw]">Pelaporan</h1>
-                            <p className="satoshiMedium text-[3vw] lg:text-[1vw]">Laporkan menu yang tidak sesuai dengan kebutuhan siswa secara cepat ke pihak SPPG.</p>
+                            <h1 className="satoshiBold text-[4.5vw] lg:text-[1.5vw] md:text-[2.5vw]">Pelaporan</h1>
+                            <p className="satoshiMedium text-[3vw] lg:text-[1vw] md:text-[1.5vw] ">Laporkan menu yang tidak sesuai dengan kebutuhan siswa secara cepat ke pihak SPPG.</p>
                         </div>
                     </Link>
                 </div>
