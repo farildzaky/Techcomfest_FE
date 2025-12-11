@@ -199,7 +199,7 @@ const MainDashboardSekolah = () => {
     }
 
     return (
-        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-4 lg:pb-[1vw]">
+        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-4 lg:pb-[1vw] overflow-hidden">
             
             {/* Bagian Kiri (Konten Utama) */}
             <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col">
@@ -217,17 +217,21 @@ const MainDashboardSekolah = () => {
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
                     <div className="flex flex-col w-[55%] py-4 lg:py-0">
-                        <h1 className="satoshiBold text-xl lg:text-[2.5vw] text-white leading-tight mb-2 lg:mb-0">Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif</h1>
-                        <p className="satoshiMedium text-xs lg:text-[1.3vw] text-white">Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.</p>
+                        <h1 className="satoshiBold text-[4vw] lg:text-[2.5vw] text-white leading-tight mb-2 lg:mb-0">Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif</h1>
+                        <p className="satoshiMedium text-[2vw] lg:text-[1.3vw] text-white">Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.</p>
                     </div>
-                    <div className="w-[45%] relative h-32 lg:h-auto">
+                    <div className="w-[45%] relative  h-auto">
                          <Image src={menuImg} alt="menu image" className="object-contain w-full h-full" />
                     </div>
                 </div>
 
                 {/* Menu Minggu Depan */}
-                <h2 className="satoshiBold text-xl lg:text-[2vw] mt-2 lg:mt-0">Menu Minggu Depan</h2>
-                <div className="bg-[#F5DDCA] p-4 lg:p-[2vw] rounded-2xl lg:rounded-[2vw] flex flex-row gap-4 lg:gap-[1vw] items-start pt-8 lg:pt-[4vw] min-h-[15vw] w-full shadow-md lg:shadow-none"
+                <h2 className="satoshiBold text-[4vw] lg:text-[2vw] mt-2 lg:mt-0">Menu Minggu Depan</h2>
+                <div className="bg-[#F5DDCA] p-4 lg:p-[2vw] rounded-2xl lg:rounded-[2vw] 
+                    flex flex-row gap-4 lg:gap-[1vw] 
+                    items-start pt-8 lg:pt-[4vw] min-h-[15vw] w-full 
+                    shadow-md lg:shadow-none
+                    overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth & hidden scrollbar
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
                     {menus.length > 0 ? (
@@ -235,7 +239,7 @@ const MainDashboardSekolah = () => {
                             <Link
                                 key={item.id}
                                 href={`/sekolah/menu-mbg/${item.id}`}
-                                className="w-full lg:flex-1 min-w-0 hover:scale-105 transition-transform duration-200"
+                                className="w-[30%] flex-shrink-0 lg:w-auto lg:flex-1 min-w-0 hover:scale-105 transition-transform duration-200"
                             >
                                 <CardMenu
                                     day={item.day}
@@ -254,27 +258,27 @@ const MainDashboardSekolah = () => {
                 <div className="flex flex-col lg:flex-row justify-center items-center w-full gap-4 lg:gap-[1vw] mt-2 lg:mt-0">
                     <Link 
                         href="/sekolah/scan-nutrisi" 
-                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-full lg:w-[80%] h-24 lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-0 lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
+                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-full lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-0 lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
                     >
-                        <div className="w-20 h-20 lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-4 lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
-                            <Image src={scan} alt="scan icon" className="w-10 h-10 lg:w-[5vw] lg:h-[5vw]" />
+                        <div className="w-[20vw] h-[20vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-6 lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
+                            <Image src={scan} alt="scan icon" className="w-[10vw] h-[10vw] lg:w-[5vw] lg:h-[5vw]" />
                         </div>
-                        <div className="w-[60%] lg:w-[15vw] items-start pl-16 lg:pl-0">
-                            <h1 className="satoshiBold text-lg lg:text-[1.5vw]">Scan Nutrisi</h1>
-                            <p className="satoshiMedium text-xs lg:text-[1vw] text-justify">Unggah foto menu makanan untuk cek gizi, tekstur, dan potensi alergi secara otomatis.</p>
+                        <div className="w-[60%] lg:w-[15vw] items-start">
+                            <h1 className="satoshiBold text-[4vw] lg:text-[1.5vw]">Scan Nutrisi</h1>
+                            <p className="satoshiMedium text-[2vw] lg:text-[1vw] text-justify">Unggah foto menu makanan untuk cek gizi, tekstur, dan potensi alergi secara otomatis.</p>
                         </div>
                     </Link>
 
                     <Link 
                         href="/sekolah/pelaporan" 
-                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-full lg:w-[80%] h-24 lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-0 lg:ml-[4vw] pr-4 lg:pr-[1vw] text-justify cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
+                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-full lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-0 lg:ml-[4vw] pr-4 lg:pr-[1vw] text-justify cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
                     >
-                        <div className="w-20 h-20 lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-4 lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
-                            <Image src={report} alt="report icon" className="w-10 h-10 lg:w-[5vw] lg:h-[5vw]" />
+                        <div className="w-[20vw] h-[20vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-6 lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
+                            <Image src={report} alt="report icon" className="w-[10vw] h-[10vw] lg:w-[5vw] lg:h-[5vw]" />
                         </div>
-                        <div className="w-[60%] lg:w-[15vw] items-start pl-16 lg:pl-0">
-                            <h1 className="satoshiBold text-lg lg:text-[1.5vw]">Pelaporan</h1>
-                            <p className="satoshiMedium text-xs lg:text-[1vw]">Laporkan menu yang tidak sesuai dengan kebutuhan siswa secara cepat ke pihak SPPG.</p>
+                        <div className="w-[60%] lg:w-[15vw] items-start ">
+                            <h1 className="satoshiBold text-[4vw] lg:text-[1.5vw]">Pelaporan</h1>
+                            <p className="satoshiMedium text-[2vw] lg:text-[1vw]">Laporkan menu yang tidak sesuai dengan kebutuhan siswa secara cepat ke pihak SPPG.</p>
                         </div>
                     </Link>
                 </div>
@@ -283,7 +287,7 @@ const MainDashboardSekolah = () => {
             {/* Bagian Kanan (Sidebar Info) */}
             <div className="lg:col-span-2 px-4 lg:pr-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col mb-8 lg:mb-0">
                 <div className="w-full text-2xl lg:text-[4vw] satoshiBold lg:flex lg:flex-row hidden items-center justify-center lg:justify-start ">
-                    <Image src={logoOrange} alt="logo" className="w-12 lg:w-[5vw] mr-2 lg:mr-[1vw]" />
+                    <Image src={logoOrange} alt="logo" className="w-12 lg:w-[5vw] mr-2 lg:mr-[0.5vw]" />
                     <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
                 </div>
 
@@ -304,10 +308,10 @@ const MainDashboardSekolah = () => {
                     ))}
                 </div>
 
-                <div className="bg-[#E87E2F] rounded-2xl lg:rounded-[2vw] p-4 lg:p-[1.5vw] flex flex-col items-center shadow-md lg:shadow-none"
+                <div className="bg-[#E87E2F] rounded-2xl lg:rounded-[2vw] p-4 gap-[0.5vw] lg:p-[1vw] flex flex-col items-center shadow-md lg:shadow-none"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
-                    <h1 className="text-white satoshiBold text-3xl lg:text-[2vw]">{riskPercentage}%</h1>
+                    <h1 className="text-white satoshiBold text-3xl lg:text-[3vw]">{riskPercentage}%</h1>
                     <h2 className="text-white satoshiBold text-base lg:text-[1.5vw] text-center">Siswa Memiliki Risiko Menu</h2>
                 </div>
 
