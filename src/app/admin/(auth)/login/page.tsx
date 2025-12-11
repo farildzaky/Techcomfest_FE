@@ -110,7 +110,7 @@ const LoginAdmin = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full text-white satoshiBold text-[1.5vw] py-[1vw] rounded-[0.8vw] mt-[1vw] transition-colors duration-300 shadow-md
+                        className={`w-full text-white cursor-pointer satoshiBold text-[1.5vw] py-[1vw] rounded-[0.8vw] mt-[1vw] transition-colors duration-300 shadow-md
                             ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#D9833E] hover:bg-[#c27233]'}
                         `}
                     >

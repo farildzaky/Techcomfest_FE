@@ -406,7 +406,7 @@ const DetailMenu = () => {
                     </div>
 
                     <button
-                        onClick={() => router.push('/sekolah/menu-mbg')}
+                        onClick={() => router.back()} 
                         className="bg-[#D7762E] text-white rounded-[2vw] px-[4vw] py-[0.8vw] satoshiBold text-[1.5vw] shadow-md hover:bg-[#b56225] transition-all cursor-pointer"
                     >
                         Kembali

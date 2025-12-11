@@ -142,7 +142,7 @@ const SidebarSppg = () => {
                         </svg>
                     </div>
 
-                    <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative border-[0.2vw] border-white">
+                    <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative ">
                         {profile.photo_url ? (
                             <Image 
                                 src={profile.photo_url}
@@ -167,7 +167,7 @@ const SidebarSppg = () => {
                         </h1>
                         
                         <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
-                            {schoolCount} Sekolah | {studentCount} Siswa 
+                            {schoolCount} Sekolah 
                         </div>
                     </div>
                 </div>

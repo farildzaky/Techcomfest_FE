@@ -1,9 +1,9 @@
-import SidebarProfileSppg from "@/src/components/common/profile/SidebarProfileSppg"
+import DataLaporanSppg from "@/src/components/common/profile/sppg/Data"
 
 const ProfileSppgPage = () => {
     return (
         <div>
-
+            <DataLaporanSppg/>
 
         </div>
     )

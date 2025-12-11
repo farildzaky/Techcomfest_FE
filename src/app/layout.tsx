@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Navbar from "../components/common/Navbar"
-import Footer from "../components/common/Footer"
+
 import "./globals.css";
+import CookieConsent from '../components/CookieConsent'; 
 
 export const metadata: Metadata = {
   title: "Inkluzi",
@@ -15,8 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className="antialiasd">
         {children}
+        {/* --- PANGGIL DI SINI --- */}
+        <CookieConsent /> 
       </body>
     </html>
   );

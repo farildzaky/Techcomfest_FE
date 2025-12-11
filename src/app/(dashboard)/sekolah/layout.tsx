@@ -10,6 +10,7 @@ export default function SekolahLayout({
 }) {
     const pathname = usePathname();
     const isMenuDetail = pathname.startsWith('/sekolah/menu-mbg/') && pathname !== '/sekolah/menu-mbg';
+    const isProfilePage = pathname.startsWith('/sekolah/profile');
 
     const isScanResult = pathname.startsWith('/sekolah/scan-nutrisi/') && pathname !== '/sekolah/scan-nutrisi';
 
@@ -18,7 +19,7 @@ export default function SekolahLayout({
     ].includes(pathname);
 
 
-    const isFullScreen = isMenuDetail || isScanResult || isSpecificPage;
+    const isFullScreen = isMenuDetail || isScanResult ||  isProfilePage || isSpecificPage;
 
 
     if (isFullScreen) {

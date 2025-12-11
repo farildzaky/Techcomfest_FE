@@ -102,7 +102,7 @@ const InformasiInstansiPage = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-[#D9833E] p-[3vw] font-sans">
+        <div className="w-full min-h-screen  p-[3vw] font-sans">
             
             <div className="flex flex-col gap-[2vw]">
                 
