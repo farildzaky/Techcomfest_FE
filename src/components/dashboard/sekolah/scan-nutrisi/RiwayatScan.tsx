@@ -296,7 +296,7 @@ const RiwayatScan = () => {
                     
                      <button
                         onClick={() => router.push('/sekolah/scan-nutrisi')}
-                        className='bg-[#FFF3EB] text-[#D7762E] satoshiBold flex ml-auto cursor-pointer text-sm lg:text-[1.2vw] py-3 lg:py-[0.8vw] px-6 lg:px-[2vw] rounded-full hover:bg-white transition-colors shadow-sm w-full sm:w-auto'
+                        className='bg-[#FFF3EB] text-[#D7762E] satoshiBold flex text-center items-center justify-center ml-auto cursor-pointer text-sm lg:text-[1.2vw] py-3 lg:py-[0.8vw] px-6 lg:px-[2vw] rounded-full hover:bg-white transition-colors shadow-sm w-full sm:w-auto'
                     >
                         Kembali
                     </button>
