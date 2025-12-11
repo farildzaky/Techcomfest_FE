@@ -22,125 +22,126 @@ const Login = () => {
         try {
             const res = await fetch(`${BASE_URL}/auth/login`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await res.json();
 
-            if (!res.ok) {
-                throw new Error(data.message || "Login gagal. Periksa kembali email dan password.");
-            }
+            if (!res.ok) throw new Error(data.message || "Login gagal.");
 
             const user = data.data.user;
             const userRole = user.role;
 
+            // Set Cookies & LocalStorage
             document.cookie = `accessToken=${data.data.access_token}; path=/; max-age=86400; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
-
             if (data.data.refresh_token) {
                 document.cookie = `refreshToken=${data.data.refresh_token}; path=/; max-age=604800; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
             }
-
             document.cookie = `userRole=${userRole}; path=/; max-age=86400; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
-
             localStorage.setItem("user", JSON.stringify(user));
 
-            if (userRole === "sekolah") {
-                router.push("/sekolah/dashboard");
-            } else if (userRole === "sppg") {
-                router.push("/sppg/dashboard");
-            } else if (userRole === "admin") {
-                router.push("/admin/dashboard");
-            } else {
-                setError("Role akun tidak dikenali. Hubungi admin.");
-                document.cookie = "accessToken=; Max-Age=0; path=/;";
-                document.cookie = "refreshToken=; Max-Age=0; path=/;";
-                document.cookie = "userRole=; Max-Age=0; path=/;";
-            }
+            // Redirect
+            if (userRole === "sekolah") router.push("/sekolah/dashboard");
+            else if (userRole === "sppg") router.push("/sppg/dashboard");
+            else if (userRole === "admin") router.push("/admin/dashboard");
+            else setError("Role akun tidak dikenali.");
 
         } catch (err: any) {
-            setError(err.message || "Terjadi kesalahan pada sistem.");
+            setError(err.message || "Terjadi kesalahan sistem.");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <section className="flex flex-row h-screen w-full bg-white relative">
+        // Container Utama: Flex Column di HP, Row di Desktop
+        <section className="flex flex-col md:flex-row min-h-screen w-full bg-white overflow-x-hidden">
 
-
-            <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center relative">
-                <Image src={logoWhite} alt="logo" className="w-[15vw]" />
-                <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
+            {/* --- BAGIAN KIRI (ORANYE) --- */}
+            <div className="flex flex-col bg-[#E87E2F] w-full md:w-[40vw] md:h-screen items-center justify-center gap-4 md:gap-[1vw] py-10 md:py-0 shrink-0">
+                {/* Logo: Ukuran tetap di HP, VW di Desktop */}
+                <Image 
+                    src={logoWhite} 
+                    alt="logo" 
+                    className="w-24 md:w-[15vw] h-auto object-contain" 
+                />
+                <h1 className="satoshiBold text-2xl md:text-[3.5vw] text-white text-center leading-tight px-4">
+                    Peduli Gizi, <br />Peduli Inklusi
+                </h1>
             </div>
 
-            <div className="flex flex-col w-[60vw] h-full justify-center items-center px-[8vw] gap-[3vw] z-10 relative">
+            {/* --- BAGIAN KANAN (FORM) --- */}
+            <div className="flex flex-col w-full md:w-[60vw] md:h-screen justify-center items-center px-6 py-10 md:px-[8vw] gap-6 md:gap-[3vw] relative bg-white">
 
-                <Link href="/" className="hover:scale-105 transition-transform left-[1vw] top-[1vw] absolute cursor-pointer ">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-black">
+                {/* Tombol Back */}
+                <Link href="/" className="fixed md:absolute cursor-pointer top-4 left-4 md:top-[2vw] md:left-[2vw] hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-8 h-8 md:w-[3vw] md:h-[3vw] text-black">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </Link>
-                <div className="flex flex-col text-[#B56225] items-center leading-none gap-[0.5vw]">
-                    <h1 className="satoshiBold text-[4.5vw]">Masuk</h1>
-                    <p className="satoshiMedium text-[1.5vw]">Masuk ke dalam akun Anda</p>
+
+                {/* Judul Form */}
+                <div className="flex flex-col text-[#B56225] items-center leading-none gap-2 md:gap-[0.5vw] mt-8 md:mt-0">
+                    <h1 className="satoshiBold text-4xl md:text-[4.5vw]">Masuk</h1>
+                    <p className="satoshiMedium text-base md:text-[1.5vw]">Masuk ke dalam akun Anda</p>
                 </div>
 
-                <form onSubmit={handleLogin} className="w-full flex flex-col gap-[1.5vw]">
+                {/* Form Input */}
+                <form onSubmit={handleLogin} className="w-full max-w-md md:max-w-none flex flex-col gap-4 md:gap-[1.5vw]">
 
                     {error && (
-                        <div className="bg-red-100 border border-red-400 text-red-700 px-[1vw] py-[0.5vw] rounded-[0.5vw] satoshiMedium text-[1vw] text-center">
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg text-sm md:text-[1vw] text-center satoshiMedium">
                             {error}
                         </div>
                     )}
 
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiMedium text-[#D9833E] text-[1.2vw]">Email</label>
+                    {/* Input Email */}
+                    <div className="flex flex-col gap-2 md:gap-[0.5vw]">
+                        <label className="satoshiMedium text-[#D9833E] text-sm md:text-[1.2vw]">Email</label>
                         <input
                             type="text"
                             placeholder="Masukkan Email Anda"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full border-[0.2vw] border-[#D9833E] rounded-[0.8vw] px-[1.5vw] py-[1vw] text-[1.2vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-[0.2vw] focus:ring-[#E87E2F]"
+                            // Mobile: Text-base (agar tidak zoom), Desktop: Text-vw
+                            className="w-full border-2 md:border-[0.2vw] border-[#D9833E] rounded-lg md:rounded-[0.8vw] px-4 py-3 md:px-[1.5vw] md:py-[1vw] text-base md:text-[1.2vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.2vw] focus:ring-[#E87E2F]"
                             required
                             disabled={isLoading}
                         />
                     </div>
 
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiMedium text-[#D9833E] text-[1.2vw]">Password</label>
+                    {/* Input Password */}
+                    <div className="flex flex-col gap-2 md:gap-[0.5vw]">
+                        <label className="satoshiMedium text-[#D9833E] text-sm md:text-[1.2vw]">Password</label>
                         <input
                             type="password"
                             placeholder="Masukkan password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full border-[0.2vw] border-[#D9833E] rounded-[0.8vw] px-[1.5vw] py-[1vw] text-[1.2vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-[0.2vw] focus:ring-[#E87E2F]"
+                            className="w-full border-2 md:border-[0.2vw] border-[#D9833E] rounded-lg md:rounded-[0.8vw] px-4 py-3 md:px-[1.5vw] md:py-[1vw] text-base md:text-[1.2vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.2vw] focus:ring-[#E87E2F]"
                             required
                             disabled={isLoading}
                         />
-                        <div className="flex justify-end mt-[0.2vw]">
-                            <Link href="/forgot-password" className="satoshiMedium text-[#D9833E] text-[1.1vw] hover:underline cursor-pointer">
+                        <div className="flex justify-end mt-1 md:mt-[0.2vw]">
+                            <Link href="/forgot-password" className="satoshiMedium text-[#D9833E] text-sm md:text-[1.1vw] hover:underline cursor-pointer">
                                 Lupa Password?
                             </Link>
                         </div>
                     </div>
 
+                    {/* Tombol Login */}
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className={`w-full cursor-pointer text-white satoshiBold text-[1.5vw] py-[1vw] rounded-[0.8vw] mt-[1vw] transition-colors duration-300 shadow-md
+                        className={`w-full cursor-pointer text-white satoshiBold text-lg md:text-[1.5vw] py-3 md:py-[1vw] rounded-lg md:rounded-[0.8vw] mt-2 md:mt-[1vw] transition-colors duration-300 shadow-md
                             ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#D9833E] hover:bg-[#c27233]'}
                         `}
                     >
                         {isLoading ? "Memproses..." : "Masuk"}
                     </button>
 
-                    <p className="satoshiMedium text-[1.2vw] text-[#D9833E] text-center">
+                    <p className="satoshiMedium text-sm md:text-[1.2vw] text-[#D9833E] text-center">
                         Belum punya akun?{" "}
                         <Link href="/register" className="hover:text-[#B56225] underline cursor-pointer">
                             Daftar
