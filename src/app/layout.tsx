@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import "./globals.css";
 import CookieConsent from '../components/CookieConsent'; 
@@ -17,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiasd">
         {children}
-        {/* --- PANGGIL DI SINI --- */}
+        <SpeedInsights />
         <CookieConsent /> 
       </body>
     </html>

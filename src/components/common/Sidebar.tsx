@@ -4,8 +4,9 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { fetchWithAuth } from "@/src/lib/api"; 
+import { fetchWithAuth } from "@/src/lib/api";
 
+// --- Import Aset (Pastikan jalurnya benar) ---
 import scanWhite from "../../assets/common/sidebar/scan-white.png";
 import scanOrange from "../../assets/common/sidebar/scan-orange.png";
 import reportWhite from "../../assets/common/sidebar/report-white.png";
@@ -18,6 +19,7 @@ import riwayatWhite from "../../assets/common/sidebar/riwayat-white.png";
 import riwayatOrange from "../../assets/common/sidebar/riwayat-orange.png";
 import logout from "../../assets/common/sidebar/logout.png";
 
+// --- Interfaces ---
 interface DisabilityType {
     jenis_disabilitas: string;
     jumlah_siswa: number;
@@ -30,12 +32,18 @@ interface SchoolProfileData {
     photo_url: string | null;
 }
 
-const Sidebar = () => {
+// --- Props Baru untuk Responsivitas ---
+interface SidebarProps {
+    isOpen: boolean;
+    toggle: () => void;
+}
+
+const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
     const pathname = usePathname();
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
-    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
+    // State Data Profil Sekolah
     const [profile, setProfile] = useState<{
         name: string;
         categories: string;
@@ -49,6 +57,11 @@ const Sidebar = () => {
     });
 
     useEffect(() => {
+        // Tutup sidebar saat berpindah halaman (untuk mobile)
+        if (isOpen && window.innerWidth < 1024) {
+            toggle();
+        }
+
         const loadProfile = async () => {
             try {
                 const response = await fetchWithAuth("/profile", { method: "GET" });
@@ -72,45 +85,19 @@ const Sidebar = () => {
                 }
             } catch (err: any) {
                 console.error("Fetch profile error:", err);
-            } finally {
-                setIsLoadingProfile(false);
             }
         };
 
         loadProfile();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pathname]); // Tambahkan pathname sebagai dependency
 
     const menuItems = [
-        {
-            label: "Beranda",
-            href: "/sekolah/dashboard",
-            iconWhite: homeWhite,
-            iconOrange: homeOrange
-        },
-        {
-            label: "Menu MBG",
-            href: "/sekolah/menu-mbg",
-            iconWhite: menuWhite,
-            iconOrange: menuOrange
-        },
-        {
-            label: "Scan Nutrisi",
-            href: "/sekolah/scan-nutrisi",
-            iconWhite: scanWhite,
-            iconOrange: scanOrange
-        },
-        {
-            label: "Pelaporan",
-            href: "/sekolah/pelaporan",
-            iconWhite: reportWhite,
-            iconOrange: reportOrange
-        },
-        {
-            label: "Riwayat Menu",
-            href: "/sekolah/riwayat-menu",
-            iconWhite: riwayatWhite,
-            iconOrange: riwayatOrange
-        },
+        { label: "Beranda", href: "/sekolah/dashboard", iconWhite: homeWhite, iconOrange: homeOrange },
+        { label: "Menu MBG", href: "/sekolah/menu-mbg", iconWhite: menuWhite, iconOrange: menuOrange },
+        { label: "Scan Nutrisi", href: "/sekolah/scan-nutrisi", iconWhite: scanWhite, iconOrange: scanOrange },
+        { label: "Pelaporan", href: "/sekolah/pelaporan", iconWhite: reportWhite, iconOrange: reportOrange },
+        { label: "Riwayat Menu", href: "/sekolah/riwayat-menu", iconWhite: riwayatWhite, iconOrange: riwayatOrange },
     ];
 
     const handleLogout = async () => {
@@ -131,120 +118,146 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#E87E2F] rounded-tr-[4vw] rounded-br-[4vw] overflow-hidden sticky top-0"
-            style={{ 
-                boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)" 
-            }}
-        >
-            
-            <Link href="/sekolah/profile/informasi-sekolah" className="w-full block group/profile">
-                <div className="w-full py-[2vw] flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300">
-                    
-                    <div className="absolute top-[1.5vw] right-[1.5vw] opacity-70 group-hover/profile:opacity-100 transition-opacity">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-[1.5vw] h-[1.5vw]">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        <>
+            {/* --- Overlay (Latar Belakang Gelap) untuk Mobile --- */}
+            <div
+                className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
+                    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                }`}
+                onClick={toggle}
+                aria-hidden="true"
+            ></div>
+
+            {/* --- Container Sidebar --- */}
+            <div
+                className={`
+                    fixed lg:sticky top-0 left-0 h-screen
+                    w-72 lg:w-auto  // Lebar tetap di mobile, otomatis di desktop
+                    bg-[#E87E2F]
+                    transition-transform duration-300 ease-in-out z-50
+                    flex flex-col overflow-y-auto overflow-x-hidden
+                    ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 // Logika buka/tutup
+                    lg:rounded-tr-[4vw] lg:rounded-br-[4vw] // Sudut membulat hanya di desktop
+                `}
+                style={{
+                    boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)"
+                }}
+            >
+                {/* --- Tombol Tutup (Hanya Mobile) --- */}
+                <div className="flex justify-end p-4 lg:hidden">
+                    <button onClick={toggle} className="text-white p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                    </div>
-
-                    <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative shadow-md">
-                        {isLoadingProfile ? (
-                            <div className="w-full h-full bg-gray-300 animate-pulse"></div>
-                        ) : profile.photoUrl ? (
-                            <Image 
-                                src={profile.photoUrl}
-                                alt="Profil Sekolah"
-                                fill 
-                                sizes="(max-width: 768px) 100vw, 15vw"
-                                className="object-cover"
-                                unoptimized={true} 
-                            />
-                        ) : (
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-[5vw] h-[5vw]">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                                </svg>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="flex flex-col px-[1vw] w-full items-center">
-                        {isLoadingProfile ? (
-                            <>
-                                <div className="h-[2vw] w-[14vw] bg-white/30 rounded animate-pulse mb-[0.5vw]"></div>
-                                <div className="h-[1.2vw] w-[10vw] bg-white/30 rounded animate-pulse mb-[0.3vw]"></div>
-                                <div className="h-[1.2vw] w-[8vw] bg-white/30 rounded animate-pulse"></div>
-                            </>
-                        ) : (
-                            <>
-                                <h1 className="text-[1.8vw] leading-tight break-words max-w-[18vw] line-clamp-2 min-h-[2.2vw]">
-                                    {profile.name}
-                                </h1>
-                                
-                                <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
-                                    <p className="line-clamp-1 max-w-[15vw] mx-auto">{profile.categories || "Jenis Sekolah"}</p>
-                                    <p>{profile.studentCount} Siswa</p>
-                                </div>
-                            </>
-                        )}
-                    </div>
+                    </button>
                 </div>
-            </Link>
 
-            <div className="flex flex-col gap-[0.5vw] mt-[1vw] pr-[2vw]">
-                {menuItems.map((item, index) => {
-                    const isActive = pathname === item.href || pathname.startsWith(item.href);
+                {/* --- PROFILE SECTION --- */}
+                {/* Menggunakan padding/ukuran fix di mobile, dan vw di desktop (lg:) */}
+                <Link href="/sekolah/profile/informasi-sekolah" className="w-full block group/profile">
+                    <div className="w-full py-6 lg:py-[2vw] px-4 lg:px-0 flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-3 lg:gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300">
+                        
+                        {/* Icon Chevron */}
+                        <div className="absolute top-4 right-4 lg:top-[1.5vw] lg:right-[1.5vw] opacity-70 group-hover/profile:opacity-100 transition-opacity">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 lg:w-[1.5vw] lg:h-[1.5vw]">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </div>
 
-                    return (
-                        <Link 
-                            key={index} 
-                            href={item.href}
-                            className="block" 
-                        >
-                            <div className="relative flex items-center p-[1.2vw] cursor-pointer rounded-r-[2vw] group overflow-hidden">
-                                <div 
-                                    className={`
-                                        absolute top-0 left-0 h-full w-full bg-white rounded-r-[2vw]
-                                        transition-transform duration-500 ease-in-out
-                                        ${isActive ? "translate-x-0" : "-translate-x-full"}
-                                    `}
+                        {/* Foto Profil */}
+                        <div className="w-24 h-24 lg:w-[10vw] lg:h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative shadow-md">
+                            {profile.photoUrl ? (
+                                <Image 
+                                    src={profile.photoUrl}
+                                    alt="Profil Sekolah"
+                                    fill 
+                                    sizes="(max-width: 768px) 30vw, 15vw"
+                                    className="object-cover"
+                                    unoptimized={true} 
                                 />
-
-                                <div className={`
-                                    relative z-10 flex items-center gap-[1.5vw] transition-colors duration-300
-                                    ${isActive ? "text-[#D7762E]" : "text-white group-hover:text-white/80"}
-                                `}>
-                                    <Image
-                                        src={isActive ? item.iconOrange : item.iconWhite}
-                                        alt={item.label}
-                                        className="w-[2vw] h-[2vw] object-contain transition-transform duration-300"
-                                    />
-                                    <span className="text-[1.4vw] satoshiBold whitespace-nowrap">
-                                        {item.label}
-                                    </span>
+                            ) : (
+                                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 lg:w-[5vw] lg:h-[5vw]">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                    </svg>
                                 </div>
-                            </div>
-                        </Link>
-                    );
-                })}
-            </div>
+                            )}
+                        </div>
 
-            <div className="flex flex-row justify-center items-center px-[2vw] mt-auto mb-[2vw] border-t-[0.1vw] border-white pt-[1vw]">
-                <button
-                    onClick={handleLogout}
-                    disabled={isLoggingOut}
-                    className="flex flex-row gap-[0.5vw] items-center cursor-pointer hover:opacity-80 transition-opacity duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <Image
-                        src={logout}
-                        alt="Logout"
-                        className="w-[2vw] h-[2vw] object-contain"
-                    />
-                    <div className="satoshiBold text-[1.4vw] text-white">
-                        {isLoggingOut ? "Logging out..." : "Logout"}
+                        {/* Informasi Teks */}
+                        <div className="flex flex-col px-4 lg:px-[1vw] w-full">
+                            <h1 className="text-lg lg:text-[1.8vw] leading-tight break-words w-full line-clamp-2 min-h-[3rem] lg:min-h-[2.2vw]">
+                                {profile.name}
+                            </h1>
+                            
+                            <div className="text-sm lg:text-[1.1vw] opacity-90 mt-2 lg:mt-[0.5vw]">
+                                <p className="line-clamp-1 w-full mx-auto">{profile.categories || "Jenis Sekolah"}</p>
+                                <p>{profile.studentCount} Siswa</p>
+                            </div>
+                        </div>
                     </div>
-                </button>
+                </Link>
+
+                {/* --- MENU ITEMS --- */}
+                <div className="flex flex-col gap-2 lg:gap-[0.5vw] mt-4 lg:mt-[1vw] pr-4 lg:pr-[2vw]">
+                    {menuItems.map((item, index) => {
+                        const isActive = pathname === item.href || pathname.startsWith(item.href);
+
+                        return (
+                            <Link 
+                                key={index} 
+                                href={item.href}
+                                className="block"
+                            >
+                                <div className="relative flex items-center p-3 lg:p-[1.2vw] cursor-pointer rounded-r-full lg:rounded-r-[2vw] group overflow-hidden">
+                                    {/* Animasi Background Putih */}
+                                    <div 
+                                        className={`
+                                            absolute top-0 left-0 h-full w-full bg-white rounded-r-full lg:rounded-r-[2vw]
+                                            transition-transform duration-500 ease-in-out
+                                            ${isActive ? "translate-x-0" : "-translate-x-full"}
+                                        `}
+                                    />
+
+                                    {/* Konten Menu */}
+                                    <div className={`
+                                        relative z-10 flex items-center gap-4 lg:gap-[1.5vw] transition-colors duration-300
+                                        ${isActive ? "text-[#D7762E]" : "text-white group-hover:text-white/80"}
+                                    `}>
+                                        <Image
+                                            src={isActive ? item.iconOrange : item.iconWhite}
+                                            alt={item.label}
+                                            className="w-5 h-5 lg:w-[2vw] lg:h-[2vw] object-contain transition-transform duration-300"
+                                        />
+                                        <span className="text-base lg:text-[1.4vw] satoshiBold whitespace-nowrap">
+                                            {item.label}
+                                        </span>
+                                    </div>
+                                </div>
+                            </Link>
+                        );
+                    })}
+                </div>
+
+                {/* --- LOGOUT BUTTON --- */}
+                <div className="flex flex-row justify-center items-center px-4 lg:px-[2vw] mt-auto mb-8 lg:mb-[2vw] border-t border-white lg:border-t-[0.1vw] pt-4 lg:pt-[1vw]">
+                    <button
+                        onClick={handleLogout}
+                        disabled={isLoggingOut}
+                        className="flex flex-row gap-2 lg:gap-[0.5vw] items-center cursor-pointer hover:opacity-80 transition-opacity duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        <Image
+                            src={logout}
+                            alt="Logout"
+                            className="w-5 h-5 lg:w-[2vw] lg:h-[2vw] object-contain"
+                        />
+                        <div className="satoshiBold text-base lg:text-[1.4vw] text-white">
+                            {isLoggingOut ? "Logging out..." : "Logout"}
+                        </div>
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 export default Sidebar;

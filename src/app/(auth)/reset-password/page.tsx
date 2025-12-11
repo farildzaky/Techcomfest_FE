@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
 import { BASE_URL } from "@/src/lib/api"; 
-import logoWhite from "../../assets/logo-white.png"; 
+import logoWhite from "../../../assets/logo-white.png"; 
 
 // Komponen Content dipisah agar bisa dibungkus Suspense (Wajib di Next.js App Router)
 const ResetPasswordContent = () => {
