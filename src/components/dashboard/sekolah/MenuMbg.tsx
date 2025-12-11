@@ -23,49 +23,24 @@ interface MenuData {
 
 const SkeletonCard = () => {
     return (
-        <div className="w-full bg-[#F5DDCA] rounded-[2vw] p-[2vw] flex flex-row gap-[2vw] animate-pulse"
-            style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
-        >
-            <div className="flex flex-col gap-[1vw] flex-1">
-                <div className="h-[2vw] bg-gray-300 rounded w-[70%]" />
+        <div className="w-full bg-[#F5DDCA] rounded-xl lg:rounded-[2vw] p-4 lg:p-[2vw] flex flex-col lg:flex-row gap-4 lg:gap-[2vw] animate-pulse shadow-md mb-4 lg:mb-0">
+            <div className="flex flex-col gap-2 lg:gap-[1vw] flex-1">
+                <div className="h-8 lg:h-[2vw] bg-gray-300 rounded w-[70%]" />
+                <div className="h-4 lg:h-[1.2vw] bg-gray-300 rounded w-[40%]" />
+                <div className="h-8 lg:h-[2vw] bg-gray-300 rounded-full w-[30%] mt-2 lg:mt-[0.5vw]" />
                 
-                <div className="h-[1.2vw] bg-gray-300 rounded w-[40%]" />
-                
-                <div className="h-[2vw] bg-gray-300 rounded-full w-[30%] mt-[0.5vw]" />
-                
-                <div className="mt-[1vw]">
-                    <div className="h-[1.3vw] bg-gray-300 rounded w-[35%] mb-[0.5vw]" />
-                    <div className="flex flex-wrap gap-[0.5vw]">
+                <div className="mt-4 lg:mt-[1vw]">
+                    <div className="h-5 lg:h-[1.3vw] bg-gray-300 rounded w-[35%] mb-2 lg:mb-[0.5vw]" />
+                    <div className="flex flex-wrap gap-2 lg:gap-[0.5vw]">
                         {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="h-[1.8vw] bg-gray-300 rounded-full w-[20%]" />
-                        ))}
-                    </div>
-                </div>
-                
-                <div className="mt-[1vw]">
-                    <div className="h-[1.3vw] bg-gray-300 rounded w-[30%] mb-[0.5vw]" />
-                    <div className="space-y-[0.3vw]">
-                        {[1, 2].map((i) => (
-                            <div key={i} className="h-[1.2vw] bg-gray-300 rounded w-[85%]" />
-                        ))}
-                    </div>
-                </div>
-                
-                <div className="mt-[1vw]">
-                    <div className="h-[1.3vw] bg-gray-300 rounded w-[35%] mb-[0.5vw]" />
-                    <div className="grid grid-cols-2 gap-[0.5vw]">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="flex gap-[0.5vw]">
-                                <div className="h-[1.2vw] bg-gray-300 rounded w-[40%]" />
-                                <div className="h-[1.2vw] bg-gray-300 rounded w-[50%]" />
-                            </div>
+                            <div key={i} className="h-6 lg:h-[1.8vw] bg-gray-300 rounded-full w-[20%]" />
                         ))}
                     </div>
                 </div>
             </div>
             
-            <div className="w-[15%] flex items-center justify-center">
-                <div className="w-[8vw] h-[8vw] bg-gray-300 rounded-[1.5vw]" />
+            <div className="w-full lg:w-[15%] flex items-center justify-center h-24 lg:h-auto">
+                <div className="w-24 lg:w-[8vw] h-24 lg:h-[8vw] bg-gray-300 rounded-lg lg:rounded-[1.5vw]" />
             </div>
         </div>
     );
@@ -151,14 +126,14 @@ const MenuMbgSekolah = () => {
 
     if (loading) {
         return (
-            <div className="w-full h-screen grid grid-cols-7 bg-white relative">
-                <div className="col-span-5 p-[2vw] flex flex-col gap-[2vw]">
+            <div className="flex flex-col lg:grid lg:grid-cols-7 w-full h-full lg:h-screen bg-white relative">
+                <div className="lg:col-span-5 p-4 lg:p-[2vw] flex flex-col gap-4 lg:gap-[2vw]">
                     {[1, 2, 3, 4, 5].map((i) => (
                         <SkeletonCard key={i} />
                     ))}
                 </div>
 
-                <div className="col-span-2 h-screen relative z-20">
+                <div className="hidden lg:block lg:col-span-2 h-screen relative z-20">
                     <div className="w-full h-full fixed bg-[#F5DDCA] [clip-path:ellipse(45%_70%_at_50%_50%)]">
                     </div>
                 </div>
@@ -167,9 +142,9 @@ const MenuMbgSekolah = () => {
     }
 
     return (
-        <div className="w-full h-screen grid grid-cols-7 bg-white relative"> 
+        <div className="flex flex-col lg:grid lg:grid-cols-7 w-full min-h-screen bg-white relative"> 
             
-            <div className="col-span-5  p-[2vw] flex flex-col gap-[2vw]">
+            <div className="lg:col-span-5 p-4 lg:p-[2vw] flex flex-col gap-4 lg:gap-[2vw]">
                 {menus.length > 0 ? (
                     menus.map((item) => {
                         const dayName = item.tanggal.split(',')[0].trim();
@@ -194,11 +169,11 @@ const MenuMbgSekolah = () => {
                         );
                     })
                 ) : (
-                    <div className="text-center text-gray-400 mt-[5vw] satoshiBold text-[1.5vw]">Tidak ada data menu tersedia.</div>
+                    <div className="text-center text-gray-400 mt-10 lg:mt-[5vw] satoshiBold text-xl lg:text-[1.5vw]">Tidak ada data menu tersedia.</div>
                 )}
             </div>
 
-            <div className="col-span-2 h-screen relative z-20">
+            <div className="hidden lg:block lg:col-span-2 h-screen relative z-20">
                 <div className="w-full h-full fixed bg-[#F5DDCA] [clip-path:ellipse(45%_70%_at_50%_50%)]">
                 </div>
             </div>

@@ -1,8 +1,7 @@
 import { getCookie, refreshAccessToken } from './auth'; 
 
-export const BASE_URL = process.env.NODE_ENV === 'production' 
-  ? "/api/proxy" 
-  : "https://api.inkluzi.my.id/api/v1";
+// Default tetap ke proxy
+export const BASE_URL = "/api/proxy";
 
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
@@ -17,8 +16,17 @@ const onRefreshed = (token: string) => {
 };
 
 export const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {
-  const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  const url = `${BASE_URL}${path}`;
+  let url = "";
+
+  // LOGIC BARU:
+  // Jika endpoint dimulai dengan "http", gunakan langsung (Bypass Proxy)
+  // Jika tidak, tempelkan BASE_URL (Pakai Proxy)
+  if (endpoint.startsWith("http")) {
+    url = endpoint;
+  } else {
+    const path = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    url = `${BASE_URL}${path}`;
+  }
 
   let token = getCookie('accessToken');
 
@@ -30,7 +38,9 @@ export const fetchWithAuth = async (endpoint: string, options: RequestInit = {})
     headers['Authorization'] = `Bearer ${token}`;
   }
 
+  // Penting: Jangan set Content-Type manual untuk FormData
   if (options.body && options.body instanceof FormData) {
+      // Biarkan browser set boundary otomatis
   } else {
       headers['Content-Type'] = 'application/json';
   }

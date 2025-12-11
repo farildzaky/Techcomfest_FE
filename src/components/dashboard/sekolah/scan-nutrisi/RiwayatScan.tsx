@@ -64,69 +64,77 @@ const RiwayatScan = () => {
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#E87E2F] py-[2vw] px-[3vw] flex flex-col font-sans relative">
-=
-            <div className='w-fit bg-[#FFF3EB] rounded-r-[3vw] py-[1.5vw] px-[4vw] -ml-[3vw] mb-[3vw] shadow-md'>
-                <h1 className='satoshiBold text-[3vw] text-[#E87E2F] w-[60vw] bg-[#FFF3EB] rounded-r-full flex px-[5vw]'>
+        <div className="w-full min-h-screen bg-[#E87E2F] py-[6vw] lg:py-[2vw] px-[5vw] lg:px-[3vw] flex flex-col font-sans relative">
+            
+            {/* --- HEADER --- */}
+            <div className='w-full lg:w-fit bg-[#FFF3EB] rounded-r-[5vw] lg:rounded-r-[3vw] py-[3vw] lg:py-[1.5vw] px-[6vw] lg:px-[4vw] -ml-[5vw] lg:-ml-[3vw] mb-[5vw] lg:mb-[3vw] shadow-md'>
+                <h1 className='satoshiBold text-[5vw] lg:text-[3vw] text-[#E87E2F] w-full lg:w-[60vw]'>
                     Riwayat Deteksi Makanan
                 </h1>
             </div>
 
-            <div className='w-full bg-white rounded-[1vw] overflow-hidden border-[0.3vw] border-[#E87E2F] '>
+            {/* --- TABLE CONTAINER --- */}
+            <div className='w-full bg-white rounded-[2vw] lg:rounded-[1vw] overflow-hidden border-[0.5vw] lg:border-[0.3vw] border-[#E87E2F] shadow-sm'>
 
-                <div className='flex w-full bg-[#FFF3EB] border-b-[0.2vw] border-[#E87E2F]'>
-                    <div className='w-[10%] py-[1vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F]'>
-                        <span className='satoshiBold text-[1.5vw] text-[#E87E2F]'>No</span>
+                {/* --- TABLE HEADER --- */}
+                <div className='flex w-full bg-[#FFF3EB] border-b-[0.4vw] lg:border-b-[0.2vw] border-[#E87E2F]'>
+                    <div className='w-[10%] py-[2vw] lg:py-[1vw] flex items-center justify-center border-r-[0.4vw] lg:border-r-[0.2vw] border-[#E87E2F]'>
+                        <span className='satoshiBold text-[3.5vw] lg:text-[1.5vw] text-[#E87E2F]'>No</span>
                     </div>
-                    <div className='w-[35%] py-[1vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F]'>
-                        <span className='satoshiBold text-[1.5vw] text-[#E87E2F]'>Tanggal Scan</span>
+                    <div className='w-[35%] py-[2vw] lg:py-[1vw] flex items-center justify-center border-r-[0.4vw] lg:border-r-[0.2vw] border-[#E87E2F]'>
+                        <span className='satoshiBold text-[3.5vw] lg:text-[1.5vw] text-[#E87E2F]'>Tanggal</span>
                     </div>
-=                    <div className='w-[35%] py-[1vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F]'>
-                        <span className='satoshiBold text-[1.5vw] text-[#E87E2F]'>Menu</span>
+                  <div className='w-[35%] py-[2vw] lg:py-[1vw] flex items-center justify-center border-r-[0.4vw] lg:border-r-[0.2vw] border-[#E87E2F]'>
+                        <span className='satoshiBold text-[3.5vw] lg:text-[1.5vw] text-[#E87E2F]'>Menu</span>
                     </div>
-=                    <div className='w-[20%] py-[1vw] flex items-center justify-center'>
-                        <span className='satoshiBold text-[1.5vw] text-[#E87E2F]'>Detail</span>
+                <div className='w-[20%] py-[2vw] lg:py-[1vw] flex items-center justify-center'>
+                        <span className='satoshiBold text-[3.5vw] lg:text-[1.5vw] text-[#E87E2F]'>Aksi</span>
                     </div>
                 </div>
 
-=                <div className='flex flex-col bg-white'>
+                {/* --- TABLE BODY --- */}
+                <div className='flex flex-col bg-white'>
                     
                     {loading ? (
-                        <div className="py-[5vw] flex items-center justify-center">
-                            <span className="text-[#E87E2F] satoshiBold text-[1.5vw]">Memuat data...</span>
+                        <div className="py-[10vw] lg:py-[5vw] flex items-center justify-center">
+                            <span className="text-[#E87E2F] satoshiBold text-[3.5vw] lg:text-[1.5vw]">Memuat data...</span>
                         </div>
                     ) : scans.length === 0 ? (
-                        <div className='py-[5vw] flex items-center justify-center'>
-                            <span className='text-gray-400 text-[1.5vw] italic'>Belum ada riwayat scan.</span>
+                        <div className='py-[10vw] lg:py-[5vw] flex items-center justify-center'>
+                            <span className='text-gray-400 text-[3.5vw] lg:text-[1.5vw] italic'>Belum ada riwayat scan.</span>
                         </div>
                     ) : (
                         scans.map((item, index) => {
                             const globalIndex = (currentPage - 1) * itemsPerPage + index + 1;
 
                             return (
-                                <div key={item.id} className='flex w-full border-b-[0.2vw] border-[#E87E2F] last:border-b-0 hover:bg-orange-50 transition-colors'>
-                                    <div className='w-[10%] py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F]'>
-                                        <span className='satoshiMedium text-[1.3vw] text-black'>{globalIndex}</span>
+                                <div key={item.id} className='flex w-full border-b-[0.4vw] lg:border-b-[0.2vw] border-[#E87E2F] last:border-b-0 hover:bg-orange-50 transition-colors'>
+                                    {/* No */}
+                                    <div className='w-[10%] py-[3vw] lg:py-[1.2vw] flex items-center justify-center border-r-[0.4vw] lg:border-r-[0.2vw] border-[#E87E2F]'>
+                                        <span className='satoshiMedium text-[3vw] lg:text-[1.3vw] text-black'>{globalIndex}</span>
                                     </div>
                                     
-                                    <div className='w-[35%] py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F]'>
-                                        <span className='satoshiMedium text-[1.3vw] text-black text-center'>
+                                    {/* Tanggal */}
+                                    <div className='w-[35%] py-[3vw] lg:py-[1.2vw] flex items-center justify-center border-r-[0.4vw] lg:border-r-[0.2vw] border-[#E87E2F] px-[1vw]'>
+                                        <span className='satoshiMedium text-[3vw] lg:text-[1.3vw] text-black text-center leading-tight'>
                                             {formatDate(item.scanned_at)}
                                         </span>
                                     </div>
                                     
-                                    <div className='w-[35%] py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F] px-[1vw]'>
-                                        <span className='satoshiBold text-[1.3vw] text-[#8B5E3C] text-center w-full truncate'>
+                                    {/* Menu */}
+                                    <div className='w-[35%] py-[3vw] lg:py-[1.2vw] flex items-center justify-center border-r-[0.4vw] lg:border-r-[0.2vw] border-[#E87E2F] px-[1vw]'>
+                                        <span className='satoshiBold text-[3vw] lg:text-[1.3vw] text-[#8B5E3C] text-center w-full line-clamp-2 leading-tight'>
                                             {item.nama_makanan || "Tanpa Nama"}
                                         </span>
                                     </div>
                                     
-                                    <div className='w-[20%] py-[1.2vw] flex items-center justify-center'>
+                                    {/* Detail Button */}
+                                    <div className='w-[20%] py-[3vw] lg:py-[1.2vw] flex items-center justify-center'>
                                         <Link
-                                            href={`/sekolah/scan-nutrisi/${item.id}`}
-                                            className='text-[#E87E2F] underline hover:text-[#b06a33] satoshiMedium text-[1.2vw] whitespace-nowrap cursor-pointer'
+                                            href={`/sekolah/riwayat-scan/${item.id}`}
+                                            className='text-[#E87E2F] underline hover:text-[#b06a33] satoshiMedium text-[3vw] lg:text-[1.2vw] whitespace-nowrap cursor-pointer'
                                         >
-                                            Lihat Detail
+                                            Detail
                                         </Link>
                                     </div>
                                 </div>
@@ -136,32 +144,34 @@ const RiwayatScan = () => {
                 </div>
             </div>
 
+            {/* --- PAGINATION --- */}
             {!loading && totalPages > 1 && (
-                <div className="flex justify-center items-center gap-[2vw] mt-[2vw]">
+                <div className="flex justify-center items-center gap-[4vw] lg:gap-[2vw] mt-[5vw] lg:mt-[2vw]">
                     <button
                         onClick={handlePrev}
                         disabled={currentPage === 1}
-                        className={`px-[2vw] py-[0.5vw] rounded-full text-[1.2vw] satoshiBold ${currentPage === 1 ? 'bg-black/10 text-white/50 cursor-not-allowed' : 'bg-[#FFF3EB] text-[#E87E2F] hover:bg-white'}`}
+                        className={`px-[4vw] lg:px-[2vw] py-[1.5vw] lg:py-[0.5vw] rounded-full text-[3.5vw] lg:text-[1.2vw] satoshiBold ${currentPage === 1 ? 'bg-black/10 text-white/50 cursor-not-allowed' : 'bg-[#FFF3EB] text-[#E87E2F] hover:bg-white'}`}
                     >
                         Sebelumnya
                     </button>
-                    <span className="text-white satoshiBold text-[1.2vw]">
-                        Halaman {currentPage} dari {totalPages}
+                    <span className="text-white satoshiBold text-[3.5vw] lg:text-[1.2vw]">
+                        {currentPage} / {totalPages}
                     </span>
                     <button
                         onClick={handleNext}
                         disabled={currentPage === totalPages}
-                        className={`px-[2vw] py-[0.5vw] rounded-full text-[1.2vw] satoshiBold ${currentPage === totalPages ? 'bg-black/10 text-white/50 cursor-not-allowed' : 'bg-[#FFF3EB] text-[#E87E2F] hover:bg-white'}`}
+                        className={`px-[4vw] lg:px-[2vw] py-[1.5vw] lg:py-[0.5vw] rounded-full text-[3.5vw] lg:text-[1.2vw] satoshiBold ${currentPage === totalPages ? 'bg-black/10 text-white/50 cursor-not-allowed' : 'bg-[#FFF3EB] text-[#E87E2F] hover:bg-white'}`}
                     >
                         Selanjutnya
                     </button>
                 </div>
             )}
 
-            <div className='flex justify-end mt-[2vw]'>
+            {/* --- BACK BUTTON --- */}
+            <div className='flex justify-end mt-[6vw] lg:mt-[2vw]'>
                 <button
                     onClick={() => router.push('/sekolah/scan-nutrisi')}
-                    className='bg-[#FFF3EB] text-[#D7762E] satoshiBold text-[1.5vw] py-[0.8vw] px-[3vw] rounded-[2vw] hover:bg-[#ffe0c9] transition-colors shadow-md cursor-pointer'
+                    className='bg-[#FFF3EB] text-[#D7762E] satoshiBold text-[4vw] lg:text-[1.5vw] py-[2vw] lg:py-[0.8vw] px-[8vw] lg:px-[3vw] rounded-[5vw] lg:rounded-[2vw] hover:bg-[#ffe0c9] transition-colors shadow-md cursor-pointer'
                 >
                     Kembali
                 </button>

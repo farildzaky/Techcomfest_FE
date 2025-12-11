@@ -24,49 +24,37 @@ interface RiskCategory {
 
 const DashboardSkeleton = () => {
     return (
-        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-4 lg:pb-[1vw] animate-pulse gap-6 lg:gap-0">
-            <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[2vw] flex flex-col">
-                <div className="w-full h-12 lg:h-[3vw] bg-gray-300 rounded-full" />
+        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-8 lg:pb-[1vw] animate-pulse gap-6 lg:gap-0">
+            <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-6 lg:gap-[2vw] flex flex-col">
+                <div className="w-full h-10 lg:h-[3vw] bg-gray-300 rounded-full" />
                 <div className="w-full h-48 lg:h-[15vw] bg-gray-300 rounded-2xl lg:rounded-[2vw]" />
                 <div className="w-48 lg:w-[15vw] h-8 lg:h-[3vw] bg-gray-300 rounded-md" />
-                <div className="bg-[#F5DDCA]/50 p-4 lg:p-[2vw] rounded-2xl lg:rounded-[2vw] flex flex-col lg:flex-row gap-4 lg:gap-[1vw] pt-8 lg:pt-[4vw] min-h-[15vw] w-full">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                        <div key={i} className="flex-1 h-32 lg:h-[11vw] bg-gray-300 rounded-xl lg:rounded-[1vw]" />
+
+                <div className="flex flex-row overflow-hidden gap-4 lg:gap-[1vw]">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="min-w-[30%] lg:flex-1 h-32 lg:h-[11vw] bg-gray-300 rounded-xl lg:rounded-[1vw]" />
                     ))}
                 </div>
+
                 <div className="flex flex-col lg:flex-row gap-4 lg:gap-[1vw]">
                     <div className="w-full lg:w-[80%] h-24 lg:h-[10vw] bg-gray-300 rounded-2xl lg:rounded-[2vw]" />
                     <div className="w-full lg:w-[80%] h-24 lg:h-[10vw] bg-gray-300 rounded-2xl lg:rounded-[2vw]" />
                 </div>
             </div>
+
             <div className="lg:col-span-2 px-4 lg:pr-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col">
-                <div className="w-full h-16 lg:h-[4vw] bg-gray-300 rounded-md" />
-                <div className="bg-[#F5DDCA]/50 rounded-2xl lg:rounded-[2vw] p-4 lg:p-[1vw] h-auto lg:h-[15vw] flex flex-col gap-2">
-                     <div className="w-full h-8 lg:h-[3vw] bg-gray-400 rounded-full mb-2" />
-                     <div className="w-full h-4 lg:h-[2vw] bg-gray-300 rounded-md" />
-                     <div className="w-full h-4 lg:h-[2vw] bg-gray-300 rounded-md" />
-                </div>
-                <div className="bg-[#E87E2F]/50 rounded-2xl lg:rounded-[2vw] p-4 lg:p-[1.5vw] h-24 lg:h-[8vw] flex flex-col items-center justify-center gap-2">
-                    <div className="w-16 lg:w-[4vw] h-8 lg:h-[3vw] bg-white/50 rounded-md" />
-                    <div className="w-32 lg:w-[10vw] h-4 lg:h-[1.5vw] bg-white/50 rounded-md" />
-                </div>
-                <div className="bg-[#F5DDCA]/50 rounded-2xl lg:rounded-[2vw] p-4 lg:p-[1vw] h-auto lg:h-[20vw] flex flex-col gap-4">
-                    <div className="w-full h-8 lg:h-[3vw] bg-gray-400 rounded-full" />
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="flex gap-2 items-center">
-                            <div className="w-12 lg:w-[4vw] h-12 lg:h-[4vw] bg-gray-300 rounded-full shrink-0" />
-                            <div className="w-full h-4 lg:h-[1.5vw] bg-gray-300 rounded-md" />
-                        </div>
-                    ))}
-                </div>
+                <div className="w-full h-12 lg:h-[4vw] bg-gray-300 rounded-md" />
+                <div className="bg-[#F5DDCA]/50 rounded-2xl lg:rounded-[2vw] p-4 h-48 lg:h-[15vw]" />
+                <div className="bg-[#E87E2F]/50 rounded-2xl lg:rounded-[2vw] p-4 h-24 lg:h-[8vw]" />
+                <div className="bg-[#F5DDCA]/50 rounded-2xl lg:rounded-[2vw] p-4 h-64 lg:h-[20vw]" />
             </div>
         </div>
     );
 };
 
 const MainDashboardSekolah = () => {
-    const [menus, setMenus] = useState<MenuItem[]>([]); 
-    const [previousMenus, setPreviousMenus] = useState<MenuItem[]>([]); 
+    const [menus, setMenus] = useState<MenuItem[]>([]);
+    const [previousMenus, setPreviousMenus] = useState<MenuItem[]>([]);
     const [riskyMenus, setRiskyMenus] = useState<RiskCategory[]>([
         { category: "Alergen Tinggi", items: [] },
         { category: "Tekstur Tidak Sesuai", items: [] },
@@ -76,6 +64,25 @@ const MainDashboardSekolah = () => {
     const [riskPercentage, setRiskPercentage] = useState(0);
     const [alertMsg, setAlertMsg] = useState("Memuat informasi peringatan...");
 
+    const parseDate = (dateStr: string) => {
+        const monthMap: { [key: string]: number } = {
+            'Januari': 0, 'Februari': 1, 'Maret': 2, 'April': 3, 'Mei': 4, 'Juni': 5,
+            'Juli': 6, 'Agustus': 7, 'September': 8, 'Oktober': 9, 'November': 10, 'Desember': 11
+        };
+        try {
+            const parts = dateStr.replace(',', '').split(' ');
+            if (parts.length < 4) return new Date();
+
+            const day = parseInt(parts[1], 10);
+            const month = monthMap[parts[2]];
+            const year = parseInt(parts[3], 10);
+
+            return new Date(year, month, day);
+        } catch (e) {
+            return new Date();
+        }
+    };
+
     useEffect(() => {
         const loadDashboardData = async () => {
             try {
@@ -84,108 +91,90 @@ const MainDashboardSekolah = () => {
 
                 if (listResult.status === "success" && Array.isArray(listResult.data)) {
 
-                    const formattedMenus = listResult.data.map((item: any) => {
-                        const dayName = item.tanggal.split(',')[0].trim().toLowerCase();
-                        return {
-                            id: item.id,
-                            day: dayName,
-                            date: item.tanggal,
-                            menu: item.nama_menu
-                        };
-                    });
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
 
-                    const dayOrder: { [key: string]: number } = {
-                        "senin": 1, "selasa": 2, "rabu": 3, "kamis": 4, "jumat": 5, "sabtu": 6, "minggu": 7
-                    };
-                    formattedMenus.sort((a: MenuItem, b: MenuItem) => (dayOrder[a.day] || 8) - (dayOrder[b.day] || 8));
+                    const allMenus = listResult.data.map((item: any) => ({
+                        id: item.id,
+                        day: item.tanggal.split(',')[0].trim().toLowerCase(),
+                        date: item.tanggal,
+                        menu: item.nama_menu,
+                        dateObj: parseDate(item.tanggal)
+                    }));
 
-                    const targetMenus = formattedMenus.slice(0, 5);
+                    const upcoming = allMenus.filter((m: any) => m.dateObj >= today);
+                    const past = allMenus.filter((m: any) => m.dateObj < today);
+
+                    upcoming.sort((a: any, b: any) => a.dateObj.getTime() - b.dateObj.getTime());
+                    past.sort((a: any, b: any) => b.dateObj.getTime() - a.dateObj.getTime());
+
+                    const targetMenus = upcoming.slice(0, 5);
+                    const previousMenusData = past.slice(0, 3);
+
                     setMenus(targetMenus);
+                    setPreviousMenus(previousMenusData);
 
-                    const pastMenus = formattedMenus.slice(5, 8);
-                    setPreviousMenus(pastMenus);
+                    if (targetMenus.length > 0) {
+                        const detailPromises = targetMenus.map((menu: any) =>
+                            fetchWithAuth(`/school/menus/${menu.id}`, { method: "GET" })
+                                .then(res => res.json())
+                                .catch(() => null)
+                        );
 
-                    const detailPromises = targetMenus.map((menu: MenuItem) =>
-                        fetchWithAuth(`/school/menus/${menu.id}`, { method: "GET" })
-                            .then(res => res.json())
-                    );
+                        const detailsResults = await Promise.all(detailPromises);
 
-                    const detailsResults = await Promise.all(detailPromises);
+                        const newRiskyMenus = [
+                            { category: "Alergen Tinggi", items: [] as string[] },
+                            { category: "Tekstur Tidak Sesuai", items: [] as string[] },
+                            { category: "Gizi Kurang", items: [] as string[] },
+                        ];
 
-                    const newRiskyMenus = [
-                        { category: "Alergen Tinggi", items: [] as string[] },
-                        { category: "Tekstur Tidak Sesuai", items: [] as string[] },
-                        { category: "Gizi Kurang", items: [] as string[] },
-                    ];
+                        let totalSafetyScore = 0;
+                        let maxScore = 0;
+                        let foundImportantNote: string | null = null;
 
-                    let totalSafetyScore = 0;
-                    let maxScore = detailsResults.length * 2;
-                    let foundImportantNote: string | null = null;
+                        detailsResults.forEach((res: any) => {
+                            if (res && res.status === "success" && res.data) {
+                                maxScore += 2;
+                                const data = res.data;
+                                const menuName = data.nama_menu;
+                                const risks = data.deteksi_risiko || {};
+                                const status = data.status_keamanan;
 
-                    detailsResults.forEach((res: any) => {
-                        if (res.status === "success" && res.data) {
-                            const data = res.data;
-                            const menuName = data.nama_menu;
-                            const risks = data.deteksi_risiko || {};
-                            const status = data.status_keamanan;
+                                if (!foundImportantNote && data.catatan_tambahan) {
+                                    foundImportantNote = `Catatan ${menuName}: ${data.catatan_tambahan}`;
+                                }
 
-                            if (!foundImportantNote && data.catatan_tambahan) {
-                                foundImportantNote = `Catatan ${menuName}: ${data.catatan_tambahan}`;
+                                if (status === 'aman') totalSafetyScore += 2;
+                                else if (status === 'perlu_perhatian') totalSafetyScore += 1;
+
+                                if (risks.alergi?.some((n: string) => n.toLowerCase().includes("mengandung") || n.toLowerCase().includes("alergi"))) {
+                                    newRiskyMenus[0].items.push(menuName);
+                                }
+                                if (risks.tekstur?.some((n: string) => n.toLowerCase().includes("keras") || n.toLowerCase().includes("sulit"))) {
+                                    newRiskyMenus[1].items.push(menuName);
+                                }
+                                if (risks.porsi_gizi?.some((n: string) => n.toLowerCase().includes("rendah") || n.toLowerCase().includes("kurang"))) {
+                                    newRiskyMenus[2].items.push(menuName);
+                                }
                             }
+                        });
 
-                            if (status === 'aman') {
-                                totalSafetyScore += 2;
-                            } else if (status === 'perlu_perhatian') {
-                                totalSafetyScore += 1;
-                            }
+                        const calculatedRisk = maxScore > 0 ? Math.round(((maxScore - totalSafetyScore) / maxScore) * 100) : 0;
 
-                            if (risks.alergi && risks.alergi.length > 0) {
-                                const hasAllergyWarning = risks.alergi.some((note: string) =>
-                                    note.toLowerCase().includes("mengandung") ||
-                                    note.toLowerCase().includes("alergi")
-                                );
-                                if (hasAllergyWarning) newRiskyMenus[0].items.push(menuName);
-                            }
+                        if (foundImportantNote) setAlertMsg(foundImportantNote);
+                        else if (calculatedRisk > 50) setAlertMsg("Peringatan: Banyak menu minggu ini memiliki risiko tinggi.");
+                        else setAlertMsg("Menu minggu ini terpantau aman dan sesuai standar gizi.");
 
-                            if (risks.tekstur && risks.tekstur.length > 0) {
-                                const hasTextureWarning = risks.tekstur.some((note: string) =>
-                                    note.toLowerCase().includes("keras") ||
-                                    note.toLowerCase().includes("sulit") ||
-                                    note.toLowerCase().includes("tersedak") ||
-                                    note.toLowerCase().includes("tidak sesuai")
-                                );
-                                if (hasTextureWarning) newRiskyMenus[1].items.push(menuName);
-                            }
-
-                            if (risks.porsi_gizi && risks.porsi_gizi.length > 0) {
-                                const hasNutritionWarning = risks.porsi_gizi.some((note: string) =>
-                                    note.toLowerCase().includes("rendah") ||
-                                    note.toLowerCase().includes("kurang") ||
-                                    note.toLowerCase().includes("di bawah standar")
-                                );
-                                if (hasNutritionWarning) newRiskyMenus[2].items.push(menuName);
-                            }
-                        }
-                    });
-
-                    const calculatedRisk = maxScore > 0
-                        ? Math.round(((maxScore - totalSafetyScore) / maxScore) * 100)
-                        : 0;
-
-                    if (foundImportantNote) {
-                        setAlertMsg(foundImportantNote);
-                    } else if (calculatedRisk > 50) {
-                        setAlertMsg("Peringatan: Banyak menu minggu ini memiliki risiko tinggi. Mohon periksa detail.");
+                        setRiskyMenus(newRiskyMenus);
+                        setRiskPercentage(calculatedRisk);
                     } else {
-                        setAlertMsg("Menu minggu ini terpantau aman dan sesuai standar gizi.");
+                        setAlertMsg("Belum ada menu untuk minggu depan.");
                     }
-
-                    setRiskyMenus(newRiskyMenus);
-                    setRiskPercentage(calculatedRisk);
                 }
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
-                setAlertMsg("Gagal memuat data peringatan.");
+                setAlertMsg("Gagal memuat data dashboard.");
             } finally {
                 setLoading(false);
             }
@@ -200,10 +189,8 @@ const MainDashboardSekolah = () => {
 
     return (
         <div className="flex flex-col lg:grid lg:grid-cols-7 pb-4 lg:pb-[1vw] overflow-hidden">
-            
             {/* Bagian Kiri (Konten Utama) */}
             <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col">
-                
                 {/* Alert Bar */}
                 <div className="bg-[#D7762E] w-full rounded-full px-4 lg:px-[1vw] py-2 lg:py-[0.5vw] satoshiMedium text-white text-sm lg:text-[1vw] items-center flex flex-row shadow-md lg:shadow-none"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
@@ -217,21 +204,21 @@ const MainDashboardSekolah = () => {
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
                     <div className="flex flex-col w-[55%] py-4 lg:py-0">
-                        <h1 className="satoshiBold text-[4vw] lg:text-[2.5vw] text-white leading-tight mb-2 lg:mb-0">Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif</h1>
-                        <p className="satoshiMedium text-[2vw] lg:text-[1.3vw] text-white">Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.</p>
+                        <h1 className="satoshiBold text-[4.5vw] lg:text-[2.5vw] text-white leading-tight mb-2 lg:mb-0">Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif</h1>
+                        <p className="satoshiMedium text-[3vw] lg:text-[1.3vw] text-white">Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.</p>
                     </div>
-                    <div className="w-[45%] relative  h-auto">
-                         <Image src={menuImg} alt="menu image" className="object-contain w-full h-full" />
+                    <div className="w-[45%] relative h-auto">
+                        <Image src={menuImg} alt="menu image" className="object-contain w-full h-full" />
                     </div>
                 </div>
 
                 {/* Menu Minggu Depan */}
-                <h2 className="satoshiBold text-[4vw] lg:text-[2vw] mt-2 lg:mt-0">Menu Minggu Depan</h2>
-                <div className="bg-[#F5DDCA] p-4 lg:p-[2vw] rounded-2xl lg:rounded-[2vw] 
-                    flex flex-row gap-4 lg:gap-[1vw] 
-                    items-start pt-8 lg:pt-[4vw] min-h-[15vw] w-full 
-                    shadow-md lg:shadow-none
-                    overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth & hidden scrollbar
+                <h2 className="satoshiBold text-[4.5vw] lg:text-[2vw] mt-2 lg:mt-0">Menu Minggu Depan</h2>
+                <div className="bg-[#F5DDCA] p-4 lg:p-[2vw] rounded-2xl lg:rounded-[2vw]
+flex flex-row gap-4 lg:gap-[1vw]
+items-start pt-8 lg:pt-[4vw] min-h-[15vw] w-full
+shadow-md lg:shadow-none
+overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth & hidden scrollbar
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
                     {menus.length > 0 ? (
@@ -256,29 +243,29 @@ const MainDashboardSekolah = () => {
 
                 {/* Tombol Aksi (Scan & Lapor) */}
                 <div className="flex flex-col lg:flex-row justify-center items-center w-full gap-4 lg:gap-[1vw] mt-2 lg:mt-0">
-                    <Link 
-                        href="/sekolah/scan-nutrisi" 
-                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-full lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-0 lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
+                    <Link
+                        href="/sekolah/scan-nutrisi"
+                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-[95%] lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-[5vw] lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
                     >
-                        <div className="w-[20vw] h-[20vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-6 lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
+                        <div className="w-[24vw] h-[24vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-[-5vw] lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
                             <Image src={scan} alt="scan icon" className="w-[10vw] h-[10vw] lg:w-[5vw] lg:h-[5vw]" />
                         </div>
-                        <div className="w-[60%] lg:w-[15vw] items-start">
-                            <h1 className="satoshiBold text-[4vw] lg:text-[1.5vw]">Scan Nutrisi</h1>
-                            <p className="satoshiMedium text-[2vw] lg:text-[1vw] text-justify">Unggah foto menu makanan untuk cek gizi, tekstur, dan potensi alergi secara otomatis.</p>
+                        <div className="w-[70%] lg:w-[15vw] items-start">
+                            <h1 className="satoshiBold text-[4.5vw] lg:text-[1.5vw]">Scan Nutrisi</h1>
+                            <p className="satoshiMedium text-[3vw] lg:text-[1vw] text-justify">Unggah foto menu makanan untuk cek gizi, tekstur, dan potensi alergi secara otomatis.</p>
                         </div>
                     </Link>
 
-                    <Link 
-                        href="/sekolah/pelaporan" 
-                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-full lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-0 lg:ml-[4vw] pr-4 lg:pr-[1vw] text-justify cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
+                    <Link
+                        href="/sekolah/pelaporan"
+                        className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-[95%] lg:w-[80%] h-[23vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-[5vw] lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
                     >
-                        <div className="w-[20vw] h-[20vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-6 lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
+                        <div className="w-[24vw] h-[24vw] lg:w-[10vw] lg:h-[10vw] bg-[#E87E2F] rounded-full mr-0 lg:mr-[1vw] absolute left-[-5vw] lg:left-[-3vw] flex justify-center items-center shadow-md lg:shadow-none top-1/2 -translate-y-1/2 lg:translate-y-0 lg:top-0">
                             <Image src={report} alt="report icon" className="w-[10vw] h-[10vw] lg:w-[5vw] lg:h-[5vw]" />
                         </div>
-                        <div className="w-[60%] lg:w-[15vw] items-start ">
-                            <h1 className="satoshiBold text-[4vw] lg:text-[1.5vw]">Pelaporan</h1>
-                            <p className="satoshiMedium text-[2vw] lg:text-[1vw]">Laporkan menu yang tidak sesuai dengan kebutuhan siswa secara cepat ke pihak SPPG.</p>
+                        <div className="w-[70%] lg:w-[15vw] items-start ">
+                            <h1 className="satoshiBold text-[4.5vw] lg:text-[1.5vw]">Pelaporan</h1>
+                            <p className="satoshiMedium text-[3vw] lg:text-[1vw]">Laporkan menu yang tidak sesuai dengan kebutuhan siswa secara cepat ke pihak SPPG.</p>
                         </div>
                     </Link>
                 </div>
