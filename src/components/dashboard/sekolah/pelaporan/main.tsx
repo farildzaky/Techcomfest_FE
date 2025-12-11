@@ -86,7 +86,7 @@ const MainPelaporanSekolah = () => {
     // ------------------------------------
 
     const [currentPage, setCurrentPage] = useState(1);
-    
+
     const [selectedDate, setSelectedDate] = useState("Tanggal");
     const [selectedMonth, setSelectedMonth] = useState("Bulan");
     const [selectedYear, setSelectedYear] = useState("Tahun");
@@ -194,13 +194,16 @@ const MainPelaporanSekolah = () => {
             <h1 className="satoshiBold text-2xl md:text-3xl lg:text-[2.5vw] text-black mb-6 lg:mb-[2vw]">Lacak Pelaporan</h1>
 
             {/* Filter Section: Stacked on mobile, row on desktop */}
-            <div className="flex flex-wrap gap-3 lg:gap-[1.5vw] mb-6 lg:mb-[2vw] relative z-20 items-center" onClick={(e) => e.stopPropagation()}>
-                <CustomDropdown label={selectedDate} options={dates} isOpen={openDropdown === 'date'} onToggle={() => toggleDropdown('date')} onSelect={(val) => { setSelectedDate(val); setCurrentPage(1); setOpenDropdown(null); }} />
-                <CustomDropdown label={selectedMonth} options={monthsList} isOpen={openDropdown === 'month'} onToggle={() => toggleDropdown('month')} onSelect={(val) => { setSelectedMonth(val); setCurrentPage(1); setOpenDropdown(null); }} />
-                <CustomDropdown label={selectedYear} options={years} isOpen={openDropdown === 'year'} onToggle={() => toggleDropdown('year')} onSelect={(val) => { setSelectedYear(val); setCurrentPage(1); setOpenDropdown(null); }} />
-                
+            <div className="flex flex-col items-start relative z-20" onClick={(e) => e.stopPropagation()}>
+                {/* Wraps on mobile */}
+                <div className="flex flex-wrap gap-3 lg:gap-[1.5vw] mb-4 lg:mb-[2vw] items-center w-full">
+                    <CustomDropdown label={selectedDate} options={dates} isOpen={openDropdown === 'date'} onToggle={() => toggleDropdown('date')} onSelect={(val) => { setSelectedDate(val); setCurrentPage(1); setOpenDropdown(null); }} />
+                    <CustomDropdown label={selectedMonth} options={monthsList} isOpen={openDropdown === 'month'} onToggle={() => toggleDropdown('month')} onSelect={(val) => { setSelectedMonth(val); setCurrentPage(1); setOpenDropdown(null); }} />
+                    <CustomDropdown label={selectedYear} options={years} isOpen={openDropdown === 'year'} onToggle={() => toggleDropdown('year')} onSelect={(val) => { setSelectedYear(val); setCurrentPage(1); setOpenDropdown(null); }} />
+                </div>
+
                 {isFilterActive && (
-                    <button onClick={handleClearFilter} className="bg-white text-[#E87E2F] satoshiMedium text-sm lg:text-[1.2vw] py-2 px-4 lg:py-[0.8vw] lg:px-[1.5vw] rounded-lg lg:rounded-[1vw] flex items-center gap-2 lg:gap-[0.5vw] shadow-sm hover:bg-[#E87E2F] hover:text-white transition-colors"
+                    <button onClick={handleClearFilter} className="bg-white mb-6 lg:mb-[2vw] w-fit text-[#E87E2F] satoshiMedium text-sm lg:text-[1.2vw] py-2 px-4 lg:py-[0.8vw] lg:px-[1.5vw] rounded-lg lg:rounded-[1vw] flex items-center gap-2 lg:gap-[0.5vw] shadow-sm hover:bg-[#E87E2F] hover:text-white transition-colors"
                         style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                     >
                         <span>Hapus Filter</span>
@@ -210,11 +213,11 @@ const MainPelaporanSekolah = () => {
 
             {/* Table Container: Enabled horizontal scroll (overflow-x-auto) so table stays wide */}
             <div className="w-full bg-[#E87E2F] rounded-xl lg:rounded-[1.5vw] overflow-hidden border-2 lg:border-[0.2vw] border-[#E87E2F] relative z-10 shadow-lg">
-                
+
                 <div className="overflow-x-auto">
                     {/* Minimum width set to 800px to ensure columns don't squish on mobile */}
                     <div className="min-w-[800px] lg:min-w-full">
-                        
+
                         {/* Table Header */}
                         <div className="flex bg-[#E87E2F] text-white">
                             <div className="w-[10%] py-3 lg:py-[1vw] flex justify-center items-center border-r border-white satoshiBold text-base lg:text-[1.5vw]">No</div>
