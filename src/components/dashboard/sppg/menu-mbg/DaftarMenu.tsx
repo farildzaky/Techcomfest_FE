@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import CardDetailSppg from "./CardDetail"; 
 import { fetchWithAuth } from '@/src/lib/api'; 
+import { useRouter } from 'next/navigation';
 import Image from 'next/image'; 
 import bg from "../../../../assets/bg.png" 
 import loadingSpinner from "../../../../assets/loading.png" 
@@ -37,7 +38,7 @@ const DaftarMenu = () => {
     const [loading, setLoading] = useState(true); 
     const [error, setError] = useState<string | null>(null);
     const [isUpdatingId, setIsUpdatingId] = useState<string | null>(null);
-    
+    const router = useRouter();
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const parseIndonesianDate = (dateStr: string) => {
@@ -147,7 +148,29 @@ const DaftarMenu = () => {
     };
 
     const renderContent = () => {
-        if (loading) return <div className="text-gray-500 italic p-4">Sedang memuat data menu...</div>;
+        if (loading) {
+            return (
+                <div className="flex flex-col gap-[2vw] ml-[3vw]">
+                    {[...Array(3)].map((_, i) => (
+                        <div key={i} className="bg-white rounded-[1.5vw] p-[2vw] border border-gray-100 shadow-sm animate-pulse flex flex-col gap-[1.5vw]">
+                            <div className="flex justify-between items-center">
+                                <div className="h-[2vw] w-[30%] bg-gray-200 rounded"></div>
+                                <div className="h-[2vw] w-[20%] bg-gray-200 rounded"></div>
+                            </div>
+                            <div className="h-[4vw] w-full bg-gray-200 rounded"></div>
+                            <div className="flex gap-[2vw] mt-[1vw]">
+                                <div className="h-[6vw] flex-1 bg-gray-200 rounded"></div>
+                                <div className="h-[6vw] flex-1 bg-gray-200 rounded"></div>
+                            </div>
+                            <div className="flex justify-end mt-[1vw]">
+                                <div className="h-[2.5vw] w-[15%] bg-gray-200 rounded-[1vw]"></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
         if (error) return <div className="text-red-500 font-bold p-4">Error: {error}</div>;
         if (menus.length === 0) return <div className="text-gray-500 p-4">Belum ada data menu tersedia.</div>;
 
@@ -156,9 +179,7 @@ const DaftarMenu = () => {
         });
 
         return sortedDisplayMenus.map((item) => {
-            
             const risiko = item.deteksi_risiko || {}; 
-
             const riskList = [
                 ...(risiko.alergi || []),
                 ...(risiko.tekstur || []),
@@ -175,7 +196,7 @@ const DaftarMenu = () => {
                 <Link
                     href={`/sppg/menu-mbg/weekly-menu/${item.menu_id}`}
                     key={item.menu_id}
-                    className="block transition-transform hover:scale-[1.01]"
+                    className="block transition-transform hover:scale-[1.01] ml-[3vw] cursor-pointer"
                 >
                     <CardDetailSppg
                         menu={item.nama_menu}
@@ -194,7 +215,12 @@ const DaftarMenu = () => {
 
     return (
         <div className="w-full h-full grid grid-cols-7 bg-white overflow-hidden">
-            <div className="col-span-5 h-full overflow-y-auto p-[2vw] flex flex-col gap-[2vw]">
+            <div className="col-span-5 h-full overflow-y-auto py-[2vw] flex flex-col gap-[2vw]">
+                <button onClick={() => router.back()} className="hover:scale-105 transition-transform translate-y-[1vw] fixed cursor-pointer ">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-black">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
                 {renderContent()}
             </div>
 
@@ -206,9 +232,7 @@ const DaftarMenu = () => {
             {isUpdatingId && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="relative bg-white rounded-[2vw] p-[3vw] w-[35vw] shadow-2xl flex flex-col items-center text-center">
-                        
                         <div className="relative w-[12vw] h-[12vw] flex items-center justify-center">
-                            
                             <Image 
                                 src={bg} 
                                 alt="Background Shape" 
@@ -221,7 +245,6 @@ const DaftarMenu = () => {
                                 className="w-[5vw] h-[5vw] object-contain absolute translate-y-[0.4vw] translate-x-[0.4vw] animate-spin"
                             />
                         </div>
-                        
                         <h3 className="satoshiBold text-[2.5vw] text-[#E87E2F] mt-[2vw]">Sedang Diproses</h3>
                         <p className="satoshiMedium text-[1.2vw] text-gray-500 mt-[0.5vw]">
                             Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
@@ -233,15 +256,12 @@ const DaftarMenu = () => {
             {successMessage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="relative bg-white rounded-[1.5vw] p-[3vw] w-[28vw] shadow-2xl flex flex-col items-center text-center gap-[2vw]">
-                        
                         <div className="w-[5vw] h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-green-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                         </div>
-                        
                         <h3 className="satoshiBold text-[1.8vw] text-gray-800">{successMessage}</h3>
-                        
                         <button
                             onClick={() => setSuccessMessage(null)}
                             className="py-[0.8vw] px-[3vw] rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"

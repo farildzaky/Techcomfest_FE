@@ -2,12 +2,10 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { fetchWithAuth } from '@/src/lib/api'; 
 
-// --- Interfaces & Constants ---
 interface ReportData { id: string; menu_name: string; status: string; created_at: string; }
 interface ReportDetailData { menu: string; catatan: string[]; foto_report: string | null; }
 const monthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-// --- CUSTOM DROPDOWN ---
 const CustomDropdown = ({ label, options, isOpen, onToggle, onSelect }: any) => (
     <div className="relative w-full">
         <button type="button" onClick={onToggle} className={`w-full cursor-pointer text-white satoshiBold text-[1.2vw] py-[0.8vw] px-[1.5vw] rounded-[0.5vw] flex justify-between items-center shadow-sm transition-all border border-transparent ${isOpen ? 'bg-[#b06a33]' : 'bg-[#E87E2F] hover:bg-[#d6732a]'} shadow-[0px_4px_4px_rgba(0,0,0,0.25)]`}>
@@ -24,22 +22,60 @@ const CustomDropdown = ({ label, options, isOpen, onToggle, onSelect }: any) => 
     </div>
 );
 
-// --- LOADING SKELETON (Fixed Width) ---
-const TableSkeleton = () => (
-    <div className="w-full bg-white animate-pulse">
-        {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex w-full border-b-[0.2vw] border-[#E87E2F] last:border-b-0">
-                <div className="w-[10%] shrink-0 py-[1.5vw] border-r-[0.2vw] border-[#E87E2F] bg-gray-100/50" />
-                <div className="w-[35%] shrink-0 py-[1.5vw] border-r-[0.2vw] border-[#E87E2F] px-[1vw]" />
-                <div className="w-[35%] shrink-0 py-[1.5vw] border-r-[0.2vw] border-[#E87E2F] px-[1vw]" />
-                <div className="w-[20%] shrink-0 py-[1.5vw] px-[1vw]" />
+const DataLaporanSkeleton = () => {
+    return (
+        <div className="w-full min-h-screen py-[2vw] px-[3vw] flex flex-col font-sans relative bg-[#E87E2F] animate-pulse"> 
+            <div className="mb-[2vw]">
+                <div className="h-[3vw] w-[30%] bg-white/20 rounded mb-[0.5vw]"></div>
+                <div className="h-[1.5vw] w-[50%] bg-white/20 rounded"></div>
             </div>
-        ))}
-    </div>
-);
+
+            <div className="flex flex-col items-start relative z-50 mb-[2vw]">
+                <div className="flex gap-[1.5vw] mb-[1.5vw] items-center w-full">
+                    <div className="h-[3vw] w-full bg-white/20 rounded-[0.5vw]"></div>
+                    <div className="h-[3vw] w-full bg-white/20 rounded-[0.5vw]"></div>
+                    <div className="h-[3vw] w-full bg-white/20 rounded-[0.5vw]"></div>
+                </div>
+            </div>
+
+            <div className='w-full bg-white rounded-[1vw] overflow-hidden border-[0.3vw] border-[#E87E2F] shadow-lg relative z-10'>
+                <div className='flex w-full bg-[#FFF3EB] border-b-[0.2vw] border-[#E87E2F] h-[4vw]'>
+                    <div className='w-[10%] border-r-[0.2vw] border-[#E87E2F]'></div>
+                    <div className='w-[35%] border-r-[0.2vw] border-[#E87E2F]'></div>
+                    <div className='w-[35%] border-r-[0.2vw] border-[#E87E2F]'></div>
+                    <div className='w-[20%]'></div>
+                </div>
+
+                <div className='flex flex-col bg-white '>
+                    {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                        <div key={i} className="flex w-full border-b-[0.2vw] border-[#E87E2F] last:border-b-0 h-[4.5vw] items-center">
+                            <div className="w-[10%] shrink-0 py-[1.5vw] flex justify-center border-r-[0.2vw] border-[#E87E2F]">
+                                <div className="h-[1.5vw] w-[30%] bg-gray-200 rounded"></div>
+                            </div>
+                            <div className="w-[35%] shrink-0 py-[1.5vw] flex justify-center border-r-[0.2vw] border-[#E87E2F]">
+                                <div className="h-[1.5vw] w-[60%] bg-gray-200 rounded"></div>
+                            </div>
+                            <div className="w-[35%] shrink-0 py-[1.5vw] flex justify-center border-r-[0.2vw] border-[#E87E2F]">
+                                <div className="h-[1.5vw] w-[70%] bg-gray-200 rounded"></div>
+                            </div>
+                            <div className="w-[20%] shrink-0 py-[1.5vw] flex justify-center">
+                                <div className="h-[1.5vw] w-[50%] bg-gray-200 rounded"></div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex justify-center items-center gap-[2vw] mt-[2vw]">
+                <div className="h-[3vw] w-[10vw] bg-white/20 rounded-full"></div>
+                <div className="h-[1.5vw] w-[15vw] bg-white/20 rounded"></div>
+                <div className="h-[3vw] w-[10vw] bg-white/20 rounded-full"></div>
+            </div>
+        </div>
+    );
+};
 
 const DataLaporanSekolah = () => {
-    // --- State ---
     const [allReports, setAllReports] = useState<ReportData[]>([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -53,13 +89,11 @@ const DataLaporanSekolah = () => {
     const [loadingDetail, setLoadingDetail] = useState(false);
     const filterContainerRef = useRef<HTMLDivElement>(null);
 
-    // Options
     const dates = Array.from({ length: 31 }, (_, i) => i + 1);
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - 2023 }, (_, i) => 2024 + i);
     const isFilterActive = selectedDate !== "Tanggal" || selectedMonth !== "Bulan" || selectedYear !== "Tahun";
 
-    // --- Helpers ---
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
         try { return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(dateString)); } catch { return dateString; }
@@ -79,7 +113,6 @@ const DataLaporanSekolah = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // --- FETCH DATA ---
     const fetchReports = useCallback(async () => {
         setLoading(true); setError(null);
         try {
@@ -92,7 +125,6 @@ const DataLaporanSekolah = () => {
     }, []);
     useEffect(() => { fetchReports(); }, [fetchReports]);
 
-    // --- FILTER & PAGINATION ---
     const filteredReports = useMemo(() => {
         return allReports.filter(item => {
             const dateObj = new Date(item.created_at);
@@ -109,7 +141,6 @@ const DataLaporanSekolah = () => {
         return filteredReports.slice(startIndex, startIndex + itemsPerPage);
     }, [filteredReports, currentPage]);
 
-    // --- DETAIL MODAL ---
     const handleViewDetail = async (id: string) => {
         setLoadingDetail(true);
         setSelectedDetail({ menu: "Memuat...", catatan: [], foto_report: null }); 
@@ -128,6 +159,8 @@ const DataLaporanSekolah = () => {
         } catch { setSelectedDetail(null); } finally { setLoadingDetail(false); }
     };
 
+    if (loading) return <DataLaporanSkeleton />;
+
     return (
         <div className="w-full min-h-screen py-[2vw] px-[3vw] flex flex-col font-sans relative bg-[#E87E2F]"> 
             <div className="mb-[2vw]">
@@ -135,7 +168,6 @@ const DataLaporanSekolah = () => {
                 <p className="text-white text-[1.2vw] opacity-80 satoshiMedium mt-[0.5vw]">Data riwayat pengajuan laporan yang telah selesai dilakukan.</p>
             </div>
 
-            {/* FILTER SECTION */}
             <div ref={filterContainerRef} className="flex flex-col items-start relative z-50 mb-[2vw]">
                 <div className="flex gap-[1.5vw] mb-[1.5vw] items-center w-full">
                     <CustomDropdown label={selectedDate} options={dates} isOpen={openDropdown === 'date'} onToggle={() => toggleDropdown('date')} onSelect={(val: any) => handleSetFilter(setSelectedDate, val)} />
@@ -149,20 +181,19 @@ const DataLaporanSekolah = () => {
                 )}
             </div>
 
-            {/* --- TABLE SECTION (FIXED WIDTH COLUMNS) --- */}
             <div className='w-full bg-white rounded-[1vw] overflow-hidden border-[0.3vw] border-[#E87E2F] shadow-lg relative z-10'>
-                {/* Header */}
                 <div className='flex w-full bg-[#FFF3EB] border-b-[0.2vw] border-[#E87E2F]'>
-                    {/* Menggunakan shrink-0 agar lebar kolom tidak berubah */}
                     <div className='w-[10%] shrink-0 py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F] satoshiBold text-[1.5vw] text-[#E87E2F]'>No</div>
                     <div className='w-[35%] shrink-0 py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F] satoshiBold text-[1.5vw] text-[#E87E2F]'>Tanggal Lapor</div>
                     <div className='w-[35%] shrink-0 py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F] satoshiBold text-[1.5vw] text-[#E87E2F]'>Menu</div>
                     <div className='w-[20%] shrink-0 py-[1.2vw] flex items-center justify-center satoshiBold text-[1.5vw] text-[#E87E2F]'>Detail</div>
                 </div>
 
-                {/* Body */}
                 <div className='flex flex-col bg-white '>
-                    {loading ? <TableSkeleton /> : error ? <div className="py-[4vw] text-center text-[#E87E2F] satoshiBold text-[1.5vw]">{error}</div> : filteredReports.length === 0 ? (
+                    {loading ? (
+                        // Removed logic for loading, already handled by if loading check
+                        <></> 
+                    ) : error ? <div className="py-[4vw] text-center text-[#E87E2F] satoshiBold text-[1.5vw]">{error}</div> : filteredReports.length === 0 ? (
                         <div className='flex-1 flex flex-col items-center justify-center text-center py-[5vw] gap-[1vw]'>
                             <span className='text-[3vw]'>📄</span>
                             <span className='text-gray-400 satoshiBold text-[1.5vw]'>{isFilterActive ? "Tidak ada laporan ditemukan." : "Belum ada laporan selesai."}</span>
@@ -172,24 +203,20 @@ const DataLaporanSekolah = () => {
                             const displayIndex = (currentPage - 1) * itemsPerPage + index + 1;
                             return (
                                 <div key={item.id} className='flex w-full border-b-[0.2vw] border-[#E87E2F] last:border-b-0 hover:bg-orange-50 transition-colors'>
-                                    {/* Kolom No - w-[10%] */}
                                     <div className='w-[10%] shrink-0 py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F] satoshiMedium text-[1.3vw] text-black'>
                                         {displayIndex}
                                     </div>
                                     
-                                    {/* Kolom Tanggal - w-[35%] */}
                                     <div className='w-[35%] shrink-0 py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F] satoshiMedium text-[1.3vw] text-black text-center'>
                                         {formatDate(item.created_at)}
                                     </div>
                                     
-                                    {/* Kolom Menu - w-[35%] - Padding Kanan Kiri agar rapi */}
                                     <div className='w-[35%] shrink-0 py-[1.2vw] flex items-center justify-center px-[2vw] border-r-[0.2vw] border-[#E87E2F]'>
                                         <span className="satoshiBold text-[1.3vw] text-[#8B5E3C] w-full truncate text-center block">
                                             {item.menu_name}
                                         </span>
                                     </div>
                                     
-                                    {/* Kolom Detail - w-[20%] */}
                                     <div className='w-[20%] shrink-0 py-[1.2vw] flex items-center justify-center'>
                                         <button onClick={() => handleViewDetail(item.id)} className='text-[#E87E2F] underline decoration-2 underline-offset-4 hover:text-[#b06a33] satoshiBold text-[1.2vw] whitespace-nowrap cursor-pointer'>
                                             Lihat Detail
@@ -202,7 +229,6 @@ const DataLaporanSekolah = () => {
                 </div>
             </div>
 
-            {/* PAGINATION */}
             {!loading && !error && filteredReports.length > 0 && (
                 <div className="flex justify-center items-center gap-[2vw] mt-[2vw]">
                     <button onClick={handlePrev} disabled={currentPage === 1} className={`px-[2vw] py-[0.6vw] rounded-full text-[1.2vw] satoshiBold ${currentPage === 1 ? 'bg-black/20 text-white/50 cursor-not-allowed' : 'bg-[#FFF3EB] text-[#E87E2F] hover:scale-105 shadow-md'}`}>Sebelumnya</button>
@@ -211,7 +237,6 @@ const DataLaporanSekolah = () => {
                 </div>
             )}
 
-            {/* MODAL DETAIL */}
             {selectedDetail && (
                 <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-[3vw]">
                     <div className="bg-[#E87E2F] w-[50vw] max-h-[90vh] overflow-y-auto rounded-[2vw] p-[3vw] shadow-2xl relative flex flex-col gap-[1.5vw] animate-in fade-in zoom-in-95 duration-200">

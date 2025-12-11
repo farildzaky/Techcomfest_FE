@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api'; 
 
-// --- INTERFACE ---
 interface ReportListItem {
     id: string;
     no: number;
@@ -29,6 +28,52 @@ interface CustomDropdownProps {
 }
 
 const monthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+const MainPelaporanSekolahSkeleton = () => {
+    return (
+        <div className="w-full min-h-screen p-[3vw] flex flex-col font-sans relative animate-pulse">
+            <div className="h-[3vw] w-[30%] bg-gray-300 rounded mb-[2vw]"></div>
+
+            <div className="flex gap-[1.5vw] mb-[2vw]">
+                <div className="h-[3vw] w-[12vw] bg-gray-300 rounded-[0.5vw]"></div>
+                <div className="h-[3vw] w-[12vw] bg-gray-300 rounded-[0.5vw]"></div>
+                <div className="h-[3vw] w-[12vw] bg-gray-300 rounded-[0.5vw]"></div>
+            </div>
+
+            <div className="w-full bg-[#E87E2F] rounded-[1.5vw] overflow-hidden border-[0.2vw] border-[#E87E2F] relative z-10">
+                <div className="flex bg-[#E87E2F] text-white h-[4vw]">
+                    <div className="w-[10%] border-r-[0.15vw] border-white"></div>
+                    <div className="w-[25%] border-r-[0.15vw] border-white"></div>
+                    <div className="w-[30%] border-r-[0.15vw] border-white"></div>
+                    <div className="w-[20%] border-r-[0.15vw] border-white"></div>
+                    <div className="w-[15%]"></div>
+                </div>
+
+                <div className="flex flex-col bg-white">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="flex border-b-[0.15vw] border-[#E87E2F] h-[5vw] items-center px-[1vw]">
+                            <div className="w-[10%] flex justify-center"><div className="h-[1.5vw] w-[50%] bg-gray-200 rounded"></div></div>
+                            <div className="w-[25%] flex justify-center"><div className="h-[1.5vw] w-[70%] bg-gray-200 rounded"></div></div>
+                            <div className="w-[30%] flex justify-center"><div className="h-[1.5vw] w-[80%] bg-gray-200 rounded"></div></div>
+                            <div className="w-[20%] flex justify-center"><div className="h-[2.5vw] w-[60%] bg-gray-200 rounded-[1vw]"></div></div>
+                            <div className="w-[15%] flex justify-center"><div className="h-[1.5vw] w-[50%] bg-gray-200 rounded"></div></div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex justify-end mt-[1vw] mb-[2vw] gap-[1vw]">
+                <div className="h-[2vw] w-[2vw] bg-gray-300 rounded-full"></div>
+                <div className="h-[2vw] w-[15vw] bg-gray-300 rounded"></div>
+                <div className="h-[2vw] w-[2vw] bg-gray-300 rounded-full"></div>
+            </div>
+            
+            <div className="mt-[2vw]">
+                <div className="w-full h-[5vw] bg-gray-300 rounded-[1.5vw]"></div>
+            </div>
+        </div>
+    );
+};
 
 const MainPelaporanSekolah = () => {
     const router = useRouter();
@@ -138,6 +183,8 @@ const MainPelaporanSekolah = () => {
 
     const toggleDropdown = (name: string) => setOpenDropdown(openDropdown === name ? null : name);
 
+    if (loadingList) return <MainPelaporanSekolahSkeleton />;
+
     return (
         <div className="w-full min-h-screen p-[3vw] flex flex-col font-sans relative" onClick={() => setOpenDropdown(null)}>
 
@@ -167,9 +214,7 @@ const MainPelaporanSekolah = () => {
                 </div>
 
                 <div className="flex flex-col bg-white">
-                    {loadingList ? (
-                        <div className="flex items-center justify-center p-[4vw]"><p className="satoshiBold text-[1.5vw] text-[#E87E2F]">Memuat data...</p></div>
-                    ) : currentItems.length > 0 ? (
+                    {currentItems.length > 0 ? (
                         currentItems.map((item, index) => (
                             <div key={item.id} className={`flex border-b-[0.15vw] border-[#E87E2F] last:border-b-0 transition-colors ${(indexOfFirstItem + index) % 2 === 1 ? 'bg-[#FFF3EB]' : 'bg-white'}`}>
                                 <div className="w-[10%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#E87E2F] satoshiMedium text-[1.2vw] text-black">{indexOfFirstItem + index + 1}</div>

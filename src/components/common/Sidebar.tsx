@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from "@/src/lib/api"; 
 
-// Aset Gambar
 import scanWhite from "../../assets/common/sidebar/scan-white.png";
 import scanOrange from "../../assets/common/sidebar/scan-orange.png";
 import reportWhite from "../../assets/common/sidebar/report-white.png";
@@ -35,8 +34,8 @@ const Sidebar = () => {
     const pathname = usePathname();
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
-    // State Data Profil Sekolah
     const [profile, setProfile] = useState<{
         name: string;
         categories: string;
@@ -59,7 +58,6 @@ const Sidebar = () => {
                     if (result.success && result.data && result.data.profile_data) {
                         const data = result.data.profile_data as SchoolProfileData;
                         
-                        // Format kategori disabilitas menjadi string
                         const categoriesFormatted = data.disability_types
                             ? data.disability_types.map(d => d.jenis_disabilitas).join(", ")
                             : '-';
@@ -74,6 +72,8 @@ const Sidebar = () => {
                 }
             } catch (err: any) {
                 console.error("Fetch profile error:", err);
+            } finally {
+                setIsLoadingProfile(false);
             }
         };
 
@@ -137,20 +137,19 @@ const Sidebar = () => {
             }}
         >
             
-            {/* --- PROFILE SECTION (Layout Persis Referensi) --- */}
             <Link href="/sekolah/profile/informasi-sekolah" className="w-full block group/profile">
                 <div className="w-full py-[2vw] flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300">
                     
-                    {/* Icon Chevron di Pojok Kanan Atas */}
                     <div className="absolute top-[1.5vw] right-[1.5vw] opacity-70 group-hover/profile:opacity-100 transition-opacity">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-[1.5vw] h-[1.5vw]">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                         </svg>
                     </div>
 
-                    {/* Foto Profil */}
                     <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative shadow-md">
-                        {profile.photoUrl ? (
+                        {isLoadingProfile ? (
+                            <div className="w-full h-full bg-gray-300 animate-pulse"></div>
+                        ) : profile.photoUrl ? (
                             <Image 
                                 src={profile.photoUrl}
                                 alt="Profil Sekolah"
@@ -168,21 +167,29 @@ const Sidebar = () => {
                         )}
                     </div>
 
-                    {/* Informasi Teks */}
-                    <div className="flex flex-col px-[1vw]">
-                        <h1 className="text-[1.8vw] leading-tight break-words max-w-[18vw] line-clamp-2 min-h-[2.2vw]">
-                            {profile.name}
-                        </h1>
-                        
-                        <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
-                            <p className="line-clamp-1 max-w-[15vw] mx-auto">{profile.categories || "Jenis Sekolah"}</p>
-                            <p>{profile.studentCount} Siswa</p>
-                        </div>
+                    <div className="flex flex-col px-[1vw] w-full items-center">
+                        {isLoadingProfile ? (
+                            <>
+                                <div className="h-[2vw] w-[14vw] bg-white/30 rounded animate-pulse mb-[0.5vw]"></div>
+                                <div className="h-[1.2vw] w-[10vw] bg-white/30 rounded animate-pulse mb-[0.3vw]"></div>
+                                <div className="h-[1.2vw] w-[8vw] bg-white/30 rounded animate-pulse"></div>
+                            </>
+                        ) : (
+                            <>
+                                <h1 className="text-[1.8vw] leading-tight break-words max-w-[18vw] line-clamp-2 min-h-[2.2vw]">
+                                    {profile.name}
+                                </h1>
+                                
+                                <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
+                                    <p className="line-clamp-1 max-w-[15vw] mx-auto">{profile.categories || "Jenis Sekolah"}</p>
+                                    <p>{profile.studentCount} Siswa</p>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </Link>
 
-            {/* --- MENU ITEMS --- */}
             <div className="flex flex-col gap-[0.5vw] mt-[1vw] pr-[2vw]">
                 {menuItems.map((item, index) => {
                     const isActive = pathname === item.href || pathname.startsWith(item.href);
@@ -194,7 +201,6 @@ const Sidebar = () => {
                             className="block" 
                         >
                             <div className="relative flex items-center p-[1.2vw] cursor-pointer rounded-r-[2vw] group overflow-hidden">
-                                {/* Animasi Background Putih (Sliding) */}
                                 <div 
                                     className={`
                                         absolute top-0 left-0 h-full w-full bg-white rounded-r-[2vw]
@@ -203,7 +209,6 @@ const Sidebar = () => {
                                     `}
                                 />
 
-                                {/* Konten Menu (Icon & Text) */}
                                 <div className={`
                                     relative z-10 flex items-center gap-[1.5vw] transition-colors duration-300
                                     ${isActive ? "text-[#D7762E]" : "text-white group-hover:text-white/80"}
@@ -223,7 +228,6 @@ const Sidebar = () => {
                 })}
             </div>
 
-            {/* --- LOGOUT BUTTON --- */}
             <div className="flex flex-row justify-center items-center px-[2vw] mt-auto mb-[2vw] border-t-[0.1vw] border-white pt-[1vw]">
                 <button
                     onClick={handleLogout}

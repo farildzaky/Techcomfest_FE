@@ -1,10 +1,8 @@
 'use client';
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
-// Link tidak lagi digunakan untuk detail karena diganti Modal, tapi dibiarkan jika ada keperluan lain
 import Link from "next/link"; 
 import { fetchWithAuth } from '@/src/lib/api'; 
 
-// --- Interfaces ---
 interface ReportData {
     id: string;
     menu_name: string;
@@ -13,17 +11,14 @@ interface ReportData {
     created_at: string;
 }
 
-// Interface untuk data detail modal
 interface ReportDetailData {
     menu: string;
     catatan: string[]; 
     foto_report: string | null;
 }
 
-// --- Constants ---
 const monthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-// --- CUSTOM DROPDOWN COMPONENT ---
 const CustomDropdown = ({ 
     label, 
     options, 
@@ -39,7 +34,6 @@ const CustomDropdown = ({
 }) => {
     return (
         <div className="relative w-full">
-            {/* BUTTON TRIGGER */}
             <button 
                 type="button"
                 onClick={onToggle} 
@@ -60,13 +54,11 @@ const CustomDropdown = ({
                 </svg>
             </button>
 
-            {/* DROPDOWN MENU */}
             {isOpen && (
                 <div className="absolute top-[120%] left-0 w-full bg-white rounded-[0.5vw] shadow-xl max-h-[15vw] overflow-y-auto border border-orange-200 z-[100] animate-in fade-in zoom-in-95 duration-100 custom-scrollbar">
                     {options.map((opt, idx) => (
                         <div 
                             key={idx} 
-                            // onMouseDown agar tereksekusi sebelum dropdown tertutup
                             onMouseDown={() => onSelect(opt)} 
                             className="px-[1.5vw] py-[0.8vw] hover:bg-orange-50 cursor-pointer satoshiMedium text-[1vw] text-gray-700 border-b border-gray-100 last:border-0 hover:text-[#E87E2F] transition-colors"
                         >
@@ -79,50 +71,30 @@ const CustomDropdown = ({
     );
 };
 
-// --- Loading Skeleton ---
-const TableSkeleton = () => (
-    <div className="w-full bg-white animate-pulse">
-        {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="flex w-full border-b-[0.2vw] border-[#E87E2F] last:border-b-0">
-                <div className="w-[10%] py-[1.5vw] border-r-[0.2vw] border-[#E87E2F] bg-gray-100/50" />
-                <div className="w-[35%] py-[1.5vw] border-r-[0.2vw] border-[#E87E2F] px-[1vw]" />
-                <div className="w-[35%] py-[1.5vw] border-r-[0.2vw] border-[#E87E2F] px-[1vw]" />
-                <div className="w-[20%] py-[1.5vw] px-[1vw]" />
-            </div>
-        ))}
-    </div>
-);
-
 const DataLaporanSppg = () => {
-    // --- State Data Utama ---
     const [allReports, setAllReports] = useState<ReportData[]>([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // --- State Pagination Client Side ---
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 7; 
 
-    // --- State Filter ---
     const [selectedDate, setSelectedDate] = useState<string | number>("Tanggal");
     const [selectedMonth, setSelectedMonth] = useState<string | number>("Bulan");
     const [selectedYear, setSelectedYear] = useState<string | number>("Tahun");
     const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-    // --- State Modal Detail ---
     const [selectedDetail, setSelectedDetail] = useState<ReportDetailData | null>(null);
     const [loadingDetail, setLoadingDetail] = useState(false);
 
     const filterContainerRef = useRef<HTMLDivElement>(null);
 
-    // Options Generator
     const dates = Array.from({ length: 31 }, (_, i) => i + 1);
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - 2023 }, (_, i) => 2024 + i);
 
     const isFilterActive = selectedDate !== "Tanggal" || selectedMonth !== "Bulan" || selectedYear !== "Tahun";
 
-    // --- 1. FETCH DATA UTAMA ---
     const fetchReports = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -154,7 +126,6 @@ const DataLaporanSppg = () => {
         fetchReports();
     }, [fetchReports]);
 
-    // --- 2. FILTER LOGIC (Client Side) ---
     const filteredReports = useMemo(() => {
         return allReports.filter(item => {
             const dateObj = new Date(item.created_at);
@@ -175,17 +146,14 @@ const DataLaporanSppg = () => {
         });
     }, [allReports, selectedDate, selectedMonth, selectedYear]);
 
-    // --- 3. PAGINATION LOGIC (Client Side) ---
     const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
     const paginatedReports = useMemo(() => {
         const startIndex = (currentPage - 1) * itemsPerPage;
         return filteredReports.slice(startIndex, startIndex + itemsPerPage);
     }, [filteredReports, currentPage]);
 
-    // --- 4. HANDLE VIEW DETAIL (MODAL LOGIC) ---
     const handleViewDetail = async (id: string) => {
         setLoadingDetail(true);
-        // Set placeholder data saat loading
         setSelectedDetail({ menu: "Memuat...", catatan: [], foto_report: null }); 
 
         try {
@@ -215,7 +183,6 @@ const DataLaporanSppg = () => {
         }
     };
 
-    // Helper functions
     const formatDate = (dateString: string) => {
         if (!dateString) return "-";
         try {
@@ -267,7 +234,6 @@ const DataLaporanSppg = () => {
                 </p>
             </div>
 
-            {/* --- FILTER SECTION --- */}
             <div ref={filterContainerRef} className="flex flex-col items-start relative z-50 mb-[2vw]">
                 <div className="flex gap-[1.5vw] mb-[1.5vw] items-center w-full">
                     <CustomDropdown 
@@ -304,9 +270,7 @@ const DataLaporanSppg = () => {
                 )}
             </div>
 
-            {/* Table Section */}
             <div className='w-full bg-white rounded-[1vw] overflow-hidden border-[0.3vw] border-[#E87E2F] shadow-lg relative z-10'>
-                {/* Header */}
                 <div className='flex w-full bg-[#FFF3EB] border-b-[0.2vw] border-[#E87E2F]'>
                     <div className='w-[10%] py-[1.2vw] flex items-center justify-center border-r-[0.2vw] border-[#E87E2F]'>
                         <span className='satoshiBold text-[1.5vw] text-[#E87E2F]'>No</span>
@@ -322,10 +286,26 @@ const DataLaporanSppg = () => {
                     </div>
                 </div>
 
-                {/* Body */}
                 <div className='flex flex-col bg-white '>
                     {loading ? (
-                        <TableSkeleton />
+                        <div className="w-full bg-white animate-pulse">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                                <div key={i} className="flex w-full border-b-[0.2vw] border-[#E87E2F] last:border-b-0">
+                                    <div className="w-[10%] py-[2vw] border-r-[0.2vw] border-[#E87E2F] flex justify-center items-center">
+                                        <div className="w-[2vw] h-[1.5vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                    <div className="w-[35%] py-[2vw] border-r-[0.2vw] border-[#E87E2F] px-[1vw] flex justify-center items-center">
+                                        <div className="w-[10vw] h-[1.5vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                    <div className="w-[35%] py-[2vw] border-r-[0.2vw] border-[#E87E2F] px-[1vw] flex justify-center items-center">
+                                        <div className="w-[15vw] h-[1.5vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                    <div className="w-[20%] py-[2vw] px-[1vw] flex justify-center items-center">
+                                        <div className="w-[5vw] h-[1.5vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     ) : error ? (
                         <div className="py-[4vw] text-center text-[#E87E2F] satoshiBold text-[1.5vw]">{error}</div>
                     ) : filteredReports.length === 0 ? (
@@ -354,7 +334,6 @@ const DataLaporanSppg = () => {
                                         <span className='satoshiBold text-[1.3vw] text-[#8B5E3C] w-full truncate text-center'>{item.menu_name}</span>
                                     </div>
                                     <div className='w-[20%] py-[1.2vw] flex items-center justify-center'>
-                                        {/* Ganti Link dengan Button yang memanggil handleViewDetail */}
                                         <button 
                                             onClick={() => handleViewDetail(item.id)} 
                                             className='text-[#E87E2F] underline decoration-2 underline-offset-4 hover:text-[#b06a33] satoshiBold text-[1.2vw] whitespace-nowrap cursor-pointer'
@@ -369,7 +348,6 @@ const DataLaporanSppg = () => {
                 </div>
             </div>
 
-            {/* Pagination Controls */}
             {!loading && !error && filteredReports.length > 0 && (
                 <div className="flex justify-center items-center gap-[2vw] mt-[2vw]">
                     <button onClick={handlePrev} disabled={currentPage === 1} className={`px-[2vw] py-[0.6vw] rounded-full text-[1.2vw] satoshiBold ${currentPage === 1 ? 'bg-black/20 text-white/50 cursor-not-allowed' : 'bg-[#FFF3EB] text-[#E87E2F] hover:scale-105 shadow-md'}`}>Sebelumnya</button>
@@ -378,7 +356,6 @@ const DataLaporanSppg = () => {
                 </div>
             )}
 
-            {/* --- MODAL DETAIL (ORANYE) --- */}
             {selectedDetail && (
                 <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-[3vw]">
                     <div className="bg-[#E87E2F] w-[50vw] max-h-[90vh] overflow-y-auto rounded-[2vw] p-[3vw] shadow-2xl relative flex flex-col gap-[1.5vw] animate-in fade-in zoom-in-95 duration-200">

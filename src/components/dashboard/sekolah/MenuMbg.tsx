@@ -21,7 +21,6 @@ interface MenuData {
     status_keamanan: string; 
 }
 
-// --- Skeleton Card Component ---
 const SkeletonCard = () => {
     return (
         <div className="w-full bg-[#F5DDCA] rounded-[2vw] p-[2vw] flex flex-row gap-[2vw] animate-pulse"

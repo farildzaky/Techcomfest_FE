@@ -10,7 +10,7 @@ const InformasiInstansiPage = () => {
     const [loadingData, setLoadingData] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false); 
-    const [successMessage, setSuccessMessage] = useState<string | null>(null); 
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
         namaInstansi: "",
@@ -94,7 +94,24 @@ const InformasiInstansiPage = () => {
     };
 
     if (loadingData) {
-        return <div className="w-full min-h-screen flex justify-center items-center bg-[#D9833E] text-white satoshiBold text-[2vw]">Memuat informasi instansi...</div>;
+        return (
+            <div className="w-full min-h-screen p-[3vw] font-sans">
+                <div className="flex flex-col gap-[2vw]">
+                    <div className="flex flex-col gap-[0.5vw]">
+                        <div className="h-[3vw] w-[25vw] bg-white/30 rounded-[0.5vw] animate-pulse"></div>
+                        <div className="h-[1.5vw] w-[5vw] bg-white/30 rounded-[0.5vw] animate-pulse"></div>
+                    </div>
+                    <div className="flex flex-col gap-[1.5vw] w-[80%]">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="flex flex-col gap-[0.5vw]">
+                                <div className="h-[1.5vw] w-[15vw] bg-white/30 rounded-[0.4vw] animate-pulse"></div>
+                                <div className="h-[3.5vw] w-full bg-white/30 rounded-[0.8vw] animate-pulse"></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     if (fetchError) {

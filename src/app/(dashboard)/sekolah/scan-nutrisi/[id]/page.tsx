@@ -30,6 +30,61 @@ interface ScanResultData {
     id?: string;
 }
 
+const HasilDeteksiSkeleton = () => {
+    return (
+        <div className="w-full min-h-screen bg-[#E87E2F] py-[2vw] flex flex-col gap-[2vw] animate-pulse">
+            
+            <div className='w-[30vw] h-[6vw] bg-[#FFF3EB] rounded-r-[3vw] py-[1.5vw] px-[4vw] -ml-[3vw] mb-[3vw] shadow-md'></div>
+            
+            <div className='w-full px-[3vw] grid grid-cols-7 gap-[1vw] '>
+                <div className='col-span-3 h-[25vw] bg-white/30 rounded-[1vw] flex items-center justify-center'></div>
+
+                <div className='col-span-4 flex flex-col gap-[1vw]'>
+                    <div>
+                        <div className='h-[1.5vw] w-[20%] bg-white/50 rounded mb-[0.5vw]'></div>
+                        <div className='w-full h-[3.5vw] bg-white rounded-[0.8vw]'></div>
+                    </div>
+
+                    <div className='flex flex-col gap-[0.8vw] mt-[1vw]'>
+                        <div className='h-[1.5vw] w-[30%] bg-white/50 rounded mb-[0.5vw]'></div>
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className='flex gap-[1vw]'>
+                                <div className='flex-1 h-[3vw] bg-white rounded-[0.8vw]'></div>
+                                <div className='w-[25%] h-[3vw] bg-white rounded-[0.8vw]'></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <div className='grid grid-cols-5 gap-[2vw] px-[3vw] w-full'>
+                <div className='col-span-2 flex flex-col gap-[1vw]'>
+                    <div className='h-[2.5vw] w-[60%] bg-white/50 rounded'></div>
+                    <div className='w-full rounded-[1vw] overflow-hidden border-[0.15vw] border-white/20 bg-white shadow-md'>
+                        {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                            <div key={i} className='h-[3vw] border-b border-gray-200'></div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className='col-span-3 flex flex-col gap-[1vw]'>
+                    <div className='h-[2.5vw] w-[40%] bg-white/50 rounded'></div>
+                    <div className='bg-white rounded-[1vw] shadow-md h-[25vw]'></div>
+                    <div className='w-full h-[4vw] bg-white rounded-[1vw] shadow-md'></div>
+                </div>
+            </div>
+
+            <div className='flex justify-between px-[3vw] items-center mt-[2vw]'>
+                <div className='h-[2.5vw] w-[15vw] bg-white/20 rounded-full'></div>
+                <div className='flex gap-[1.5vw] ml-auto'>
+                    <div className='h-[4vw] w-[12vw] bg-[#FFF3EB] rounded-[2vw]'></div>
+                    <div className='h-[4vw] w-[12vw] bg-[#FFF3EB] rounded-[2vw]'></div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const HasilDeteksiPage = () => {
     const router = useRouter();
     const params = useParams(); 
@@ -202,7 +257,7 @@ const HasilDeteksiPage = () => {
         }
     };
 
-    if (loading) return <div className="min-h-screen bg-[#E87E2F] flex items-center justify-center text-white satoshiBold text-[2vw]">Memuat Data...</div>;
+    if (loading) return <HasilDeteksiSkeleton />;
 
     return (
         <div className="w-full min-h-screen bg-[#E87E2F] py-[2vw] flex flex-col gap-[2vw]">

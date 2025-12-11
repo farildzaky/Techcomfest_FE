@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api';
 
-// --- INTERFACES ---
 interface ReportListItem {
     id: string;
     no: number;
@@ -41,20 +40,16 @@ const DetailPelaporanSekolahSppg = () => {
     const params = useParams();
     const targetSchoolId = params?.id as string; 
 
-    // --- STATE DATA ---
     const [reports, setReports] = useState<ReportListItem[]>([]);
     const [schoolName, setSchoolName] = useState("Memuat Nama Sekolah...");
     const [loading, setLoading] = useState(true);
 
-    // --- STATE DETAIL MODAL ---
     const [selectedDetail, setSelectedDetail] = useState<ReportDetailData | null>(null);
     const [loadingDetail, setLoadingDetail] = useState(false);
 
-    // --- STATE UPDATE MODAL ---
     const [itemToUpdate, setItemToUpdate] = useState<ReportListItem | null>(null);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    // --- STATE FILTER & PAGINATION ---
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5; 
     const [selectedDate, setSelectedDate] = useState("Tanggal");
@@ -65,12 +60,10 @@ const DetailPelaporanSekolahSppg = () => {
     const dates = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
     const years = ["2025", "2026", "2027"];
 
-    // --- 1. FETCH DATA ---
     useEffect(() => {
         const fetchAllData = async () => {
             setLoading(true);
             try {
-                // A. Ambil Nama Sekolah
                 const responseSchools = await fetchWithAuth('/sppg/schools', { method: 'GET' });
                 let currentSchoolName = "Sekolah Tidak Ditemukan";
 
@@ -82,7 +75,6 @@ const DetailPelaporanSekolahSppg = () => {
                 }
                 setSchoolName(currentSchoolName);
 
-                // B. Ambil List Laporan
                 const responseReports = await fetchWithAuth('/sppg/reports', { method: 'GET' });
                 
                 if (responseReports.ok) {
@@ -118,7 +110,6 @@ const DetailPelaporanSekolahSppg = () => {
         if (targetSchoolId) fetchAllData();
     }, [targetSchoolId]);
 
-    // --- 2. GET DETAIL ---
     const handleViewDetail = async (id: string) => {
         setLoadingDetail(true);
         setSelectedDetail({ menu: "Memuat...", catatan: [], foto_report: null }); 
@@ -150,7 +141,6 @@ const DetailPelaporanSekolahSppg = () => {
         }
     };
 
-    // --- 3. HANDLE KLIK STATUS ---
     const handleStatusClick = (item: ReportListItem) => {
         if (item.status.toLowerCase() === 'completed' || item.status.toLowerCase() === 'selesai') {
             return; 
@@ -158,28 +148,22 @@ const DetailPelaporanSekolahSppg = () => {
         setItemToUpdate(item);
     };
 
-    // --- 4. PUT UPDATE STATUS (TANPA BODY/PAYLOAD) ---
     const handleConfirmUpdate = async () => {
         if (!itemToUpdate) return;
 
         setIsUpdating(true);
         try {
-            // PERBAIKAN: Tidak mengirim body apapun
-            // Backend hanya butuh trigger ID di URL
             const response = await fetchWithAuth(`/sppg/reports/${itemToUpdate.id}`, {
                 method: 'PUT'
-                // HAPUS headers & body agar tidak mengirim property apapun
             });
 
             if (response.ok) {
-                // Update UI Lokal
                 setReports(prev => prev.map(item => 
                     item.id === itemToUpdate.id ? { ...item, status: "completed" } : item
                 ));
                 setItemToUpdate(null);
                 alert("Status berhasil diperbarui!");
             } else {
-                // Cek error message dari backend
                 const errJson = await response.json();
                 console.error("Backend Error:", errJson);
                 alert(`Gagal mengubah status: ${errJson.message || "Unknown Error"}`);
@@ -192,7 +176,6 @@ const DetailPelaporanSekolahSppg = () => {
         }
     };
 
-    // --- FILTER & PAGINATION ---
     const filteredData = reports.filter(item => {
         const matchDate = selectedDate === "Tanggal" || item.tanggal === selectedDate;
         const matchMonth = selectedMonth === "Bulan" || item.bulan === selectedMonth;
@@ -224,15 +207,17 @@ const DetailPelaporanSekolahSppg = () => {
     return (
         <div className="w-full min-h-screen p-[3vw] flex flex-col font-sans relative" onClick={() => setOpenDropdown(null)}>
             
-            {/* Header */}
             <div className="mb-[2vw]">
                 <h1 className="satoshiBold text-[2.5vw] text-black">Pelaporan Sekolah</h1>
                 <h2 className="satoshiMedium text-[1.5vw] text-gray-600">
-                    {loading && schoolName === "Memuat Nama Sekolah..." ? "Memuat..." : schoolName}
+                    {loading ? (
+                        <div className="h-[2vw] w-[25vw] bg-gray-200 rounded animate-pulse mt-[0.5vw]"></div>
+                    ) : (
+                        schoolName
+                    )}
                 </h2>
             </div>
 
-            {/* Filter */}
             <div className="flex flex-col items-start relative z-20" onClick={(e) => e.stopPropagation()}>
                 <div className="flex gap-[1.5vw] mb-[2vw] items-center">
                     <CustomDropdown label={selectedDate} options={dates} isOpen={openDropdown === 'date'} onToggle={() => toggleDropdown('date')} onSelect={(val) => { setSelectedDate(val); setCurrentPage(1); setOpenDropdown(null); }} />
@@ -240,7 +225,7 @@ const DetailPelaporanSekolahSppg = () => {
                     <CustomDropdown label={selectedYear} options={years} isOpen={openDropdown === 'year'} onToggle={() => toggleDropdown('year')} onSelect={(val) => { setSelectedYear(val); setCurrentPage(1); setOpenDropdown(null); }} />
                 </div>
                 {isFilterActive && (
-                     <button onClick={handleClearFilter} className="bg-white mb-[2vw] w-fit text-[#E87E2F] satoshiMedium text-[1.2vw] py-[0.8vw] px-[1.5vw] rounded-[1vw] flex items-center gap-[0.5vw] shadow-sm hover:bg-[#E87E2F] hover:text-white"
+                     <button onClick={handleClearFilter} className="bg-white cursor-pointer mb-[2vw] w-fit text-[#E87E2F] satoshiMedium text-[1.2vw] py-[0.8vw] px-[1.5vw] rounded-[1vw] flex items-center gap-[0.5vw] shadow-sm hover:bg-[#E87E2F] hover:text-white"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                     >
                         <span>Hapus Filter</span>
@@ -248,7 +233,6 @@ const DetailPelaporanSekolahSppg = () => {
                 )}
             </div>
 
-            {/* Tabel List */}
             <div className="w-full bg-[#E87E2F] rounded-[1.5vw] overflow-hidden border-[0.2vw] border-[#E87E2F] relative z-10">
                 <div className="flex bg-[#E87E2F] text-white">
                     <div className="w-[10%] py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-[1.5vw]">No</div>
@@ -260,7 +244,25 @@ const DetailPelaporanSekolahSppg = () => {
 
                 <div className="flex flex-col bg-white">
                     {loading ? (
-                         <div className="flex items-center justify-center p-[4vw]"><p className="satoshiBold text-[1.5vw] text-[#E87E2F]">Memuat data...</p></div>
+                         [...Array(5)].map((_, i) => (
+                            <div key={i} className="flex border-b-[0.15vw] border-[#E87E2F] bg-white animate-pulse">
+                                <div className="w-[10%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#E87E2F]">
+                                    <div className="w-[1.5vw] h-[1.5vw] bg-gray-200 rounded"></div>
+                                </div>
+                                <div className="w-[25%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#E87E2F]">
+                                    <div className="w-[10vw] h-[1.2vw] bg-gray-200 rounded"></div>
+                                </div>
+                                <div className="w-[30%] py-[1.5vw] px-[1vw] flex justify-center items-center border-r-[0.15vw] border-[#E87E2F]">
+                                    <div className="w-[15vw] h-[1.2vw] bg-gray-200 rounded"></div>
+                                </div>
+                                <div className="w-[20%] px-[2vw] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#E87E2F]">
+                                    <div className="w-full h-[2vw] bg-gray-200 rounded-[1vw]"></div>
+                                </div>
+                                <div className="w-[15%] py-[1.5vw] flex justify-center items-center">
+                                    <div className="w-[5vw] h-[1.2vw] bg-gray-200 rounded"></div>
+                                </div>
+                            </div>
+                        ))
                     ) : currentItems.length > 0 ? (
                         currentItems.map((item, index) => (
                             <div key={item.id} className={`flex border-b-[0.15vw] border-[#E87E2F] last:border-b-0 transition-colors ${(indexOfFirstItem + index) % 2 === 1 ? 'bg-[#FFF3EB]' : 'bg-white'} hover:opacity-95`}>
@@ -288,7 +290,6 @@ const DetailPelaporanSekolahSppg = () => {
                 </div>
             </div>
 
-            {/* Pagination */}
             {totalPages > 0 && (
                 <div className="flex justify-end mt-[1vw] mb-[2vw]">
                     <div className="flex items-center gap-[1vw]">
@@ -301,7 +302,6 @@ const DetailPelaporanSekolahSppg = () => {
                 </div>
             )}
 
-            {/* --- MODAL DETAIL (ORANYE) --- */}
             {selectedDetail && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-[3vw]">
                     <div className="bg-[#E87E2F] w-[50vw] max-h-[90vh] overflow-y-auto rounded-[2vw] p-[3vw] shadow-2xl relative flex flex-col gap-[1.5vw]">
@@ -332,7 +332,6 @@ const DetailPelaporanSekolahSppg = () => {
                 </div>
             )}
 
-            {/* --- MODAL UPDATE STATUS (SIMPLE WHITE) --- */}
             {itemToUpdate && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-[3vw]">
                     <div className="bg-white w-[30vw] rounded-[2vw] p-[2vw] shadow-2xl relative flex flex-col gap-[1.5vw] text-center">
@@ -341,7 +340,6 @@ const DetailPelaporanSekolahSppg = () => {
                             Pastikan menu sudah diperbarui dengan mengedit menu MBG. Status akan otomatis terganti.
                         </p>
                         <div className="flex gap-[1vw] justify-center mt-[1vw]">
-                            {/* Tombol Batal */}
                             <button 
                                 onClick={() => setItemToUpdate(null)}
                                 className="bg-white text-[#E87E2F] border-[0.15vw] border-[#E87E2F] px-[3vw] py-[0.8vw] rounded-[1.5vw] satoshiBold text-[1.2vw] hover:bg-[#FFF3EB] transition-colors"
@@ -349,7 +347,6 @@ const DetailPelaporanSekolahSppg = () => {
                                 Batal
                             </button>
 
-                            {/* Tombol Konfirmasi */}
                             <button 
                                 onClick={handleConfirmUpdate}
                                 disabled={isUpdating}
@@ -369,7 +366,7 @@ const DetailPelaporanSekolahSppg = () => {
 const CustomDropdown = ({ label, options, isOpen, onToggle, onSelect }: CustomDropdownProps) => {
     return (
         <div className="relative w-[12vw]">
-            <button onClick={onToggle} className="w-full bg-[#E87E2F] text-white satoshiBold text-[1.2vw] py-[0.8vw] px-[1.5vw] rounded-[0.5vw] flex justify-between items-center shadow-sm hover:bg-[#b06a33]" style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
+            <button onClick={onToggle} className="w-full bg-[#E87E2F] cursor-pointer text-white satoshiBold text-[1.2vw] py-[0.8vw] px-[1.5vw] rounded-[0.5vw] flex justify-between items-center shadow-sm hover:bg-[#b06a33]" style={{ boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)' }}>
                 {label}
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className={`w-[1.2vw] h-[1.2vw] transition-transform ${isOpen ? 'rotate-180' : ''}`}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
             </button>

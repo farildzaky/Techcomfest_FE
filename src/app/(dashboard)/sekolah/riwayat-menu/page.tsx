@@ -3,10 +3,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { fetchWithAuth } from '@/src/lib/api';
 
-// --- INTERFACES ---
 interface MenuData {
     id: string;
-    tanggal: string; // Format: "Jumat, 16 Januari 2026"
+    tanggal: string; 
     nama_menu: string;
     komponen_menu: string[];
     risiko_umum_ringkas: string[];
@@ -30,12 +29,54 @@ interface CustomDropdownProps {
 
 const monthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
+const RiwayatMenuSkeleton = () => {
+    return (
+        <div className="min-h-screen p-[3vw] animate-pulse">
+            <div className="h-[3vw] w-[20%] bg-gray-300 rounded mb-[2vw]"></div>
+
+            <div className="flex flex-col items-start mb-[2vw]">
+                <div className="flex gap-[1.5vw]">
+                    <div className="h-[3vw] w-[12vw] bg-gray-300 rounded-[0.5vw]"></div>
+                    <div className="h-[3vw] w-[12vw] bg-gray-300 rounded-[0.5vw]"></div>
+                    <div className="h-[3vw] w-[12vw] bg-gray-300 rounded-[0.5vw]"></div>
+                </div>
+            </div>
+
+            <div className="w-full bg-[#E87E2F] rounded-[1.5vw] overflow-hidden border-[0.2vw] border-[#E87E2F]">
+                <div className="flex bg-[#E87E2F] h-[4vw]">
+                    <div className="w-[10%] border-r-[0.15vw] border-white"></div>
+                    <div className="w-[35%] border-r-[0.15vw] border-white"></div>
+                    <div className="w-[35%] border-r-[0.15vw] border-white"></div>
+                    <div className="w-[20%]"></div>
+                </div>
+
+                <div className="flex flex-col bg-white">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="flex border-b-[0.15vw] border-[#E87E2F] h-[5vw] items-center px-[1vw]">
+                            <div className="w-[10%] flex justify-center"><div className="h-[1.5vw] w-[50%] bg-gray-200 rounded"></div></div>
+                            <div className="w-[35%] flex justify-center"><div className="h-[1.5vw] w-[70%] bg-gray-200 rounded"></div></div>
+                            <div className="w-[35%] flex justify-center"><div className="h-[1.5vw] w-[60%] bg-gray-200 rounded"></div></div>
+                            <div className="w-[20%] flex justify-center"><div className="h-[1.5vw] w-[50%] bg-gray-200 rounded"></div></div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="flex justify-end mt-[1vw] gap-[1vw]">
+                <div className="h-[2vw] w-[10vw] bg-gray-300 rounded"></div>
+                <div className="flex gap-[0.5vw]">
+                    <div className="h-[2vw] w-[2vw] bg-gray-300 rounded-full"></div>
+                    <div className="h-[2vw] w-[2vw] bg-gray-300 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const RiwayatMenuPage = () => {
-    // --- STATE ---
     const [menus, setMenus] = useState<MenuData[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // --- STATE FILTER & PAGINATION ---
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5; 
     const [selectedDate, setSelectedDate] = useState("Tanggal");
@@ -46,12 +87,10 @@ const RiwayatMenuPage = () => {
     const dates = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
     const years = ["2025", "2026", "2027"];
 
-    // --- FETCH DATA ---
     useEffect(() => {
         const fetchMenus = async () => {
             setLoading(true);
             try {
-                // Endpoint GET /school/menus
                 const response = await fetchWithAuth('/school/menus', { method: 'GET' });
                 
                 if (response.ok) {
@@ -70,17 +109,14 @@ const RiwayatMenuPage = () => {
         fetchMenus();
     }, []);
 
-    // --- LOGIKA FILTER ---
-    // Format tanggal dari API: "Jumat, 16 Januari 2026"
-    // Kita perlu parsing string ini untuk dicocokkan dengan filter dropdown
     const filteredData = menus.filter(item => {
-        const parts = item.tanggal.split(' '); // ["Jumat,", "16", "Januari", "2026"]
+        const parts = item.tanggal.split(' '); 
         
-        if (parts.length < 4) return true; // Safety check
+        if (parts.length < 4) return true; 
 
-        const day = parts[1];      // "16"
-        const month = parts[2];    // "Januari"
-        const year = parts[3];     // "2026"
+        const day = parts[1];      
+        const month = parts[2];    
+        const year = parts[3];     
 
         const matchDate = selectedDate === "Tanggal" || day === selectedDate;
         const matchMonth = selectedMonth === "Bulan" || month === selectedMonth;
@@ -99,7 +135,6 @@ const RiwayatMenuPage = () => {
         setOpenDropdown(null);
     };
 
-    // --- PAGINATION ---
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
@@ -107,13 +142,14 @@ const RiwayatMenuPage = () => {
 
     const toggleDropdown = (name: string) => setOpenDropdown(openDropdown === name ? null : name);
 
+    if (loading) return <RiwayatMenuSkeleton />;
+
     return (
         <div className="min-h-screen" onClick={() => setOpenDropdown(null)}>
             <div className="p-[3vw]">
 
                 <h1 className="satoshiBold text-[2.5vw] text-black mb-[2vw]">Riwayat Menu</h1>
 
-                {/* --- FILTER SECTION --- */}
                 <div className="flex flex-col items-start relative z-20" onClick={(e) => e.stopPropagation()}>
                     <div className="flex gap-[1.5vw] mb-[2vw] items-center">
                         <CustomDropdown label={selectedDate} options={dates} isOpen={openDropdown === 'date'} onToggle={() => toggleDropdown('date')} onSelect={(val) => { setSelectedDate(val); setCurrentPage(1); setOpenDropdown(null); }} />
@@ -130,7 +166,6 @@ const RiwayatMenuPage = () => {
                     )}
                 </div>
 
-                {/* --- TABLE SECTION --- */}
                 <div className="w-full bg-white rounded-[1.5vw] overflow-hidden border-[0.2vw] border-[#E87E2F] relative z-10">
 
                     <div className="flex bg-[#E87E2F] text-white">
@@ -141,11 +176,7 @@ const RiwayatMenuPage = () => {
                     </div>
 
                     <div className="flex flex-col bg-white">
-                        {loading ? (
-                            <div className="flex items-center justify-center p-[4vw]">
-                                <p className="satoshiBold text-[1.5vw] text-[#E87E2F]">Memuat data...</p>
-                            </div>
-                        ) : currentItems.length > 0 ? (
+                        {currentItems.length > 0 ? (
                             currentItems.map((item, index) => (
                                 <div key={item.id} className={`flex border-b-[0.15vw] border-[#E87E2F] last:border-b-0 ${index % 2 === 1 ? 'bg-[#FFF3EB]' : 'bg-white'} hover:opacity-95`}>
 
@@ -179,7 +210,6 @@ const RiwayatMenuPage = () => {
                     </div>
                 </div>
 
-                {/* --- PAGINATION --- */}
                 {totalPages > 0 && (
                     <div className="flex justify-end mt-[1vw] mb-[2vw]">
                         <div className="flex items-center gap-[1vw]">
@@ -197,7 +227,6 @@ const RiwayatMenuPage = () => {
     );
 }
 
-// --- DROPDOWN COMPONENT ---
 const CustomDropdown = ({ label, options, isOpen, onToggle, onSelect }: CustomDropdownProps) => {
     return (
         <div className="relative w-[12vw]">

@@ -7,6 +7,7 @@ import bg from "../../../../assets/bg.png";
 import loadingSpinner from "../../../../assets/loading.png"; 
 import jam from "../../../../assets/dashboard/sppg/jam.png"; 
 import { fetchWithAuth } from '@/src/lib/api';
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 const COMPRESSION_QUALITY = 0.8;
 const MAX_IMG_WIDTH = 1024;
@@ -43,6 +44,36 @@ const compressImage = (file: File): Promise<Blob> => {
         };
         reader.readAsDataURL(file);
     });
+};
+
+const ScanNutrisiSkeleton = () => {
+    return (
+        <div className="w-full h-screen px-[3vw] py-[2vw] flex flex-col gap-[1vw] relative animate-pulse">
+            
+            <div className="flex justify-between items-start">
+                <div className="flex flex-col gap-[0.5vw] w-[70%]">
+                    <div className="h-[3.5vw] w-[80%] bg-gray-300 rounded-md"></div>
+                    <div className="h-[2vw] w-full bg-gray-200 rounded-md mt-[0.5vw]"></div>
+                    <div className="h-[2vw] w-[90%] bg-gray-200 rounded-md"></div>
+                </div>
+
+                <div className="w-[3.5vw] h-[3.5vw] bg-gray-300 rounded-full shrink-0"></div>
+            </div>
+
+            <div className="relative w-[90%] h-[35vw] bg-gray-300 rounded-[1.5vw] mt-[1vw] flex items-center justify-center">
+                <div className="flex flex-col items-center gap-[1vw]">
+                    <div className="w-[6vw] h-[6vw] bg-gray-400 rounded-full"></div>
+                    <div className="w-[15vw] h-[2vw] bg-gray-400 rounded-full"></div>
+                </div>
+            </div>
+
+            <div className="h-[1.5vw] w-[30%] bg-gray-200 rounded-md mt-[0.5vw]"></div>
+
+            <div className="flex justify-end mt-[1vw]">
+                <div className="h-[3.5vw] w-[15vw] bg-gray-300 rounded-[2vw]"></div>
+            </div>
+        </div>
+    );
 };
 
 const ScanNutrisiMain = () => {

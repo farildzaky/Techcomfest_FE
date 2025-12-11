@@ -6,7 +6,7 @@ interface CardMenuProps {
 
 const CardMenu: React.FC<CardMenuProps> = ({ menu, day }) => {
     return (
-        <div className="relative flex flex-col justify-center items-center w-1/5 h-[11vw] rounded-[1vw] pt-[4vw] px-[1vw] pb-[4vw] bg-[#D7762E]">
+        <div className="relative flex flex-col justify-center items-center w-full h-[11vw] rounded-[1vw] pt-[4vw] px-[1vw] pb-[4vw] bg-[#D7762E]">
             <div className='absolute top-[-3vw] w-[6vw] h-[6vw] flex justify-center items-center text-black satoshiBold text-[1.5vw] bg-[#FAF6E6] px-[0.5vw] rounded-full'
                 style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
 

@@ -10,6 +10,51 @@ interface MenuData {
     komponen_menu: string[] | string; 
 }
 
+const FormPelaporanSkeleton = () => {
+    return (
+        <div className="w-full h-full p-[3vw] bg-white animate-pulse">
+            <div className="mb-[2.5vw]">
+                <div className="h-[3vw] w-[20vw] bg-gray-300 rounded mb-[0.5vw]"></div>
+                <div className="h-[1vw] w-[30vw] bg-gray-200 rounded"></div>
+            </div>
+
+            <div className="flex gap-[4vw]">
+                <div className="flex-1 flex flex-col gap-[1.5vw]">
+                    <div>
+                        <div className="h-[1.2vw] w-[12vw] bg-gray-300 rounded mb-[0.5vw]"></div>
+                        <div className="h-[0.9vw] w-[18vw] bg-gray-200 rounded mb-[0.5vw]"></div>
+                        <div className="w-full h-[3.5vw] bg-gray-300 rounded-[0.8vw]"></div>
+                    </div>
+
+                    <div>
+                        <div className="h-[1.2vw] w-[12vw] bg-gray-300 rounded mb-[0.5vw]"></div>
+                        <div className="h-[0.9vw] w-[18vw] bg-gray-200 rounded mb-[0.5vw]"></div>
+                        <div className="w-full h-[3.5vw] bg-gray-300 rounded-[0.8vw]"></div>
+                    </div>
+
+                    <div>
+                        <div className="h-[1.2vw] w-[15vw] bg-gray-300 rounded mb-[0.5vw]"></div>
+                        <div className="h-[0.9vw] w-[20vw] bg-gray-200 rounded mb-[0.5vw]"></div>
+                        <div className="w-full h-[8vw] bg-gray-300 rounded-[0.8vw]"></div>
+                    </div>
+                </div>
+
+                <div className="flex-1 flex flex-col">
+                     <div className="flex flex-col h-full">
+                        <div className="h-[1.2vw] w-[10vw] bg-gray-300 rounded mb-[0.5vw]"></div>
+                        <div className="h-[0.9vw] w-[22vw] bg-gray-200 rounded mb-[0.5vw]"></div>
+                        <div className="w-full flex-1 bg-gray-300 rounded-[0.8vw] min-h-[15vw]"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-end mt-[2.5vw]">
+                <div className="w-[10vw] h-[3.5vw] bg-gray-300 rounded-[2vw]"></div>
+            </div>
+        </div>
+    );
+};
+
 const FormPelaporan = () => {
     const [formData, setFormData] = useState({
         menuId: '',      
@@ -19,7 +64,7 @@ const FormPelaporan = () => {
     });
 
     const [menuOptions, setMenuOptions] = useState<MenuData[]>([]);
-    const [loadingMenu, setLoadingMenu] = useState(false);
+    const [loadingMenu, setLoadingMenu] = useState(true);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -64,7 +109,6 @@ const FormPelaporan = () => {
     }, []);
 
     const handleSelectMenu = (menu: MenuData) => {
-        // Format komponen
         let komponenString = "";
         if (Array.isArray(menu.komponen_menu)) {
             komponenString = menu.komponen_menu.join(', ');
@@ -160,6 +204,8 @@ const FormPelaporan = () => {
             setIsSubmitting(false);
         }
     };
+
+    if (loadingMenu) return <FormPelaporanSkeleton />;
 
     return (
         <div className="w-full h-full p-[3vw] bg-white">

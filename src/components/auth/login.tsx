@@ -8,7 +8,7 @@ import logoWhite from "../../assets/logo-white.png";
 
 const Login = () => {
     const router = useRouter();
-    
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -38,7 +38,7 @@ const Login = () => {
             }
 
             const user = data.data.user;
-            const userRole = user.role; 
+            const userRole = user.role;
 
             document.cookie = `accessToken=${data.data.access_token}; path=/; max-age=86400; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
 
@@ -71,20 +71,28 @@ const Login = () => {
     };
 
     return (
-        <section className="flex flex-row h-screen w-full bg-white">
-           <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center">
+        <section className="flex flex-row h-screen w-full bg-white relative">
+
+
+            <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center relative">
                 <Image src={logoWhite} alt="logo" className="w-[15vw]" />
                 <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
             </div>
 
-            <div className="flex flex-col w-[60vw] h-full justify-center items-center px-[8vw] gap-[3vw]">
+            <div className="flex flex-col w-[60vw] h-full justify-center items-center px-[8vw] gap-[3vw] z-10 relative">
+
+                <Link href="/" className="hover:scale-105 transition-transform left-[1vw] top-[1vw] absolute cursor-pointer ">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-black">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </Link>
                 <div className="flex flex-col text-[#B56225] items-center leading-none gap-[0.5vw]">
                     <h1 className="satoshiBold text-[4.5vw]">Masuk</h1>
                     <p className="satoshiMedium text-[1.5vw]">Masuk ke dalam akun Anda</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="w-full flex flex-col gap-[1.5vw]">
-                    
+
                     {error && (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-[1vw] py-[0.5vw] rounded-[0.5vw] satoshiMedium text-[1vw] text-center">
                             {error}
@@ -122,7 +130,7 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <button 
+                    <button
                         type="submit"
                         disabled={isLoading}
                         className={`w-full cursor-pointer text-white satoshiBold text-[1.5vw] py-[1vw] rounded-[0.8vw] mt-[1vw] transition-colors duration-300 shadow-md

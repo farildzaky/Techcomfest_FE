@@ -27,6 +27,7 @@ const SidebarSppg = () => {
     const pathname = usePathname();
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
     const [profile, setProfile] = useState<ProfileData>({
         nama_instansi: "", 
@@ -34,7 +35,6 @@ const SidebarSppg = () => {
     });
 
     const [schoolCount, setSchoolCount] = useState(0);
-    const [studentCount, setStudentCount] = useState(0); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -64,6 +64,8 @@ const SidebarSppg = () => {
 
             } catch (error) {
                 console.error("Gagal mengambil data sidebar:", error);
+            } finally {
+                setIsLoadingProfile(false);
             }
         };
 
@@ -143,7 +145,9 @@ const SidebarSppg = () => {
                     </div>
 
                     <div className="w-[10vw] h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative ">
-                        {profile.photo_url ? (
+                        {isLoadingProfile ? (
+                            <div className="w-full h-full bg-gray-300 animate-pulse"></div>
+                        ) : profile.photo_url ? (
                             <Image 
                                 src={profile.photo_url}
                                 alt="Profil SPPG"
@@ -161,14 +165,23 @@ const SidebarSppg = () => {
                         )}
                     </div>
 
-                    <div className="flex flex-col px-[1vw]">
-                        <h1 className="text-[1.8vw] leading-tight break-words max-w-[18vw] line-clamp-2 min-h-[2.2vw]">
-                            {profile.nama_instansi}
-                        </h1>
-                        
-                        <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
-                            {schoolCount} Sekolah 
-                        </div>
+                    <div className="flex flex-col px-[1vw] w-full items-center">
+                        {isLoadingProfile ? (
+                            <>
+                                <div className="h-[2vw] w-[14vw] bg-white/30 rounded animate-pulse mb-[0.5vw]"></div>
+                                <div className="h-[1.2vw] w-[8vw] bg-white/30 rounded animate-pulse"></div>
+                            </>
+                        ) : (
+                            <>
+                                <h1 className="text-[1.8vw] leading-tight break-words max-w-[18vw] line-clamp-2 min-h-[2.2vw]">
+                                    {profile.nama_instansi}
+                                </h1>
+                                
+                                <div className="text-[1.1vw] opacity-90 mt-[0.5vw]">
+                                    {schoolCount} Sekolah 
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </Link>

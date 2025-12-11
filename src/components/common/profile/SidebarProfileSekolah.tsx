@@ -119,7 +119,7 @@ const SidebarProfileSekolah = () => {
             {/* Back Button */}
             <div className="w-full px-[2vw] mb-[2vw]">
                 <Link href="/sppg/dashboard">
-                    <button className="text-white hover:bg-white/20 p-[0.5vw] rounded-full transition-colors">
+                    <button className="text-white hover:bg-white/20 p-[0.5vw] rounded-full transition-colors cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-[2vw] h-[2vw]">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                         </svg>
@@ -178,10 +178,10 @@ const SidebarProfileSekolah = () => {
                     ) : (
                         <>
                             <h2 className="satoshiBold text-[1.8vw] leading-tight break-words uppercase">
-                                {profile?.nama_sekolah || "Nama Instansi"}
+                                {profile?.nama_sekolah || "Nama Sekolah"}
                             </h2>
                             <p className="satoshiMedium text-[1.5vw] uppercase mt-[0.2vw]">
-                                {profile?.alamat || "Wilayah Kerja"}
+                                {profile?.alamat || "Alamat Sekolah"}
                             </p>
                         </>
                     )}
