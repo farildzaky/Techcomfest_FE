@@ -72,7 +72,7 @@ const Login = () => {
             </div>
 
             {/* --- BAGIAN KANAN (FORM) --- */}
-            <div className="flex flex-col w-full md:w-[60vw] md:h-screen justify-center items-center px-6 py-10 md:px-[8vw] gap-6 md:gap-[3vw] relative bg-white">
+            <div className="flex flex-col w-full md:w-[60vw] md:h-screen justify-center items-center px-6  md:px-[8vw] gap-6 md:gap-[3vw] relative bg-white">
 
                 {/* Tombol Back */}
                 <Link href="/" className="fixed md:absolute cursor-pointer top-4 left-4 md:top-[2vw] md:left-[2vw] hover:scale-110 transition-transform">
