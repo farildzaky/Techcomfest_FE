@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   console.log("🏁 [SERVER LOG] Menerima Request Refresh Token di Route Handler");
-  
+
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
   try {
     console.log("📡 [SERVER LOG] Mengirim request ke Backend API Inkluzi...");
-    
+
     const res = await fetch("https://api.inkluzi.my.id/api/v1/auth/refresh", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -29,9 +29,9 @@ export async function POST(request: Request) {
     console.log(`📡 [SERVER LOG] Status dari Backend API: ${res.status}`);
 
     if (!res.ok) {
-        const errText = await res.text();
-        console.error(`❌ [SERVER LOG] Backend menolak refresh: ${errText}`);
-        throw new Error(`Backend refused refresh: ${res.status}`);
+      const errText = await res.text();
+      console.error(`❌ [SERVER LOG] Backend menolak refresh: ${errText}`);
+      throw new Error(`Backend refused refresh: ${res.status}`);
     }
 
     const data = await res.json();
@@ -41,29 +41,27 @@ export async function POST(request: Request) {
     const newRefreshToken = data.data.refresh_token;
 
     const response = NextResponse.json(
-      { 
+      {
         success: true,
         data: { access_token: newAccessToken }
       },
       { status: 200 }
     );
 
-    // Set Cookie Access Token
     response.cookies.set("accessToken", newAccessToken, {
-      httpOnly: false, 
+      httpOnly: false,
       path: "/",
-      maxAge: 60 * 15, // 15 Menit
+      maxAge: 60 * 15,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
     });
 
-    // Set Cookie Refresh Token (Jika ada rotasi)
     if (newRefreshToken) {
       console.log("🔄 [SERVER LOG] Update Refresh Token cookie...");
       response.cookies.set("refreshToken", newRefreshToken, {
         httpOnly: true,
         path: "/",
-        maxAge: 60 * 60 * 24 * 7, 
+        maxAge: 60 * 60 * 24 * 7,
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
       });
@@ -73,7 +71,7 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     console.error("🚨 [SERVER LOG] Exception Total:", error.message);
-    
+
     const response = NextResponse.json({ message: "Refresh failed" }, { status: 401 });
     response.cookies.delete("refreshToken");
     response.cookies.delete("accessToken");
