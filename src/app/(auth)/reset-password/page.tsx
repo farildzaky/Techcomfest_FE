@@ -132,10 +132,7 @@ const ResetPasswordContent = () => {
 const ResetPasswordPage = () => {
     return (
         <section className="flex flex-row h-screen w-full bg-white relative">
-            <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center relative">
-                <Image src={logoWhite} alt="logo" className="w-[15vw]" />
-                <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
-            </div>
+            
             
             {/* Suspense diperlukan karena useSearchParams */}
             <Suspense fallback={<div className="w-[60vw] flex justify-center items-center text-[#D9833E] satoshiBold text-[1.5vw]">Memuat...</div>}>
