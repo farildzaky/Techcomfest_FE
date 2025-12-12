@@ -3,16 +3,20 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import progressIcon from "@/src/assets/progress.png";
 import { BASE_URL } from "@/src/lib/api";
-import logoWhite from "../../../../assets/logo-white.png";
+
+// Import Assets (Pastikan path sesuai struktur folder Anda)
+import bg from "../../../../assets/bg.png";
+import proses from "../../../../assets/proses.png"; // Icon untuk Sukses
+import loadingIcon from "../../../../assets/loading.png"; // Icon untuk Loading
 
 const RegisterSppgPage = () => {
     const router = useRouter();
     const [step, setStep] = useState(1);
 
-    const [showPopup, setShowPopup] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    // --- MODAL STATE (Menggantikan showPopup & isLoading UI) ---
+    const [modalType, setModalType] = useState<'loading' | 'success' | null>(null);
+    
     const [apiError, setApiError] = useState("");
 
     const [formData, setFormData] = useState({
@@ -52,7 +56,6 @@ const RegisterSppgPage = () => {
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            // Scroll ke atas agar user melihat error di mobile
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             setStep(2);
@@ -74,7 +77,8 @@ const RegisterSppgPage = () => {
             return;
         }
 
-        setIsLoading(true);
+        // Buka Modal Loading
+        setModalType('loading');
 
         try {
             const payload = {
@@ -99,46 +103,100 @@ const RegisterSppgPage = () => {
                 throw new Error(data.message || "Gagal mendaftar. Silakan coba lagi.");
             }
 
-            setShowPopup(true);
+            // Jika Sukses, ganti modal ke Success
+            setModalType('success');
 
         } catch (err: any) {
+            // Jika Gagal, tutup modal dan tampilkan error text
+            setModalType(null);
             setApiError(err.message);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        } finally {
-            setIsLoading(false);
         }
     };
 
     return (
-        // Container Utama: Flex-col (HP), Flex-row (Desktop)
         <section className="flex flex-col md:flex-row min-h-screen w-full bg-white relative overflow-x-hidden">
 
-            {/* --- POPUP SUCCESS --- */}
-            {showPopup && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4">
-                    <div className="bg-white w-full max-w-sm md:w-[40vw] md:max-w-none rounded-xl md:rounded-[1.5vw] p-6 md:p-[3vw] flex flex-col items-center justify-center gap-4 md:gap-[1.5vw] shadow-2xl animate-in zoom-in duration-300">
-                        <Image src={progressIcon} alt="Progress" className="w-16 h-16 md:w-[8vw] md:h-[8vw]" />
-                        <div className="text-center">
-                            <h2 className="satoshiBold text-xl md:text-[2vw] text-[#B56225] mb-2 md:mb-[0.5vw]">Pendaftaran Berhasil!</h2>
-                            <p className="satoshiMedium text-sm md:text-[1.1vw] text-[#B56225]">
-                                Akun Anda sedang diproses. Admin akan memverifikasi dalam waktu 1x24 jam.
-                            </p>
+            {/* --- UNIFIED MODAL SYSTEM (LOADING & SUCCESS) --- */}
+            {modalType && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+
+                    {/* Modal Content */}
+                    <div className="relative bg-white rounded-2xl md:rounded-[2vw] p-6 md:p-[3vw] w-full max-w-lg md:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center ">
+                        
+                        {/* ICON SECTION */}
+                        <div className="relative w-24 h-24 md:w-[15vw] md:h-[15vw] flex items-center justify-center">
+                            {/* Background Circle */}
+                            <Image 
+                                src={bg} 
+                                alt="Background Shape" 
+                                layout="fill"
+                                objectFit="contain" 
+                            />
+
+                            {/* Overlay Icon */}
+                            {modalType === 'loading' && (
+                                <Image 
+                                    src={loadingIcon} 
+                                    alt="Loading" 
+                                    className="w-12 h-12 md:w-[5vw] md:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
+                                />
+                            )}
+                            
+                            {modalType === 'success' && (
+                                <Image 
+                                    src={proses} 
+                                    alt="Proses" 
+                                    className="w-12 h-12 md:w-[8vw] md:h-[8vw] translate-y-[-0.3vw] object-contain absolute"
+                                />
+                            )}
                         </div>
-                        <button
-                            onClick={() => router.push('/login')}
-                            className="w-full bg-[#E87E2F] text-white satoshiBold text-base md:text-[1.2vw] py-3 md:py-[0.8vw] rounded-lg md:rounded-[0.8vw] hover:bg-[#c27233] transition-colors shadow-md mt-4 md:mt-[1vw]"
-                        >
-                            Kembali ke Login
-                        </button>
+
+                        {/* TEXT CONTENT */}
+                        <div className="flex flex-col gap-2">
+                            {modalType === 'loading' && (
+                                <>
+                                    <h3 className="satoshiBold text-xl md:text-[2.5vw] text-[#E87E2F] mt-4 md:mt-[2vw]">Sedang Memproses</h3>
+                                    <p className="satoshiMedium text-sm md:text-[1.2vw] text-gray-500 mt-2 md:mt-[0.5vw]">
+                                        Mohon tunggu, data pendaftaran Anda sedang dikirim...
+                                    </p>
+                                </>
+                            )}
+
+                            {modalType === 'success' && (
+                                <>
+                                    <h3 className="satoshiBold text-xl md:text-[2.5vw] text-[#B56225] mt-4 md:mt-[2vw]">Pendaftaran Berhasil!</h3>
+                                    <p className="satoshiMedium text-sm md:text-[1.2vw] text-[#B56225] mt-2 md:mt-[0.5vw]">
+                                        Akun Anda sedang diproses. Admin akan memverifikasi dalam waktu 1x24 jam.
+                                    </p>
+                                </>
+                            )}
+                        </div>
+
+                        {/* BUTTON (Only for Success) */}
+                        {modalType === 'success' && (
+                            <button
+                                onClick={() => router.push('/login')}
+                                className="w-full bg-[#D9833E] text-white satoshiBold text-base md:text-[1.2vw] py-3 md:py-[1vw] rounded-xl md:rounded-[1vw] hover:bg-[#c27233] transition-colors shadow-md mt-4 md:mt-[1vw]"
+                            >
+                                Kembali ke Login
+                            </button>
+                        )}
                     </div>
                 </div>
             )}
 
-
-
             {/* --- BAGIAN KANAN (FORM) --- */}
-            {/* Menggunakan min-h di HP agar bisa scroll jika konten panjang */}
             <div className="flex flex-col w-full md:w-[60vw] md:h-screen items-center justify-start pt-8 px-6 pb-10 md:pt-[4vw] md:px-[8vw] gap-6 md:gap-[3vw] relative overflow-y-auto bg-white">
+
+                {/* TOMBOL BACK */}
+                <Link href="/register" className="md:absolute fixed top-4 left-4 md:top-[2vw] md:left-[2vw] hover:scale-110 transition-transform z-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-8 h-8 md:w-[2.5vw] md:h-[2.5vw] text-black">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </Link>
 
                 {/* Progress Bar */}
                 <div className="w-full flex flex-row items-center gap-2 md:gap-[1vw]">
@@ -148,26 +206,19 @@ const RegisterSppgPage = () => {
                     <span className="satoshiBold text-sm md:text-[1.2vw] text-black whitespace-nowrap">{step}/2</span>
                 </div>
 
-                <Link href="/register" className="md:absolute fixed top-4 left-4 md:top-[2vw] md:left-[2vw] hover:scale-110 transition-transform z-10">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-8 h-8 md:w-[2.5vw] md:h-[2.5vw] text-black">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
-                </Link>
-
-                {/* Judul Halaman */}
+                {/* Header */}
                 <div className="flex flex-col text-[#B56225] items-center leading-none gap-2 md:gap-[0.5vw]">
                     <h1 className="satoshiBold text-[#B56225] text-4xl md:text-[4.5vw]">Daftar</h1>
                     <p className="satoshiMedium text-[#B56225] text-base md:text-[1.5vw]">Daftar SPPG untuk Bergabung!</p>
                 </div>
 
-                {/* Error Message */}
+                {/* Error Box */}
                 {apiError && (
                     <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 md:px-[1vw] md:py-[0.8vw] rounded-md md:rounded-[0.5vw] text-center satoshiMedium text-sm md:text-[1vw]">
                         {apiError}
                     </div>
                 )}
 
-                {/* Form Container */}
                 <div className="w-full flex flex-col gap-4 md:gap-[1vw]">
 
                     {/* STEP 1 */}
@@ -202,12 +253,12 @@ const RegisterSppgPage = () => {
 
                             <button
                                 onClick={handleSubmit}
-                                disabled={isLoading}
+                                disabled={modalType === 'loading'}
                                 className={`w-full text-white satoshiBold text-lg md:text-[1.5vw] py-3 md:py-[1vw] rounded-xl md:rounded-[1vw] shadow-md mt-2 md:mt-[1vw] transition-colors
-                                    ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E87E2F] hover:bg-[#c27233]'}
+                                    ${modalType === 'loading' ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E87E2F] hover:bg-[#c27233]'}
                                 `}
                             >
-                                {isLoading ? "Memproses..." : "Daftar Sekarang"}
+                                {modalType === 'loading' ? "Memproses..." : "Daftar Sekarang"}
                             </button>
                         </>
                     )}
@@ -225,7 +276,7 @@ const RegisterSppgPage = () => {
     );
 }
 
-// --- INPUT COMPONENT (Responsive) ---
+// --- INPUT COMPONENT ---
 interface InputGroupProps {
     label: string;
     placeholder: string;
@@ -246,8 +297,6 @@ const InputGroup = ({ label, placeholder, type = "text", name, value, onChange, 
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
-                // Mobile: border-2, text-base (biar ga zoom), py-3
-                // Desktop: border-[0.15vw], text-[1vw], py-[0.8vw]
                 className={`w-full border-2 md:border-[0.15vw] ${error ? 'border-red-500 focus:ring-red-200' : 'border-[#E87E2F] focus:ring-[#E87E2F]'} 
                 rounded-lg md:rounded-[0.6vw] px-4 md:px-[1vw] py-3 md:py-[0.8vw] 
                 text-base md:text-[1vw] text-[#B56225] placeholder:text-gray-400 
