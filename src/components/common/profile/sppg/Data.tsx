@@ -235,7 +235,7 @@ const DataLaporanSppg = () => {
                 {/* Title Responsif */}
                 <h1 className='satoshiBold text-2xl lg:text-[3vw] text-white'>Rekap Pelaporan</h1>
                 <p className="text-white text-sm lg:text-[1.2vw] opacity-80 satoshiMedium mt-2 lg:mt-[0.5vw]">
-                    Data riwayat pengajuan laporan yang telah selesai dilakukan.
+                   Data Riwayat penerimaan pelaporan yang telah selesai dilakukan.
                 </p>
             </div>
 

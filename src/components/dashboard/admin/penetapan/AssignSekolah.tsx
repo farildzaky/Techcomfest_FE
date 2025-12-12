@@ -195,8 +195,8 @@ const AssignSekolah = () => {
                     </div>
                 )}
                 {!loadingData && filteredSchools.length === 0 && (
-                    <div className="flex flex-col items-center justify-center mt-10 lg:mt-[5vw] text-gray-400">
-                        <p className="satoshiMedium text-sm lg:text-[1.5vw] text-center">
+                    <div className={`flex flex-col items-center justify-center text-gray-400 ${filteredSchools.length === 0 ? 'h-full mt-0' : 'h-auto  mt-10 lg:mt-[5vw]'}`}>
+                        <p className={`satoshiMedium text-sm lg:text-[1.5vw] text-center`}>
                            {schoolList.length === 0 ? "Semua sekolah sudah memiliki SPPG" : "Sekolah tidak ditemukan"}
                         </p>
                     </div>
@@ -222,10 +222,10 @@ const AssignSekolah = () => {
                         onClick={closeModal}
                     ></div>
 
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center ">
 
                         {/* ICON SECTION - MATCHED LAYOUT */}
-                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
                             {/* Background Circle */}
                             <Image 
                                 src={bg} 
@@ -239,7 +239,7 @@ const AssignSekolah = () => {
                                 <Image 
                                     src={loadingIcon} 
                                     alt="Loading" 
-                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
+                                    className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
                                 />
                             )}
                             
@@ -247,7 +247,7 @@ const AssignSekolah = () => {
                                 <Image 
                                     src={alertIcon} 
                                     alt="Error" 
-                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute"
+                                    className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute"
                                 />
                             )}
                         </div>

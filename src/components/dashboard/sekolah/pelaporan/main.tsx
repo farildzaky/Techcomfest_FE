@@ -272,7 +272,7 @@ const MainPelaporanSekolah = () => {
                                     </div>
                                 ))
                             ) : (
-                                <div className="p-8 lg:p-[4vw] text-center satoshiMedium text-base lg:text-[1.2vw] text-gray-500">Data tidak ditemukan.</div>
+                                <div className="p-8 lg:p-[2vw] text-center satoshiBold text-base lg:text-[1.5vw] text-gray-500">Tidak ada laporan.</div>
                             )}
                         </div>
                     </div>

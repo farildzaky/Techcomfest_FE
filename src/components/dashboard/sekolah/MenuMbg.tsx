@@ -169,7 +169,7 @@ const MenuMbgSekolah = () => {
                         );
                     })
                 ) : (
-                    <div className="text-center text-gray-400 mt-10 lg:mt-[5vw] satoshiBold text-xl lg:text-[1.5vw]">Tidak ada data menu tersedia.</div>
+                    <div className="text-center text-gray-400 flex items-center justify-center h-full satoshiBold text-xl lg:text-[2.5vw]">Tidak ada data menu tersedia.</div>
                 )}
             </div>
 

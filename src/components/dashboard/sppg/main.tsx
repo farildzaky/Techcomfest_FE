@@ -255,7 +255,7 @@ const MainDashboardSppg = () => {
                             </Link>
                         ))
                     ) : (
-                        <div className="w-full text-center py-10 satoshiBold text-[#E87E2F] text-lg lg:text-[1.5vw]">
+                        <div className="w-full text-center py-10 satoshiBold text-[#E87E2F] text-lg lg:text-[2.5vw]">
                             Belum ada jadwal menu.
                         </div>
                     )}
@@ -298,7 +298,7 @@ const MainDashboardSppg = () => {
                                 </div>
                             ))
                         ) : (
-                            <div className="text-center satoshiMedium text-gray-500 mt-4 lg:mt-[2vw]">
+                            <div className="text-center satoshiBold  text-[#E87E2F] flex flex-col items-center justify-center h-full text-lg lg:text-[1.5vw] mt-4 lg:mt-[2vw]">
                                 Tidak ada sekolah terdaftar.
                             </div>
                         )}
@@ -319,7 +319,7 @@ const MainDashboardSppg = () => {
                             </Link>
                         ))
                     ) : (
-                        <div className="col-span-full w-full text-center py-6 text-[#E87E2F] satoshiMedium lg:text-[1.2vw]">
+                        <div className="col-span-full w-full text-center py-6 text-[#E87E2F] satoshiBold lg:text-[2vw]">
                             Belum ada laporan masuk.
                         </div>
                     )}

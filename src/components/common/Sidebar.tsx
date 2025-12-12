@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from "@/src/lib/api";
 
-// --- Import Aset (Pastikan jalurnya benar) ---
+// --- Import Aset ---
 import scanWhite from "../../assets/common/sidebar/scan-white.png";
 import scanOrange from "../../assets/common/sidebar/scan-orange.png";
 import reportWhite from "../../assets/common/sidebar/report-white.png";
@@ -32,7 +32,6 @@ interface SchoolProfileData {
     photo_url: string | null;
 }
 
-// --- Props Baru untuk Responsivitas ---
 interface SidebarProps {
     isOpen: boolean;
     toggle: () => void;
@@ -43,7 +42,6 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
     const router = useRouter();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-    // State Data Profil Sekolah
     const [profile, setProfile] = useState<{
         name: string;
         categories: string;
@@ -57,7 +55,6 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
     });
 
     useEffect(() => {
-        // Tutup sidebar saat berpindah halaman (untuk mobile)
         if (isOpen && window.innerWidth < 1024) {
             toggle();
         }
@@ -90,7 +87,7 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
 
         loadProfile();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname]); // Tambahkan pathname sebagai dependency
+    }, [pathname]);
 
     const menuItems = [
         { label: "Beranda", href: "/sekolah/dashboard", iconWhite: homeWhite, iconOrange: homeOrange },
@@ -119,7 +116,7 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
 
     return (
         <>
-            {/* --- Overlay (Latar Belakang Gelap) untuk Mobile --- */}
+            {/* --- Overlay Mobile --- */}
             <div
                 className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
                     isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -128,78 +125,78 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                 aria-hidden="true"
             ></div>
 
-            {/* --- Container Sidebar --- */}
+            {/* --- Container Sidebar Utama --- */}
             <div
                 className={`
                     fixed lg:sticky top-0 left-0 h-screen
-                    w-72 lg:w-auto  // Lebar tetap di mobile, otomatis di desktop
+                    w-72 lg:w-[18vw]
                     bg-[#E87E2F]
                     transition-transform duration-300 ease-in-out z-50
-                    flex flex-col overflow-y-auto overflow-x-hidden
-                    ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 // Logika buka/tutup
-                    lg:rounded-tr-[4vw] lg:rounded-br-[4vw] // Sudut membulat hanya di desktop
+                    flex flex-col
+                    ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
+                    lg:rounded-tr-[4vw] lg:rounded-br-[4vw]
                 `}
                 style={{
                     boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)"
                 }}
             >
-                {/* --- Tombol Tutup (Hanya Mobile) --- */}
-                <div className="flex justify-end p-4 lg:hidden">
-                    <button onClick={toggle} className="text-white p-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                {/* --- PROFILE SECTION --- */}
-                {/* Menggunakan padding/ukuran fix di mobile, dan vw di desktop (lg:) */}
-                <Link href="/sekolah/profile/informasi-sekolah" className="w-full block group/profile">
-                    <div className="w-full py-6 lg:py-[2vw] px-4 lg:px-0 flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-3 lg:gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300">
-                        
-                        {/* Icon Chevron */}
-                        <div className="absolute top-4 right-4 lg:top-[1.5vw] lg:right-[1.5vw] opacity-70 group-hover/profile:opacity-100 transition-opacity">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 lg:w-[1.5vw] lg:h-[1.5vw]">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                {/* --- 1. BAGIAN ATAS (STATIC - TIDAK SCROLL) --- */}
+                <div className="flex-shrink-0 bg-[#E87E2F] z-10 lg:rounded-tr-[4vw]"> {/* shrink-0 agar tidak mengecil */}
+                    
+                    {/* Tombol Tutup (Mobile) */}
+                    <div className="flex justify-end p-4 lg:hidden">
+                        <button onClick={toggle} className="text-white p-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
-                        </div>
+                        </button>
+                    </div>
 
-                        {/* Foto Profil */}
-                        <div className="w-24 h-24 lg:w-[10vw] lg:h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative shadow-md">
-                            {profile.photoUrl ? (
-                                <Image 
-                                    src={profile.photoUrl}
-                                    alt="Profil Sekolah"
-                                    fill 
-                                    sizes="(max-width: 768px) 30vw, 15vw"
-                                    className="object-cover"
-                                    unoptimized={true} 
-                                />
-                            ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 lg:w-[5vw] lg:h-[5vw]">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
-                                    </svg>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Informasi Teks */}
-                        <div className="flex flex-col px-4 lg:px-[1vw] w-full">
-                            <h1 className="text-lg lg:text-[1.8vw] leading-tight break-words w-full line-clamp-2 min-h-[3rem] lg:min-h-[2.2vw]">
-                                {profile.name}
-                            </h1>
+                    {/* PROFILE SECTION */}
+                    <Link href="/sekolah/profile/informasi-sekolah" className="w-full block group/profile">
+                        <div className="w-full py-6 lg:py-[2vw] px-4 lg:px-0 flex flex-col items-center justify-center bg-[#E87E2F] satoshiBold text-white text-center gap-3 lg:gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300 lg:rounded-tr-[4vw]">
                             
-                            <div className="text-sm lg:text-[1.1vw] opacity-90 mt-2 lg:mt-[0.5vw]">
-                                <p className="line-clamp-1 w-full mx-auto">{profile.categories || "Jenis Sekolah"}</p>
-                                <p>{profile.studentCount} Siswa</p>
+                            <div className="absolute top-4 right-4 lg:top-[1.5vw] lg:right-[1.5vw] opacity-70 group-hover/profile:opacity-100 transition-opacity">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 lg:w-[1.5vw] lg:h-[1.5vw]">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </div>
+
+                            <div className="w-24 h-24 lg:w-[10vw] lg:h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative shadow-md">
+                                {profile.photoUrl ? (
+                                    <Image 
+                                        src={profile.photoUrl}
+                                        alt="Profil Sekolah"
+                                        fill 
+                                        sizes="(max-width: 768px) 30vw, 15vw"
+                                        className="object-cover"
+                                        unoptimized={true} 
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 lg:w-[5vw] lg:h-[5vw]">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col px-4 lg:px-[1vw] w-full">
+                                <h1 className="text-lg lg:text-[1.8vw] leading-tight break-words w-full line-clamp-2 min-h-[3rem] lg:min-h-[2.2vw]">
+                                    {profile.name}
+                                </h1>
+                                <div className="text-sm lg:text-[1.1vw] opacity-90 mt-2 lg:mt-[0.5vw]">
+                                    <p className="line-clamp-1 w-full mx-auto">{profile.categories || "Jenis Sekolah"}</p>
+                                    <p>{profile.studentCount} Siswa</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </Link>
+                    </Link>
+                </div>
 
-                {/* --- MENU ITEMS --- */}
-                <div className="flex flex-col gap-2 lg:gap-[0.5vw] mt-4 lg:mt-[1vw] pr-4 lg:pr-[2vw]">
+                {/* --- 2. BAGIAN TENGAH (SCROLLABLE MENU) --- */}
+                {/* flex-1 akan mengisi sisa ruang, overflow-y-auto memungkinkan scroll hanya di area ini */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2 lg:gap-[0.5vw] mt-4 lg:mt-[0vw] pr-4 lg:pr-[2vw] pb-4">
                     {menuItems.map((item, index) => {
                         const isActive = pathname === item.href || pathname.startsWith(item.href);
 
@@ -207,10 +204,9 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                             <Link 
                                 key={index} 
                                 href={item.href}
-                                className="block"
+                                className="block flex-shrink-0" // Mencegah item mengecil
                             >
                                 <div className="relative flex items-center p-3 lg:p-[1.2vw] cursor-pointer rounded-r-full lg:rounded-r-[2vw] group overflow-hidden">
-                                    {/* Animasi Background Putih */}
                                     <div 
                                         className={`
                                             absolute top-0 left-0 h-full w-full bg-white rounded-r-full lg:rounded-r-[2vw]
@@ -218,8 +214,6 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                                             ${isActive ? "translate-x-0" : "-translate-x-full"}
                                         `}
                                     />
-
-                                    {/* Konten Menu */}
                                     <div className={`
                                         relative z-10 flex items-center gap-4 lg:gap-[1.5vw] transition-colors duration-300
                                         ${isActive ? "text-[#D7762E]" : "text-white group-hover:text-white/80"}
@@ -239,22 +233,24 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                     })}
                 </div>
 
-                {/* --- LOGOUT BUTTON --- */}
-                <div className="flex flex-row justify-center items-center px-4 lg:px-[2vw] mt-auto mb-8 lg:mb-[2vw] border-t border-white lg:border-t-[0.1vw] pt-4 lg:pt-[1vw]">
-                    <button
-                        onClick={handleLogout}
-                        disabled={isLoggingOut}
-                        className="flex flex-row gap-2 lg:gap-[0.5vw] items-center cursor-pointer hover:opacity-80 transition-opacity duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <Image
-                            src={logout}
-                            alt="Logout"
-                            className="w-5 h-5 lg:w-[2vw] lg:h-[2vw] object-contain"
-                        />
-                        <div className="satoshiBold text-base lg:text-[1.4vw] text-white">
-                            {isLoggingOut ? "Logging out..." : "Logout"}
-                        </div>
-                    </button>
+                {/* --- 3. BAGIAN BAWAH (STATIC - TIDAK SCROLL) --- */}
+                <div className="flex-shrink-0 border-t border-white lg:border-t-[0.1vw] bg-[#E87E2F] lg:rounded-br-[4vw]">
+                    <div className="flex flex-row justify-center items-center px-4 lg:px-[2vw] py-6 lg:py-[1vw]">
+                        <button
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
+                            className="flex flex-row gap-2 lg:gap-[0.5vw] items-center cursor-pointer hover:opacity-80 transition-opacity duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Image
+                                src={logout}
+                                alt="Logout"
+                                className="w-5 h-5 lg:w-[2vw] lg:h-[2vw] object-contain"
+                            />
+                            <div className="satoshiBold text-base lg:text-[1.4vw] text-white">
+                                {isLoggingOut ? "Logging out..." : "Logout"}
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
         </>

@@ -3,7 +3,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api'; 
+import Image from 'next/image';
 
+// Import Assets
+import bg from "../../../assets/bg.png";
+import loadingIcon from "../../../assets/loading.png";
+import alertIcon from "../../../assets/alert.png";
+
+// Interface sesuai response API SPPG
 interface ProfileData {
     nama_instansi: string;
     wilayah_kerja: string;
@@ -14,10 +21,17 @@ const SidebarProfileSppg = () => {
     const pathname = usePathname();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // --- STATE ---
+    // --- STATE DATA ---
     const [profile, setProfile] = useState<ProfileData | null>(null);
     const [loading, setLoading] = useState(true);
-    const [isUploading, setIsUploading] = useState(false);
+
+    // State untuk Cache Busting Gambar
+    const [imgKey, setImgKey] = useState(Date.now());
+
+    // --- STATE MODAL ---
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<'loading' | 'success' | 'error' | null>(null);
+    const [modalMessage, setModalMessage] = useState("");
 
     // --- FETCH DATA (GET) ---
     useEffect(() => {
@@ -29,6 +43,7 @@ const SidebarProfileSppg = () => {
                     const result = await response.json();
                     if (result.data && result.data.profile_data) {
                         setProfile(result.data.profile_data);
+                        setImgKey(Date.now()); // Set key awal
                     }
                 }
             } catch (error) {
@@ -41,6 +56,30 @@ const SidebarProfileSppg = () => {
         fetchProfile();
     }, []);
 
+    // --- HELPER MODAL ---
+    const showLoadingModal = () => {
+        setModalType('loading');
+        setIsModalOpen(true);
+    };
+
+    const showSuccessModal = (message: string) => {
+        setModalType('success');
+        setModalMessage(message);
+        setIsModalOpen(true);
+    };
+
+    const showErrorModal = (message: string) => {
+        setModalType('error');
+        setModalMessage(message);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        if (modalType === 'loading') return; 
+        setIsModalOpen(false);
+        setModalType(null);
+    };
+
     // --- HANDLE UPLOAD FOTO (PATCH) ---
     const handleIconClick = () => {
         fileInputRef.current?.click();
@@ -50,12 +89,13 @@ const SidebarProfileSppg = () => {
         const file = event.target.files?.[0];
         if (!file) return;
 
+        // Validasi Ukuran (2MB)
         if (file.size > 2 * 1024 * 1024) {
-            alert("Ukuran file terlalu besar. Maksimal 2MB.");
+            showErrorModal("Ukuran file terlalu besar. Maksimal 2MB.");
             return;
         }
 
-        setIsUploading(true);
+        showLoadingModal();
 
         try {
             const formData = new FormData();
@@ -66,24 +106,22 @@ const SidebarProfileSppg = () => {
                 body: formData, 
             });
 
+            const result = await response.json();
+
             if (response.ok) {
-                const result = await response.json();
+                // Update State & Force Refresh Image
                 if (result.data && result.data.profile_data) {
-                    setProfile(prev => ({
-                        ...prev!, 
-                        photo_url: result.data.profile_data.photo_url 
-                    }));
+                    setProfile(result.data.profile_data);
+                    setImgKey(Date.now()); // Update timestamp agar gambar langsung berubah
                 }
-                alert("Foto profil berhasil diperbarui!");
+                showSuccessModal("Foto profil berhasil diperbarui!");
             } else {
-                const errorResult = await response.json();
-                alert(`Gagal upload: ${errorResult.message || "Terjadi kesalahan"}`);
+                showErrorModal(result.message || "Gagal mengupload foto.");
             }
         } catch (error) {
             console.error("Error updating profile photo:", error);
-            alert("Gagal memperbarui foto profil.");
+            showErrorModal("Terjadi kesalahan jaringan.");
         } finally {
-            setIsUploading(false);
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }
@@ -92,11 +130,10 @@ const SidebarProfileSppg = () => {
 
     const menuItems = [
         { label: "Informasi Instansi", href: "/sppg/profile/informasi-instansi" },
-        { label: "Data Laporan", href: "/sppg/profile/data-laporan" },
+        { label: "Data Pelaporan", href: "/sppg/profile/data-laporan" },
     ];
 
     return (
-        // Container Utama: Padding pixel di mobile, VW di desktop
         <div className="w-full lg:min-h-screen bg-[#D7762E] flex flex-col items-center p-6 lg:py-[2vw] lg:p-0 rounded-none lg:rounded-r-[0.5vw]">
             
             <input 
@@ -110,7 +147,7 @@ const SidebarProfileSppg = () => {
             {/* Back Button */}
             <div className="w-full mb-6 lg:mb-[2vw] px-0 lg:px-[2vw]">
                 <Link href="/sppg/dashboard">
-                    <button className="text-white hover:bg-white/20 p-2 lg:p-[0.5vw] rounded-full transition-colors">
+                    <button className="text-white hover:bg-white/20 p-2 lg:p-[0.5vw] rounded-full transition-colors cursor-pointer">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 lg:w-[2vw] lg:h-[2vw]">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                         </svg>
@@ -120,22 +157,17 @@ const SidebarProfileSppg = () => {
 
             {/* Profile Section */}
             <div className="flex flex-col items-center gap-4 lg:gap-[1vw] mb-8 lg:mb-[3vw]">
-                {/* Foto Profil Container: Fixed size di mobile, VW di desktop */}
+                
+                {/* Foto Profil Container */}
                 <div className="w-32 h-32 lg:w-[15vw] lg:h-[15vw] bg-[#F3F4F6] rounded-full relative shadow-lg group">
-                    
-                    {/* Render Foto */}
                     <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
                         {loading ? (
                             <div className="animate-pulse bg-gray-300 w-full h-full"></div>
-                        ) : isUploading ? (
-                            <div className="flex flex-col items-center justify-center gap-2">
-                                {/* Spinner size responsive */}
-                                <div className="w-8 h-8 lg:w-[3vw] lg:h-[3vw] border-4 border-[#D7762E] border-t-transparent rounded-full animate-spin"></div>
-                                <span className="text-xs lg:text-[0.8vw] font-bold text-gray-500">Uploading...</span>
-                            </div>
                         ) : profile?.photo_url ? (
+                            // Menggunakan <img> biasa + key timestamp untuk bypass cache
                             <img 
-                                src={profile.photo_url} 
+                                key={imgKey}
+                                src={`${profile.photo_url}${profile.photo_url.includes('?') ? '&' : '?'}v=${imgKey}`} 
                                 alt="Profile" 
                                 className="w-full h-full object-cover"
                             />
@@ -149,8 +181,8 @@ const SidebarProfileSppg = () => {
                     {/* Tombol Edit Foto */}
                     <button 
                         onClick={handleIconClick}
-                        disabled={isUploading || loading}
-                        className="absolute bottom-1 right-2 lg:bottom-[0.5vw] lg:right-[1vw] bg-white p-2 lg:p-[0.4vw] rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition-colors z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={loading}
+                        className="absolute bottom-1 right-2 lg:bottom-[0.5vw] lg:right-[1vw] bg-white p-2 lg:p-[0.4vw] rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition-colors z-10 disabled:opacity-50"
                         title="Ubah Foto Profil"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 lg:w-[2vw] lg:h-[2vw] text-[#D9833E]">
@@ -168,7 +200,6 @@ const SidebarProfileSppg = () => {
                         </>
                     ) : (
                         <>
-                            {/* Text size responsive: XL di mobile, VW di desktop */}
                             <h2 className="satoshiBold text-xl lg:text-[1.8vw] leading-tight break-words uppercase">
                                 {profile?.nama_instansi || "Nama Instansi"}
                             </h2>
@@ -191,7 +222,6 @@ const SidebarProfileSppg = () => {
                             href={item.href}
                             className="block" 
                         >
-                            {/* Menu Item: Padding standar mobile, VW desktop */}
                             <div className="relative flex items-center justify-center lg:justify-start p-3 lg:p-[1.2vw] cursor-pointer rounded-lg lg:rounded-l-none lg:rounded-r-[1vw] group">
                                 <div 
                                     className={`
@@ -215,6 +245,74 @@ const SidebarProfileSppg = () => {
                     );
                 })}
             </div>
+
+            {/* --- UNIFIED MODAL SYSTEM (Fixed Z-9999) --- */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeModal}></div>
+
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                        
+                        {/* ICON SECTION */}
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            
+                            {modalType === 'loading' && (
+                                <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                            )}
+                            
+                            {modalType === 'success' && (
+                                // SVG Centang Oranye
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] absolute text-[#E87E2F]">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                </svg>
+                            )}
+
+                            {modalType === 'error' && (
+                                <Image src={alertIcon} alt="Error" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute" />
+                            )}
+                        </div>
+
+                        {/* TEXT CONTENT */}
+                        <div className="flex flex-col gap-2">
+                            {modalType === 'loading' && (
+                                <>
+                                    <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Mengunggah...</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                        Mohon tunggu, foto sedang diperbarui.
+                                    </p>
+                                </>
+                            )}
+
+                            {modalType === 'success' && (
+                                <>
+                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#E87E2F]">Berhasil!</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{modalMessage}</p>
+                                </>
+                            )}
+
+                            {modalType === 'error' && (
+                                <>
+                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-red-500">Gagal</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{modalMessage}</p>
+                                </>
+                            )}
+                        </div>
+
+                        {/* BUTTON ACTION */}
+                        {modalType !== 'loading' && (
+                            <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                                <button
+                                    onClick={closeModal}
+                                    className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                                >
+                                    Tutup
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
 
         </div>
     )

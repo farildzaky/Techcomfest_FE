@@ -194,7 +194,7 @@ const DaftarMenu = () => {
         }
 
         if (error) return <div className="text-red-500 font-bold p-4">Error: {error}</div>;
-        if (menus.length === 0) return <div className="text-gray-500 p-4">Belum ada data menu tersedia.</div>;
+        if (menus.length === 0) return <div className="text-gray-500 p-4 h-full flex items-center justify-center text-[2.5vw] satoshiBold">Belum ada data menu tersedia.</div>;
 
         const sortedDisplayMenus = [...menus].sort((a, b) => {
             return parseIndonesianDate(a.tanggal).getTime() - parseIndonesianDate(b.tanggal).getTime();

@@ -235,14 +235,14 @@ overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth
                             </Link>
                         ))
                     ) : (
-                        <div className="w-full text-center py-10 satoshiBold text-[#E87E2F] text-lg lg:text-[1.5vw]">
-                            Tidak Ada Menu Minggu Depan
+                        <div className="w-full text-center py-10 satoshiBold text-[#E87E2F] text-lg lg:text-[2vw]">
+                            Belum Ada Menu Minggu Depan
                         </div>
                     )}
                 </div>
 
                 {/* Tombol Aksi (Scan & Lapor) */}
-                <div className="flex flex-col md:flex-row justify-center items-center w-full gap-4 lg:gap-[1vw] mt-2 lg:mt-0">
+                <div className="flex flex-col md:flex-row justify-center items-center w-full gap-4 lg:gap-[1vw] mt-2 lg:mt-[1vw]">
                     <Link
                         href="/sekolah/scan-nutrisi"
                         className="bg-[#F5DDCA] relative rounded-2xl lg:rounded-[2vw] flex flex-row items-center w-[90%] md:w-[80%] h-[23vw] md:h-[15vw] lg:h-[10vw] justify-end gap-4 lg:gap-[3vw] ml-[5vw] lg:ml-[4vw] pr-4 lg:pr-[1vw] cursor-pointer hover:scale-[1.02] transition-transform duration-200 shadow-md lg:shadow-none"
@@ -275,7 +275,7 @@ overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth
             <div className="lg:col-span-2 px-4 lg:pr-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col mb-8 lg:mb-0">
                 <div className="w-full text-2xl lg:text-[4vw] satoshiBold lg:flex lg:flex-row hidden items-center justify-center lg:justify-start ">
                     <Image src={logoOrange} alt="logo" className="w-12 lg:w-[5vw] mr-2 lg:mr-[0.5vw]" />
-                    <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
+                    <h1 className="text-[#E87E2F] satoshiBold ">INKLUZI</h1>
                 </div>
 
                 <div className="bg-[#F5DDCA] rounded-2xl lg:rounded-[2vw] flex flex-col items-center pb-4 lg:pb-[1vw] shadow-md lg:shadow-none"
@@ -324,8 +324,8 @@ overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth" // Scroll smooth
                             </div>
                         ))
                     ) : (
-                        <div className="py-4 lg:py-[1vw] satoshiMedium text-black/60 text-center text-sm lg:text-base">
-                            Tidak ada data menu sebelumnya.
+                        <div className="py-4 lg:py-[1vw] satoshiBold text-black/60 text-center text-sm lg:text-lg">
+                            Belum ada menu sebelumnya.
                         </div>
                     )}
                 </div>

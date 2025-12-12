@@ -165,7 +165,7 @@ const DataLaporanSekolah = () => {
             <div className="mb-6 lg:mb-[2vw]">
                 {/* Judul: Besar di desktop (VW), Terbaca di mobile (text-2xl) */}
                 <h1 className='satoshiBold text-2xl lg:text-[3vw] text-white'>Rekap Pelaporan</h1>
-                <p className="text-white text-sm lg:text-[1.2vw] opacity-80 satoshiMedium mt-2 lg:mt-[0.5vw]">Data riwayat pengajuan laporan yang telah selesai dilakukan.</p>
+                <p className="text-white text-sm lg:text-[1.2vw] opacity-80 satoshiMedium mt-2 lg:mt-[0.5vw]">Data berupa riwayat pengajuan laporan yang telah selesai dilakukan.</p>
             </div>
 
             <div ref={filterContainerRef} className="flex flex-col items-start relative z-50 mb-6 lg:mb-[2vw]">

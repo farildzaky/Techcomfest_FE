@@ -36,7 +36,7 @@ const DaftarSekolah = () => {
         fetchSekolah();
     }, []);
 
-    // Loading State
+    // Loading State (Sudah di tengah)
     if (loading) {
         return (
             <div className="flex flex-col min-h-screen items-center justify-center 
@@ -55,7 +55,7 @@ const DaftarSekolah = () => {
 
     return (
         <div className="flex flex-col 
-            p-6 gap-6 
+            p-6 gap-6 min-h-screen
             lg:p-[3vw] lg:gap-[3vw]"
         >
 
@@ -66,8 +66,12 @@ const DaftarSekolah = () => {
                 Pelaporan Sekolah
             </h1>
 
+            {/* PERUBAHAN DISINI: 
+               Ganti 'h-full' dengan 'flex-1'. 
+               Ini membuat div ini mengambil semua sisa ruang kosong ke bawah.
+            */}
             <div className="flex flex-col 
-                gap-4 
+                gap-4 flex-1
                 lg:gap-[2vw]"
             >
                 {sekolahList.length > 0 ? (
@@ -77,7 +81,6 @@ const DaftarSekolah = () => {
                             key={item.id} 
                             className="block transition-transform hover:scale-[1.01]"
                         >
-                            {/* Tampilan Kotak Oranye */}
                             <h1 
                                 className="satoshiBold bg-[#E87E2F] text-white 
                                     text-lg p-4 px-6 rounded-xl 
@@ -89,15 +92,17 @@ const DaftarSekolah = () => {
                         </Link>
                     ))
                 ) : (
-                    <div className="text-center 
-                        p-4 
-                        lg:p-[2vw]"
-                    >
-                        <p className="satoshiMedium text-gray-500 
+                    /* PERUBAHAN DISINI:
+                       Tambahkan 'flex-1', 'w-full', dan 'items-center justify-center'.
+                       Karena parent-nya sudah flex-1, div ini akan membesar memenuhi area kosong,
+                       lalu textnya ditaruh tepat di tengah.
+                    */
+                    <div className="flex flex-1 w-full items-center justify-center text-center">
+                        <p className="satoshiBold text-gray-400 
                             text-base 
-                            lg:text-[1.5vw]"
+                            lg:text-[2vw]"
                         >
-                            Tidak ada data sekolah ditemukan.
+                            Belum ada data pelaporan.
                         </p>
                     </div>
                 )}

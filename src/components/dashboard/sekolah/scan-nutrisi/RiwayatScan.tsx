@@ -218,8 +218,8 @@ const RiwayatScan = () => {
                             {/* --- TABLE BODY --- */}
                             <div className='flex flex-col bg-white'>
                                 {filteredScans.length === 0 ? (
-                                    <div className='py-8 lg:py-[5vw] flex items-center justify-center'>
-                                        <span className='text-gray-400 text-sm lg:text-[1.5vw] italic'>Data tidak ditemukan.</span>
+                                    <div className='py-8 lg:py-[2vw] flex items-center justify-center'>
+                                        <span className='text-gray-400 text-sm lg:text-[2.5vw] satoshiBold'>Belum ada riwayat scan.</span>
                                     </div>
                                 ) : (
                                     filteredScans.map((item, index) => {

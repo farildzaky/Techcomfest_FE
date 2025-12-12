@@ -296,10 +296,10 @@ const DaftarPenetapan = () => {
                         onClick={closeModal}
                     ></div>
 
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center ">
 
                         {/* ICON SECTION */}
-                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
                             {/* Background Circle */}
                             <Image 
                                 src={bg} 
@@ -313,7 +313,7 @@ const DaftarPenetapan = () => {
                                 <Image 
                                     src={loading} 
                                     alt="Loading" 
-                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
+                                    className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
                                 />
                             )}
                             
@@ -321,7 +321,7 @@ const DaftarPenetapan = () => {
                                 <Image 
                                     src={trash} 
                                     alt="Hapus" 
-                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute"
+                                    className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute"
                                 />
                             )}
 
@@ -329,7 +329,7 @@ const DaftarPenetapan = () => {
                                 <Image 
                                     src={alertIcon} 
                                     alt="Error" 
-                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute"
+                                    className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute"
                                 />
                             )}
                         </div>

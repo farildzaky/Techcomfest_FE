@@ -64,9 +64,7 @@ const Reason = () => {
                     <div 
                         className="
                             bg-[#E87E2F] text-white satoshiMedium text-justify flex items-center
-                            /* Mobile Styles */
                             w-[90vw] h-[60vw] rounded-[4vw] p-[5vw]
-                            /* Desktop Styles (Sesuai Asli) */
                             lg:w-[41vw] lg:h-[30vw] lg:rounded-tl-[1.5vw] lg:rounded-br-[1.5vw] lg:rounded-tr-none lg:rounded-bl-none lg:p-[2.5vw] lg:px-[3vw]
                         "
                         style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
@@ -134,7 +132,7 @@ const Reason = () => {
 
                     {/* Subtitle */}
                     {/* Mobile: Text 7vw Center. Desktop: Text 4vw End */}
-                    <h2 className="reason-subtitle satoshiBold text-[7vw] text-center mt-[8vw] lg:text-[4vw] lg:text-end lg:mr-[3vw] lg:mt-[-1vw] leading-tight text-[#E87E2F] lg:text-black">
+                    <h2 className="reason-subtitle satoshiBold text-[7vw] text-center mt-[8vw] lg:text-[4vw] lg:text-end lg:mr-[3vw] lg:mt-[1vw] leading-tight text-[#E87E2F] lg:text-black">
                         Wujudkan Menu MBG <br />yang Aman dan Inklusif
                     </h2>
                 </div>

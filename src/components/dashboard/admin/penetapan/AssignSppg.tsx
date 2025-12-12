@@ -62,8 +62,8 @@ const AssignSppg = () => {
             ">
                 {/* Wrapper Judul & Back Button */}
                 <div className="flex items-center gap-3 lg:gap-[1vw]">
-                    <button 
-                        onClick={() => router.back()} 
+                    <button
+                        onClick={() => router.back()}
                         className="hover:bg-gray-100 rounded-full p-1 transition-transform hover:scale-105"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 lg:w-[2.5vw] lg:h-[2.5vw] text-black">
@@ -103,7 +103,7 @@ const AssignSppg = () => {
             {/* CONTENT GRID */}
             {/* Mobile: Padding standard. Desktop: Padding VW + Top Padding untuk offset Fixed Header */}
             <div className="p-4 lg:pt-[8vw] lg:px-[3vw] lg:pb-[5vw]">
-                
+
                 {loading ? (
                     // Skeleton Loading
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-[2vw]">
@@ -113,7 +113,7 @@ const AssignSppg = () => {
                     </div>
                 ) : filteredSppg.length > 0 ? (
                     // Data Grid
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-[2vw]">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 h-full lg:gap-[2vw]">
                         {filteredSppg.map((sppg) => (
                             <Link key={sppg.id} href={`/admin/penetapan/assign-sppg/${sppg.id}`} className="block">
                                 <div className="
@@ -142,10 +142,9 @@ const AssignSppg = () => {
                     </div>
                 ) : (
                     // Empty State
-                    <div className="flex flex-col items-center justify-center mt-10 lg:mt-[5vw] text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 lg:w-[5vw] lg:h-[5vw] mb-2 lg:mb-[1vw]">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-                        </svg>
+                    <div className="flex flex-col items-center justify-center text-gray-400 min-h-[calc(100vh-250px)] lg:min-h-[calc(100vh-14vw)]">                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-16 h-16 lg:w-[5vw] lg:h-[5vw] mb-2 lg:mb-[1vw]">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
                         <p className="satoshiMedium text-lg lg:text-[1.5vw]">Data SPPG tidak ditemukan</p>
                     </div>
                 )}
