@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from 'next/link';
 import { fetchWithAuth } from '@/src/lib/api';
 import information from "../../../assets/dashboard/sekolah/information.png";
-import menuImg from "../../../assets/dashboard/sekolah/menu.png";
+import menuImg from "../../../assets/dashboard/sekolah/menu.webp";
 import CardMenu from "./CardMenu";
 import report from "../../../assets/dashboard/sekolah/report.png";
 import scan from "../../../assets/dashboard/sekolah/scan.png";

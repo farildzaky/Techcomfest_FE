@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import mock from '../../assets/landingpage/feature/mock.png';
+import mock from '../../assets/landingpage/feature/mock.webp';
 
 const Feature = () => {
     const [activeId, setActiveId] = useState<number | null>(null);
@@ -20,7 +20,7 @@ const Feature = () => {
         {
             id: 2,
             title: "Scan Nutrisi Makanan",
-            desc: "Unggah foto menu untuk menedetksi nutrisi gizi, tekstur, dan potensi alergi.",
+            desc: "Unggah foto menu untuk mendeteksi nutrisi gizi, tekstur, dan potensi alergi.",
             align: "left"
         },
         {
@@ -39,57 +39,103 @@ const Feature = () => {
 
     useLayoutEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
+        
+        const mm = gsap.matchMedia();
 
         const ctx = gsap.context(() => {
 
-            const tlEnter = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top 80%",
-                    end: "top 50%",
-                    toggleActions: "play none none reverse"
-                }
+            // --- MOBILE ---
+            mm.add("(max-width: 1023px)", () => {
+                const items = gsap.utils.toArray(".feature-item-mobile");
+                items.forEach((item: any) => {
+                    gsap.from(item, {
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 90%", // Lebih awal (saat item baru mau masuk layar)
+                            end: "top 60%",
+                            scrub: 1,
+                        },
+                        y: 80,
+                        opacity: 0,
+                        scale: 0.95,
+                        ease: "power2.out"
+                    });
+                });
             });
 
-            tlEnter.from(".feature-item", {
-                y: 40,
-                opacity: 0,
-                scale: 0.9,
-                duration: 0.6,
-                ease: "back.out(1.7)",
-                stagger: 0.2
-            });
+            // --- DESKTOP (PARALLAX ENTRY) ---
+            mm.add("(min-width: 1024px)", () => {
+                
+                // Timeline utama yang terikat scroll
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top 80%", // Mulai animasi saat bagian atas section masuk 80% viewport (bawah layar)
+                        end: "center 40%", // Selesai saat tengah section di tengah layar
+                        scrub: 1.5, // Sedikit lebih smooth (ada delay dikit biar halus)
+                    }
+                });
 
-            const tlExit = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: 1,
-                }
-            });
+                // 1. Judul & Lingkaran masuk duluan
+                tl.from(".feature-title", { 
+                    y: 100, 
+                    opacity: 0, 
+                    duration: 1 
+                })
+                .from(".center-circle", { 
+                    scale: 0.6, 
+                    opacity: 0, 
+                    duration: 1.5 
+                }, "-=0.5");
 
-            tlExit.to([".feature-item", ".center-circle", ".feature-title"], {
-                opacity: 0,
-                y: -100,
-                stagger: 0.1,
-                ease: "power1.in"
-            });
+                // 2. Item 1, 2, 3, 4 Masuk Berurutan (Staggered Parallax)
+                const itemsLg = gsap.utils.toArray(".feature-item-lg");
+                
+                // Kita gunakan .from() untuk animasi masuk
+                tl.from(itemsLg, {
+                    y: 300,       // Datang dari posisi SANGAT bawah (efek parallax kuat)
+                    opacity: 0,
+                    duration: 2,  // Durasi scroll yang dibutuhkan lebih panjang
+                    stagger: 0.8, // Jeda antar item cukup signifikan
+                    ease: "power1.out" // Ease yang linear di awal agar terasa langsung bergerak saat scroll
+                }, "-=1.0"); // Mulai sebelum lingkaran selesai total
 
-            gsap.to(".center-circle", {
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top center",
-                    end: "bottom center",
-                    scrub: 0.5
-                },
-                y: 50,
-                ease: "none"
+                // 3. Efek Parallax Lingkaran Tengah (Terpisah agar terus bergerak pelan)
+                gsap.to(".center-circle", {
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 0.5
+                    },
+                    y: 80, // Gerak sedikit ke bawah mengikuti scroll
+                    ease: "none"
+                });
+
+                // 4. Animasi Keluar (Exit) - Saat scroll melewati section ke bawah
+                const tlExit = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "bottom 60%", // Mulai hilang saat bagian bawah section naik
+                        end: "bottom top",
+                        scrub: 1,
+                    }
+                });
+
+                tlExit.to([".feature-item-lg", ".center-circle", ".feature-title"], {
+                    opacity: 0,
+                    y: -100,
+                    stagger: 0.1,
+                    ease: "power1.in"
+                });
             });
 
         }, containerRef);
 
-        return () => ctx.revert();
+        return () => {
+            ctx.revert();
+            mm.revert();
+        };
     }, []);
 
     const getNumberStyle = (id: number) => {
@@ -99,19 +145,42 @@ const Feature = () => {
     };
 
     return (
-        <section ref={containerRef} className="flex flex-col w-full gap-[2vw] items-center justify-center relative px-[3vw] py-[5vw]">
-            <h1 className="feature-title satoshiBold text-[4.5vw] text-[#E87E2F] relative z-10">Fitur Kami</h1>
+        <section 
+            ref={containerRef} 
+            className="flex flex-col w-full gap-8 lg:gap-[2vw] items-center justify-center relative px-6 lg:px-[3vw] py-10 lg:py-[5vw]"
+        >
+            <h1 className="feature-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] relative z-10 text-center">
+                Fitur Kami
+            </h1>
 
-            <div className="flex flex-col items-center w-full justify-center relative gap-[5vw]">
+            {/* --- MOBILE LAYOUT --- */}
+            <div className="flex flex-col w-full gap-8 lg:hidden">
+                {features.map((feature) => (
+                    <div key={feature.id} className="feature-item-mobile flex flex-col items-center text-center gap-2 p-6 bg-white rounded-2xl shadow-md border border-gray-100">
+                        <div className="w-16 h-16 text-3xl rounded-full flex items-center justify-center satoshiBold bg-[#D7762E] text-white shadow-lg mb-2">
+                            {feature.id}
+                        </div>
+                        <h2 className="text-[#D7762E] satoshiBold text-xl">
+                            {feature.title}
+                        </h2>
+                        <p className="text-gray-600 satoshiMedium text-sm leading-relaxed px-4">
+                            {feature.desc}
+                        </p>
+                    </div>
+                ))}
+            </div>
 
-                <div className='center-circle absolute w-[70vw] h-[60vw] top-[50%] translate-x-[2%] translate-y-[-50%] pointer-events-none z-0'>
+            {/* --- DESKTOP LAYOUT --- */}
+            <div className="hidden lg:flex flex-col items-center w-full justify-center relative gap-[5vw]">
+
+                <div className='center-circle absolute w-[70vw] h-[60vw] top-[50%]  translate-y-[-50%] pointer-events-none z-0'>
                     <Image src={mock} alt="circle" className="w-full h-full object-contain" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-[40vw] z-10 w-full relative">
 
                     <div
-                        className='feature-item flex flex-col items-end gap-[0.5vw] cursor-pointer group'
+                        className='feature-item-lg flex flex-col items-end gap-[0.5vw] cursor-pointer group'
                         onMouseEnter={() => setActiveId(1)}
                         onMouseLeave={() => setActiveId(null)}
                     >
@@ -129,7 +198,7 @@ const Feature = () => {
                     </div>
 
                     <div
-                        className='feature-item flex flex-col items-start gap-[0.5vw] cursor-pointer group'
+                        className='feature-item-lg flex flex-col items-start gap-[0.5vw] cursor-pointer group'
                         onMouseEnter={() => setActiveId(2)}
                         onMouseLeave={() => setActiveId(null)}
                     >
@@ -150,7 +219,7 @@ const Feature = () => {
                 <div className="grid grid-cols-2 gap-[40vw] z-10 w-full mt-[2vw] relative">
 
                     <div
-                        className='feature-item flex flex-col items-end gap-[0.5vw] cursor-pointer group'
+                        className='feature-item-lg flex flex-col items-end gap-[0.5vw] cursor-pointer group'
                         onMouseEnter={() => setActiveId(3)}
                         onMouseLeave={() => setActiveId(null)}
                     >
@@ -168,7 +237,7 @@ const Feature = () => {
                     </div>
 
                     <div
-                        className='feature-item flex flex-col items-start gap-[0.5vw] cursor-pointer group'
+                        className='feature-item-lg flex flex-col items-start gap-[0.5vw] cursor-pointer group'
                         onMouseEnter={() => setActiveId(4)}
                         onMouseLeave={() => setActiveId(null)}
                     >

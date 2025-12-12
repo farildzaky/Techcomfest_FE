@@ -41,11 +41,7 @@ const ForgotPassword = () => {
 
     return (
         <section className="flex flex-row h-screen w-full bg-white relative">
-            {/* Sisi Kiri (Oranye) */}
-            <div className="flex flex-col bg-[#E87E2F] w-[40vw] h-full items-center gap-[1vw] justify-center relative">
-                <Image src={logoWhite} alt="logo" className="w-[15vw]" />
-                <h1 className="satoshiBold text-[3.5vw] text-white text-center leading-tight">Peduli Gizi, <br />Peduli Inklusi</h1>
-            </div>
+  
 
             {/* Sisi Kanan (Form) */}
             <div className="flex flex-col w-[60vw] h-full justify-center items-center px-[8vw] gap-[3vw] z-10 relative">

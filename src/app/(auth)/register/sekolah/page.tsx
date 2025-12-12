@@ -169,13 +169,7 @@ const RegisterSekolahPage = () => {
                 </div>
             )}
 
-            {/* --- BAGIAN KIRI (ORANYE) --- */}
-            <div className="flex flex-col bg-[#E87E2F] w-full h-[30vh] md:w-[40vw] md:h-screen items-center gap-4 md:gap-[1vw] justify-center shrink-0">
-                <Image src={logoWhite} alt="logo" className="w-20 md:w-[15vw] h-auto object-contain" />
-                <h1 className="satoshiBold text-2xl md:text-[3.5vw] text-white text-center leading-tight px-4">
-                    Peduli Gizi, <br />Peduli Inklusi
-                </h1>
-            </div>
+    
 
             {/* --- BAGIAN KANAN (FORM) --- */}
             <div className="flex flex-col w-full md:w-[60vw] md:h-screen items-center justify-start pt-8 px-6 pb-10 md:pt-[4vw] md:px-[8vw] gap-6 md:gap-[3vw] relative overflow-y-auto bg-white">

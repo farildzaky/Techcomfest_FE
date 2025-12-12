@@ -10,7 +10,7 @@ import CardMenu from "../sekolah/CardMenu";
 import CardPelaporan from "./CardPelaporan";
 
 import information from "../../../assets/dashboard/sekolah/information.png";
-import menuImg from "../../../assets/dashboard/sekolah/menu.png";
+import menuImg from "../../../assets/dashboard/sekolah/menu.webp";
 import logoOrange from "../../../assets/logo-orange.png";
 
 // --- Interfaces ---

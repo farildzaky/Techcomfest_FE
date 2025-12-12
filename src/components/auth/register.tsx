@@ -7,19 +7,7 @@ const Register = () => {
     return (
         // Container Utama: Flex Column di HP, Row di Desktop
         <section className="flex flex-col md:flex-row min-h-screen w-full bg-white overflow-x-hidden">
-
-            {/* --- BAGIAN KIRI (ORANYE) --- */}
-            {/* HP: Tinggi menyesuaikan konten + padding. Desktop: Full Height, Lebar 40vw */}
-            <div className="flex flex-col bg-[#E87E2F] w-full md:w-[40vw] md:h-screen items-center justify-center gap-4 md:gap-[1vw] py-10 md:py-0 shrink-0">
-                <Image 
-                    src={logoWhite} 
-                    alt="logo" 
-                    className="w-24 md:w-[15vw] h-auto object-contain" 
-                />
-                <h1 className="satoshiBold text-2xl md:text-[3.5vw] text-white text-center leading-tight px-4">
-                    Peduli Gizi, <br />Peduli Inklusi
-                </h1>
-            </div>
+  
 
             {/* --- BAGIAN KANAN (KONTEN) --- */}
             {/* HP: Padding standar. Desktop: Padding VW */}

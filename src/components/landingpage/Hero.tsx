@@ -80,17 +80,19 @@ const Hero = () => {
     }, []);
 
     return (
-        <section ref={containerRef} className="flex flex-row relative justify-center w-full h-full px-[3vw] ">
-             <div className="w-[40%] satoshiBold text-[4.5vw] flex flex-col gap-[2vw] justify-center">
-                <h1 className="hero-title">
+        <section ref={containerRef} className="flex flex-col lg:gap-0 gap-4 pt-[14vw] lg:pt-[10vw] lg:flex-row items-center relative justify-center w-full h-full px-[3vw] ">
+             <div className="w-[80%] lg:w-[40%] satoshiBold text-[4.5vw] lg:text-start text-center flex flex-col gap-[2vw] justify-center">
+                <h1 className="hero-title text-[6.5vw] md:text-[5.5vw] lg:text-[4.5vw] text-center lg:text-start leading-tight">
                     KAMI PEDULI VALIDASI <span className="text-[#E8882F]">GIZI</span> UNTUK <span className="text-[#E8882F]">SEKOLAH INKLUSIF</span>
                 </h1>
-                <p className="hero-desc text-[1.5vw] satoshiMedium">
+                
+                {/* Mobile: Text base (biar terbaca). Desktop: 1.5vw */}
+                <p className="hero-desc text-[3.5vw] md:text-[2.5vw] lg:text-[1.5vw] satoshiMedium text-center lg:text-start text-gray-600 lg:text-black">
                     Membantu sekolah memastikan setiap menu MBG memenuhi standar keamanan gizi dan sesuai kebutuhan siswa disabilitas dengan analisis AI.
                 </p>
             </div>
 
-            <div className="hero-slider-container w-[60%] flex items-center justify-center overflow-hidden relative h-full">
+            <div className="hero-slider-container lg:w-[60%] w-full flex items-center justify-center overflow-hidden relative h-full">
                 <div className="relative w-full flex">
                     {images.map((imgSrc, index) => (
                         <div
@@ -105,28 +107,28 @@ const Hero = () => {
                     ))}
                 </div>
                 <div 
-                    className="hero-box-doctor absolute bottom-[2%] left-[3%] w-[60%] h-[27%] bg-[#E8882F] rounded-[1.5vw] z-10 pointer-events-none flex flex-row gap-[1vw]"
+                    className="hero-box-doctor absolute bottom-[2%] left-[3%] w-[60%] h-[27%] bg-[#E8882F] rounded-[3vw] lg:rounded-[1.5vw] z-10 pointer-events-none flex flex-row gap-[1vw]"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
                     <Image src={dokter} alt="Dokter" className="h-full w-auto rounded-[1vw] ml-[1vw]" />
                     <div className="flex flex-col gap-[0.5vw] justify-center">
                         <div className="">
-                            <h2 className="satoshiBold text-white text-[1.5vw] ">dr. David Fadjar Putra, MS, Sp. G.K</h2>
-                            <p className="satoshiBold text-white text-[1.2vw] leading-none">Spesialis Gizi Klinik</p>
+                        <h2 className="satoshiBold text-white text-[3vw] md:text-[3vw] lg:text-[1.5vw] leading-tight">dr. David Fadjar Putra, MS, Sp. G.K</h2>
+                            <p className="satoshiBold text-white text-[2vw] md:text-[1.5vw] lg:text-[1.2vw] leading-none opacity-90">Spesialis Gizi Klinik</p>
                         </div>
-                        <p className="satoshiMedium text-white text-[1.15vw]">"Penyandang disabilitas tetap boleh makan menu umum, namun nutrisinya harus benar-benar seimbang."</p>
+                        <p className="satoshiMedium text-white  text-[1.5vw] md:text-[1.5vw] lg:text-[1.15vw]">"Penyandang disabilitas tetap boleh makan menu umum, namun nutrisinya harus benar-benar seimbang."</p>
                     </div>
                 </div>
 
                 <div 
-                    className="hero-box-counter absolute top-[3%] right-0 w-[24%] h-[34%] bg-[#E8882F] rounded-[1.5vw] flex flex-col justify-center items-center gap-[1vw] text-white "
+                    className="hero-box-counter absolute top-[3%] right-0 w-[24%] h-[34%] bg-[#E8882F] rounded-[3vw] lg:rounded-[1.5vw] flex flex-col justify-center items-center gap-[1vw] text-white "
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
                     <div className="flex items-center leading-none">
-                        <span className={`satoshiBold text-white text-[5vw] transition-all duration-1000 ease-out transform ${counter === number ? 'translate-x-0' : 'translate-x-[1.7vw]'}`}>{counter}</span>
-                        <span className={`font-bold text-[5vw] transition-all duration-1000 ease-out transform ${counter === number ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>+</span>
+                        <span className={`satoshiBold text-white text-[7vw] lg:text-[5vw] transition-all duration-1000 ease-out transform ${counter === number ? 'translate-x-0' : 'translate-x-[1.7vw]'}`}>{counter}</span>
+                        <span className={`font-bold text-[7vw] lg:text-[5vw] transition-all duration-1000 ease-out transform ${counter === number ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'}`}>+</span>
                     </div>
-                    <h2 className="satoshiBold text-white text-[1.5vw] ">Sekolah Inklusif</h2>
+                    <h2 className="satoshiBold text-white text-[2.5vw] md:text-[2.5vw] lg:text-[1.5vw] ">Sekolah Inklusif</h2>
                 </div>
             </div>
         </section>

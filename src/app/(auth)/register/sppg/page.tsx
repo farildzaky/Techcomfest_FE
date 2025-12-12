@@ -134,13 +134,7 @@ const RegisterSppgPage = () => {
                 </div>
             )}
 
-            {/* --- BAGIAN KIRI (ORANYE) --- */}
-            <div className="flex flex-col bg-[#E87E2F] w-full h-[30vh] md:w-[40vw] md:h-screen items-center gap-4 md:gap-[1vw] justify-center shrink-0">
-                <Image src={logoWhite} alt="logo" className="w-20 md:w-[15vw] h-auto object-contain" />
-                <h1 className="satoshiBold text-2xl md:text-[3.5vw] text-white text-center leading-tight px-4">
-                    Peduli Gizi, <br />Peduli Inklusi
-                </h1>
-            </div>
+
 
             {/* --- BAGIAN KANAN (FORM) --- */}
             {/* Menggunakan min-h di HP agar bisa scroll jika konten panjang */}
@@ -159,7 +153,7 @@ const RegisterSppgPage = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </Link>
-                
+
                 {/* Judul Halaman */}
                 <div className="flex flex-col text-[#B56225] items-center leading-none gap-2 md:gap-[0.5vw]">
                     <h1 className="satoshiBold text-[#B56225] text-4xl md:text-[4.5vw]">Daftar</h1>
