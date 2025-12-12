@@ -18,13 +18,14 @@ export default function SekolahLayout({
   // --- LOGIC HALAMAN FULLSCREEN (HIDDEN SIDEBAR DI DESKTOP) ---
   const isMenuDetail = pathname.startsWith('/sekolah/menu-mbg/') && pathname !== '/sekolah/menu-mbg';
   const isScanResult = pathname.startsWith('/sekolah/scan-nutrisi/') && pathname !== '/sekolah/scan-nutrisi';
+  const isProfilePage = pathname === '/sekolah/profile' || pathname.startsWith('/sekolah/profile/');
   
   // Halaman spesifik lain yang ingin full screen di desktop
   const isSpecificPage = [
       "/sekolah/riwayat-scan", 
   ].includes(pathname);
 
-  const isFullScreen = isMenuDetail || isScanResult || isSpecificPage;
+  const isFullScreen = isMenuDetail || isScanResult || isSpecificPage || isProfilePage;
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
