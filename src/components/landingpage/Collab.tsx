@@ -98,13 +98,13 @@ const Collab = () => {
                 style={{ backgroundColor: orangeColor }}
             ></div>
 
-            <h1 ref={textRef} className="absolute z-20 text-white text-[4.5vw] satoshiBold leading-wide text-center origin-center will-change-transform flex flex-col items-center justify-center pointer-events-none w-full whitespace-nowrap">
+            <h2 ref={textRef} className="absolute z-20 text-white text-[4.5vw] satoshiBold leading-wide text-center origin-center will-change-transform flex flex-col items-center justify-center pointer-events-none w-full whitespace-nowrap">
                 <span className="pl-[1vw] rounded-[1vw] leading-none block"
                     style={{ textShadow: textShadowStyle }}
                 >
                     Kolaborasi dengan SPPG
                 </span>
-            </h1>
+            </h2>
 
             <div ref={descRef} className="absolute bottom-[5vw] right-[5vw] w-[66%] z-20 text-right">
                 <p className="text-white satoshiMedium text-[1.5vw] px-[0.5vw]">

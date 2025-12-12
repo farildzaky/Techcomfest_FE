@@ -80,13 +80,11 @@ const Inklusif = () => {
             */}
             <div className="flex flex-col lg:flex-row items-center justify-between w-full h-full gap-[8vw] lg:gap-0">
 
-                {/* --- TEKS (KIRI) --- */}
-                {/* Lebar dibatasi 50% di desktop agar tidak nabrak gambar */}
-                <h1 ref={textRef} className="relative z-10 leading-tight w-full lg:w-[50%] satoshiBold text-[8vw] lg:text-[4.5vw] text-center lg:text-left">
+                <h2 ref={textRef} className="relative z-10 leading-tight w-full lg:w-[50%] satoshiBold text-[8vw] lg:text-[4.5vw] text-center lg:text-left">
                     <span className="text-[#E87E2F]">Semua anak </span>
                     berhak mendapat <span className="text-[#E87E2F]">makanan yang aman</span> dan
                     <span className="text-[#E87E2F]"> sesuai kebutuhannya</span>
-                </h1>
+                </h2>
 
                 {/* --- GAMBAR (KANAN) --- */}
                 {/* Lebar dibatasi 45% di desktop */}

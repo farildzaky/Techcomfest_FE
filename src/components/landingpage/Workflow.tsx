@@ -110,9 +110,9 @@ const Workflow = () => {
             ref={containerRef}
             className="flex flex-col gap-8 lg:gap-[2vw] relative  w-full"
         >
-            <h1 className="workflow-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] px-6 lg:px-[3vw] relative z-10 text-center lg:text-left">
+            <h2 className="workflow-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] px-6 lg:px-[3vw] relative z-10 text-center lg:text-left">
                 Cara Kerja
-            </h1>
+            </h2>
 
             <div className="w-full px-6 lg:px-[6vw] flex flex-col lg:flex-row items-start gap-8 lg:gap-[15vw] relative">
 

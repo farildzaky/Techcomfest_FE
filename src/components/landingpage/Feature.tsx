@@ -149,9 +149,9 @@ const Feature = () => {
             ref={containerRef}
             className="flex flex-col w-full gap-8 lg:gap-[2vw] items-center justify-center relative px-6 lg:px-[3vw] py-10 lg:py-[5vw]"
         >
-            <h1 className="feature-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] relative z-10 text-center">
+            <h2 className="feature-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] relative z-10 text-center">
                 Fitur Kami
-            </h1>
+            </h2>
 
             {/* --- MOBILE LAYOUT --- */}
             <div className="flex flex-col w-full gap-8 lg:hidden">

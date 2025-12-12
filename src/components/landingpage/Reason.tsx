@@ -50,10 +50,9 @@ const Reason = () => {
             ref={containerRef}
             className="flex flex-col w-full gap-[8vw] px-[5vw]  lg:py-0 lg:gap-[2vw] lg:px-[3vw]"
         >
-            {/* Title: 9vw di Mobile -> 4.5vw di Desktop */}
-            <h1 className="reason-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] text-center lg:text-left">
+            <h2 className="reason-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] text-center lg:text-left">
                 Mengapa Kami Ada
-            </h1>
+            </h2>
 
             <div className="flex flex-col lg:flex-row w-full h-full items-center lg:items-start">
 

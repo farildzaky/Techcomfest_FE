@@ -49,7 +49,7 @@ const Navbar = () => {
                         priority
                         sizes="(max-width: 768px) 10vw, (max-width: 1024px) 8vw, 5vw"
                     />
-                    <h1 className="satoshiBold tracking-wider text-[#E87E2F] text-[4vw] md:text-[3.5vw] lg:text-[2.5vw]">INKLUZI</h1>
+                    <span className="satoshiBold tracking-wider text-[#E87E2F] text-[4vw] md:text-[3.5vw] lg:text-[2.5vw]">INKLUZI</span>
                 </div>
                 <div className="flex flex-row gap-[2vw] text-[4vw] md:text-[3vw] lg:text-[2vw] satoshiBold">
                     <Link href="/register" className="text-[#B56225] hover:text-[#E87E2F] transition-colors">Register</Link>
