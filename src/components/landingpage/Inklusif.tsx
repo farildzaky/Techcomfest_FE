@@ -96,6 +96,7 @@ const Inklusif = () => {
                         alt="mock"
                         width={800} 
                         height={800}
+                        sizes="(max-width: 1024px) 80vw, 45vw"
                         className="object-contain w-[80vw] lg:w-full h-auto "
                     />
                 </div>

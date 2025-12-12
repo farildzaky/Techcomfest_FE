@@ -174,7 +174,13 @@ const Feature = () => {
             <div className="hidden lg:flex flex-col items-center w-full justify-center relative gap-[5vw]">
 
                 <div className='center-circle absolute w-[70vw] h-[60vw] top-[50%]  translate-y-[-50%] pointer-events-none z-0'>
-                    <Image src={mock} alt="circle" className="w-full h-full object-contain" />
+                    <Image 
+                        src={mock} 
+                        alt="circle" 
+                        className="w-full h-full object-contain"
+                        sizes="70vw"
+                        loading="lazy"
+                    />
                 </div>
 
                 <div className="grid grid-cols-2 gap-[40vw] z-10 w-full relative">

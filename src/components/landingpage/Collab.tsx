@@ -85,6 +85,8 @@ const Collab = () => {
                     ref={bgImageRef}
                     src={bg}
                     alt="background"
+                    fill
+                    sizes="100vw"
                     className="w-full h-full object-cover"
                     priority
                 />

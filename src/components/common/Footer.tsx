@@ -12,12 +12,12 @@ const Footer = () => {
 
                     {/* 1. KOLOM KIRI (Logo & Slogan) */}
                     <div className="flex flex-col items-center lg:w-1/4 gap-6">
-                        {/* Logo Wrapper */}
                         <div className="relative w-32 h-32 lg:w-40 lg:h-40">
                             <Image
                                 src={logoWhite}
                                 alt="Logo Inkluzi"
                                 fill
+                                sizes="(max-width: 1024px) 128px, 160px"
                                 className="object-contain"
                             />
                         </div>

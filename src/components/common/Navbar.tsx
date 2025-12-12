@@ -42,7 +42,13 @@ const Navbar = () => {
         >
             <div className="flex flex-row justify-between py-[1vw] px-[3vw] items-center w-full">
                 <div className="flex flex-row items-center gap-[1vw] lg:gap-[0.5vw]">
-                    <Image src={logo} alt="logo" className="lg:w-[5vw] lg:h-[5vw] md:w-[8vw] md:h-[8vw] w-[10vw] h-[10vw] object-contain" />
+                    <Image 
+                        src={logo} 
+                        alt="logo" 
+                        className="lg:w-[5vw] lg:h-[5vw] md:w-[8vw] md:h-[8vw] w-[10vw] h-[10vw] object-contain"
+                        priority
+                        sizes="(max-width: 768px) 10vw, (max-width: 1024px) 8vw, 5vw"
+                    />
                     <h1 className="satoshiBold tracking-wider text-[#E87E2F] text-[4vw] md:text-[3.5vw] lg:text-[2.5vw]">INKLUZI</h1>
                 </div>
                 <div className="flex flex-row gap-[2vw] text-[4vw] md:text-[3vw] lg:text-[2vw] satoshiBold">

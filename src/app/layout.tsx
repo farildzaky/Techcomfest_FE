@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiasd">
+      <body className="antialiased">
         {children}
         <SpeedInsights />
         <CookieConsent /> 

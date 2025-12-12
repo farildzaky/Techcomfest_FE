@@ -121,6 +121,9 @@ const Workflow = () => {
                         <Image
                             src={mock1}
                             alt="Mockup 1"
+                            width={400}
+                            height={600}
+                            sizes="25vw"
                             className="w-[25vw] h-auto drop-shadow-xl"
                             priority
                         />
@@ -129,6 +132,9 @@ const Workflow = () => {
                         <Image
                             src={mock2}
                             alt="Mockup 2"
+                            width={350}
+                            height={500}
+                            sizes="22vw"
                             className="w-[22vw] h-auto drop-shadow-2xl"
                             priority
                         />

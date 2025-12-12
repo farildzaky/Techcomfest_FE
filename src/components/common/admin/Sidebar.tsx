@@ -129,6 +129,9 @@ const SidebarAdmin = ({ isOpen, toggle }: SidebarProps) => {
                                         <Image
                                             src={isActive ? item.iconOrange : item.iconWhite}
                                             alt={item.label}
+                                            width={32}
+                                            height={32}
+                                            sizes="(max-width: 1024px) 20px, 2vw"
                                             className="w-5 h-5 lg:w-[2vw] lg:h-[2vw] object-contain transition-transform duration-300"
                                         />
                                         <span className="text-base lg:text-[1.4vw] satoshiBold whitespace-nowrap">
@@ -151,6 +154,9 @@ const SidebarAdmin = ({ isOpen, toggle }: SidebarProps) => {
                         <Image
                             src={logout}
                             alt="Logout"
+                            width={32}
+                            height={32}
+                            sizes="(max-width: 1024px) 20px, 2vw"
                             className="w-5 h-5 lg:w-[2vw] lg:h-[2vw] object-contain"
                         />
                         <div className="satoshiBold text-base lg:text-[1.4vw] text-white">

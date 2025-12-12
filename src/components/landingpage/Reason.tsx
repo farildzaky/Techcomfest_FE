@@ -127,7 +127,14 @@ const Reason = () => {
                     
                     {/* Gambar: HIDDEN di Mobile, BLOCK di Desktop */}
                     <div className="reason-image hidden lg:block">
-                        <Image src={mbg} alt="MBG" className="w-[59vw]" />
+                        <Image 
+                            src={mbg} 
+                            alt="MBG" 
+                            width={1200}
+                            height={600}
+                            sizes="59vw"
+                            className="w-[59vw]" 
+                        />
                     </div>
 
                     {/* Subtitle */}

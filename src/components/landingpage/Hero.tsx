@@ -102,7 +102,13 @@ const Hero = () => {
                                 transform: `translateX(-${currentImage * 100}%)`
                             }}
                         >
-                            <Image src={imgSrc} alt={`Gambar ${index + 1}`} className="w-full h-auto object-cover" />
+                            <Image 
+                                src={imgSrc} 
+                                alt={`Gambar ${index + 1}`} 
+                                className="w-full h-auto object-cover"
+                                priority={index === 0}
+                                sizes="(max-width: 1024px) 100vw, 60vw"
+                            />
                         </div>
                     ))}
                 </div>
@@ -110,7 +116,12 @@ const Hero = () => {
                     className="hero-box-doctor absolute bottom-[2%] left-[3%] w-[60%] h-[27%] bg-[#E8882F] rounded-[3vw] lg:rounded-[1.5vw] z-10 pointer-events-none flex flex-row gap-[1vw]"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
-                    <Image src={dokter} alt="Dokter" className="h-full w-auto rounded-[1vw] ml-[1vw]" />
+                    <Image 
+                        src={dokter} 
+                        alt="Dokter" 
+                        className="h-full w-auto rounded-[1vw] ml-[1vw]"
+                        sizes="15vw"
+                    />
                     <div className="flex flex-col gap-[0.5vw] justify-center">
                         <div className="">
                         <h2 className="satoshiBold text-white text-[3vw] md:text-[3vw] lg:text-[1.5vw] leading-tight">dr. David Fadjar Putra, MS, Sp. G.K</h2>
