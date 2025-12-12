@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchWithAuth } from '@/src/lib/api'; 
+import { fetchWithAuth } from '@/src/lib/api';
 import detailCircle from "../../../assets/dashboard/sekolah/detail-circle.png";
 
-// --- INTERFACES ---
 interface ChartItem {
     label: string;
     persentase: number;
@@ -62,7 +61,7 @@ interface KomponenDetail {
     berat: string;
     kalori: number;
     satuan_kalori: string;
-    nutrisi?: KomponenNutrisi; 
+    nutrisi?: KomponenNutrisi;
 }
 
 interface MenuNutritionResponse {
@@ -79,7 +78,6 @@ interface MenuNutritionResponse {
     komponen_detail?: KomponenDetail[];
 }
 
-// Helper Function - Radius disesuaikan untuk mobile/desktop via CSS/Logic nanti
 const getLabelPosition = (startAngle: number, endAngle: number, radius: number) => {
     const middleAngle = startAngle + (endAngle - startAngle) / 2;
     const radian = (middleAngle - 90) * (Math.PI / 180);
@@ -92,27 +90,23 @@ const AkgMenu = () => {
     const params = useParams();
     const router = useRouter();
     const id = params?.id as string;
-    
+
     const [menuData, setMenuData] = useState<MenuNutritionResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    
-    // State untuk radius label agar reaktif terhadap resize window
+
     const [labelRadius, setLabelRadius] = useState(63);
 
-    // Effect untuk handle resize window agar chart responsif
     useEffect(() => {
         const handleResize = () => {
-            // Jika layar kecil (< 1024px), perbesar radius agar label tidak menumpuk di tengah
             if (window.innerWidth < 1024) {
-                setLabelRadius(60); 
+                setLabelRadius(60);
             } else {
                 setLabelRadius(63);
             }
         };
 
-        // Set awal
         handleResize();
 
         window.addEventListener('resize', handleResize);
@@ -148,11 +142,9 @@ const AkgMenu = () => {
         fetchData();
     }, [id]);
 
-    // --- UI LOADING (SKELETON RESPONSIVE) ---
     if (loading) {
         return (
             <div className="flex flex-col gap-6 lg:gap-[5vw] w-full min-h-screen bg-white pb-8 lg:pb-[5vw] font-sans relative">
-                {/* Header Skeleton */}
                 <div className="w-full relative">
                     <div className="w-full p-6 lg:p-[2vw] px-4 lg:px-[3vw] bg-[#E87E2F] rounded-b-3xl lg:rounded-b-[2vw] flex shadow-md">
                         <div className="h-8 lg:h-[3vw] bg-white/30 rounded animate-pulse w-1/2 lg:w-[40%]" />
@@ -160,7 +152,6 @@ const AkgMenu = () => {
                 </div>
 
                 <div className="px-4 lg:px-[3vw] flex flex-col gap-8 lg:gap-[3vw]">
-                    {/* Chart & Description Skeleton */}
                     <div className="flex flex-col lg:flex-row gap-8 lg:gap-[2vw] items-center">
                         <div className="w-full flex items-center justify-center relative">
                             <div className="w-64 h-64 lg:w-[25vw] lg:h-[25vw] rounded-full relative bg-gray-300 animate-pulse"></div>
@@ -170,24 +161,22 @@ const AkgMenu = () => {
                             <div className="h-8 lg:h-[3vw] bg-white/30 rounded animate-pulse w-[70%]" />
                             <div className="flex flex-col lg:flex-row gap-4 lg:gap-[1vw] items-center">
                                 <div className="w-full space-y-2 lg:space-y-[0.5vw]">
-                                    {[1,2,3].map(i => <div key={i} className="h-4 lg:h-[1.1vw] bg-white/30 rounded animate-pulse w-full" />)}
+                                    {[1, 2, 3].map(i => <div key={i} className="h-4 lg:h-[1.1vw] bg-white/30 rounded animate-pulse w-full" />)}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    {/* List Skeleton */}
+
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-[2vw]">
-                         {[1,2,3,4].map(i => (
-                             <div key={i} className="h-12 lg:h-[3vw] bg-gray-200 rounded-lg animate-pulse" />
-                         ))}
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} className="h-12 lg:h-[3vw] bg-gray-200 rounded-lg animate-pulse" />
+                        ))}
                     </div>
                 </div>
             </div>
         );
     }
 
-    // --- UI ERROR ---
     if (error || !menuData) {
         return (
             <div className="flex flex-col gap-6 w-full min-h-screen bg-white items-center justify-center px-4">
@@ -208,7 +197,6 @@ const AkgMenu = () => {
         );
     }
 
-    // --- DATA PREPARATION ---
     const chartData = menuData?.info_nutrisi?.donut_chart || {};
     const karbo = chartData.karbohidrat?.persentase || 0;
     const protein = chartData.protein?.persentase || 0;
@@ -227,7 +215,6 @@ const AkgMenu = () => {
         ${colors[3]} ${p3}% 100%
     )`;
 
-    // Posisi label dihitung berdasarkan state labelRadius
     const posKarbo = getLabelPosition(0, p1 * 3.6, labelRadius);
     const posProtein = getLabelPosition(p1 * 3.6, p2 * 3.6, labelRadius);
     const posLemak = getLabelPosition(p2 * 3.6, p3 * 3.6, labelRadius);
@@ -253,18 +240,17 @@ const AkgMenu = () => {
         persentase.serat || { label: 'Serat', nilai: '0%' },
         persentase.gula || { label: 'Gula', nilai: '0%' },
         persentase.sodium || { label: 'Sodium', nilai: '0%' },
-    ].filter(item => item.label); // Filter item kosong jika ada
+    ].filter(item => item.label);
 
     const komponenDetail = menuData?.komponen_detail || [];
 
     return (
         <div className="flex flex-col gap-8 lg:gap-[5vw] w-full min-h-screen bg-white pb-8 lg:pb-[1vw] font-sans relative overflow-x-hidden">
 
-            {/* POPUP DETAIL */}
             {isPopupOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 lg:p-[3vw]">
                     <div className="bg-white w-full max-w-lg lg:w-[50vw] rounded-3xl lg:rounded-[2vw] p-6 lg:p-[3vw] shadow-2xl relative flex flex-col gap-4 lg:gap-[1.5vw] animate-in fade-in zoom-in duration-200">
-                        <button 
+                        <button
                             onClick={() => setIsPopupOpen(false)}
                             className="absolute top-4 right-4 lg:top-[1.5vw] lg:right-[1.5vw] text-gray-400 hover:text-gray-600 transition-colors p-2"
                         >
@@ -272,21 +258,21 @@ const AkgMenu = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-                        
+
                         <div>
                             <h3 className="satoshiBold text-lg lg:text-[1.5vw] text-black mb-2 lg:mb-[0.5vw]">Pengertian</h3>
                             <p className="satoshiMedium text-sm lg:text-[1.1vw] text-gray-700 text-justify leading-relaxed">
                                 {infoAkg.pengertian || "Tidak ada data."}
                             </p>
                         </div>
-                        
+
                         <div>
                             <h3 className="satoshiBold text-lg lg:text-[1.5vw] text-black mb-2 lg:mb-[0.5vw]">Fungsi</h3>
                             <p className="satoshiMedium text-sm lg:text-[1.1vw] text-gray-700 text-justify leading-relaxed">
                                 {infoAkg.fungsi || "Tidak ada data."}
                             </p>
                         </div>
-                        
+
                         <div>
                             <h3 className="satoshiBold text-lg lg:text-[1.5vw] text-black mb-2 lg:mb-[0.5vw]">Tetapan AKG</h3>
                             <ul className="grid grid-cols-2 gap-x-4 lg:gap-x-[2vw] gap-y-2 lg:gap-y-[0.5vw] list-disc list-inside satoshiMedium text-sm lg:text-[1.1vw] text-gray-700">
@@ -297,7 +283,6 @@ const AkgMenu = () => {
                 </div>
             )}
 
-            {/* HEADER */}
             <div className="w-full relative">
                 <h1 className="satoshiBold text-2xl lg:text-[3vw] text-white w-full p-6 lg:p-[2vw] px-4 lg:px-[3vw] bg-[#E87E2F] rounded-b-3xl lg:rounded-b-[2vw] shadow-md text-center lg:text-left">
                     Informasi Nutrisi
@@ -306,24 +291,19 @@ const AkgMenu = () => {
 
             <div className="px-4 lg:px-[3vw] flex flex-col gap-8 lg:gap-[3vw]">
 
-                {/* --- BAGIAN ATAS: CHART & DESKRIPSI --- */}
                 <div className="flex flex-col lg:flex-row gap-8  lg:gap-[2vw] items-center">
-                    
-                    {/* Donut Chart Wrapper */}
+
                     <div className="w-full lg:w-1/2 lg:mb-0  flex items-center justify-center relative my-8 lg:my-0">
-                        {/* Ukuran chart fix di mobile agar tidak terlalu kecil/besar, responsif di desktop */}
                         <div className="w-64 h-64 lg:w-[25vw] lg:h-[25vw] rounded-full relative shadow-md shrink-0"
                             style={{ background: chartGradient }}
                         >
-                            {/* Inner Circle (Putih) */}
                             <div className="absolute inset-12 lg:inset-[5vw] bg-white rounded-full flex flex-col items-center justify-center shadow-inner z-20">
                                 <span className="satoshiBold text-4xl lg:text-[3.5vw] text-black leading-none tracking-tight">
                                     {menuData?.info_nutrisi?.total_kalori || 0}
                                 </span>
                                 <span className="satoshiMedium text-base lg:text-[1.2vw] text-gray-500 mt-1">kalori</span>
                             </div>
-                            
-                            {/* Labels */}
+
                             {karbo > 0 && <LabelChart x={posKarbo.x} y={posKarbo.y} label="Karbohidrat" value={karbo} color={colors[0]} />}
                             {protein > 0 && <LabelChart x={posProtein.x} y={posProtein.y} label="Protein" value={protein} color={colors[1]} />}
                             {lemak > 0 && <LabelChart x={posLemak.x} y={posLemak.y} label="Lemak" value={lemak} color={colors[2]} />}
@@ -331,20 +311,18 @@ const AkgMenu = () => {
                         </div>
                     </div>
 
-                    {/* Deskripsi Menu Card */}
                     <div className="w-full lg:w-1/2 bg-[#E87E2F] rounded-3xl lg:rounded-[2vw] gap-6 lg:gap-[1vw] p-6 lg:p-[2vw] text-white flex flex-col shadow-lg h-fit">
                         <div>
                             <h2 className="satoshiBold text-2xl lg:text-[3vw] text-center lg:text-left leading-tight">
                                 {menuData?.nama_menu || "Nama Menu"}
                             </h2>
                         </div>
-                        
+
                         <div className="flex flex-col lg:flex-row gap-6 lg:gap-[1vw] items-stretch lg:items-center">
                             <p className="satoshiMedium text-sm lg:text-[1.1vw] w-full text-justify leading-relaxed opacity-90">
                                 {menuData?.deskripsi || "Deskripsi menu tidak tersedia."}
                             </p>
-                            
-                            {/* Total Porsi Box */}
+
                             <div className='w-full lg:w-[40%] flex flex-col p-4 lg:p-[1vw] rounded-2xl lg:rounded-[1vw] gap-1 lg:gap-[0.5vw] items-center justify-center bg-[#FFF3EB] text-[#D7762E] shrink-0 shadow-sm'>
                                 <p className="satoshiMedium text-sm lg:text-[1.2vw]">Total Porsi</p>
                                 <p className="satoshiBold text-xl lg:text-[2.2vw] leading-tight text-center break-words w-full">
@@ -355,7 +333,6 @@ const AkgMenu = () => {
                     </div>
                 </div>
 
-                {/* --- BAGIAN TENGAH: PERSENTASE AKG --- */}
                 <div className="w-full flex flex-col gap-4 lg:gap-[1vw]">
                     <div className="flex justify-between items-end border-b border-gray-100 pb-2">
                         <div className='flex flex-row items-center gap-2 lg:gap-[1vw]'>
@@ -368,7 +345,7 @@ const AkgMenu = () => {
                             {persentase.kalori?.label || "Kalori"} {persentase.kalori?.nilai || "-"}
                         </span>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-x-[3vw] lg:gap-y-[1.5vw]">
                         {persentaseAkgList.map((item, idx) => (
                             <div key={idx} className="flex justify-between items-center border lg:border-[0.2vw] border-[#E87E2F] bg-[#FFF3EB] rounded-xl lg:rounded-[1vw] px-4 lg:px-[1.5vw] py-3 lg:py-[0.8vw] shadow-sm">
@@ -379,12 +356,10 @@ const AkgMenu = () => {
                     </div>
                 </div>
 
-                {/* --- BAGIAN BAWAH: KOMPONEN DETAIL --- */}
                 <div className="w-full relative">
-                    {/* Garis tengah dekoratif (hanya desktop) */}
                     <div className="absolute left-1/2 top-0 bottom-0 w-[2px] lg:w-[0.2vw] bg-[#E87E2F]/20 -translate-x-1/2 hidden lg:block"></div>
-                    
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-x-[5vw] lg:gap-y-[2vw]"> 
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-x-[5vw] lg:gap-y-[2vw]">
                         {komponenDetail.map((comp, idx) => (
                             <div key={idx} className="bg-[#E87E2F] rounded-3xl lg:rounded-[1.5vw] p-5 lg:p-[1.5vw] text-white shadow-md flex flex-col gap-4 lg:gap-[1vw]">
                                 <div className="flex justify-between items-start border-b border-white/20 pb-3 lg:pb-[0.8vw]">
@@ -410,7 +385,6 @@ const AkgMenu = () => {
                     </div>
                 </div>
 
-                {/* TOMBOL KEMBALI */}
                 <div className="flex justify-end mt-4">
                     <button
                         onClick={() => router.back()}
@@ -424,10 +398,9 @@ const AkgMenu = () => {
     );
 }
 
-// Komponen Label Chart (Responsif)
 const LabelChart = ({ x, y, label, value, color }: { x: string, y: string, label: string, value: number, color: string }) => (
-    <div 
-        className="absolute z-10 flex flex-col items-center text-center w-24 lg:w-auto transition-all duration-300 ease-out" 
+    <div
+        className="absolute z-10 flex flex-col items-center text-center w-24 lg:w-auto transition-all duration-300 ease-out"
         style={{ left: x, top: y, transform: 'translate(-50%, -50%)' }}
     >
         <p className="text-[10px] lg:text-[1vw] text-gray-600 mb-0 lg:mb-[-0.2vw] leading-none font-medium whitespace-nowrap">{label}</p>
@@ -435,7 +408,6 @@ const LabelChart = ({ x, y, label, value, color }: { x: string, y: string, label
     </div>
 );
 
-// Komponen Kotak Nutrisi (Responsif)
 const NutrientBox = ({ label, value }: { label?: string, value?: string }) => (
     <div className="bg-[#FFF3E0] rounded-xl lg:rounded-[1vw] py-2 lg:py-[0.5vw] px-1 flex flex-col items-center justify-center text-center h-full min-h-[60px] lg:min-h-0 shadow-sm">
         <span className="satoshiBold text-[#8C4C1D] text-sm lg:text-[1.2vw] leading-tight break-all">{value || "-"}</span>

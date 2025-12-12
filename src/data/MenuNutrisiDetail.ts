@@ -2,19 +2,17 @@
 
 export const detailedMenus = [
     {
-        id: 1, // Terhubung ke "Ikan Bumbu Kuning"
-        menuName: "Nasi Ikan Bumbu Kuning", // <-- DITAMBAHKAN
-        totalCalories: 590,                 // <-- DITAMBAHKAN
+        id: 1,
+        menuName: "Nasi Ikan Bumbu Kuning",
+        totalCalories: 590,
         totalWeight: "448 gram/porsi",
         description: "Menu Nasi Ikan Bumbu Kuning adalah sajian seimbang yang kaya akan protein hewani. Pengolahan ikan dengan bumbu kuning memberikan antioksidan alami, dipadukan dengan tumis buncis sebagai sumber serat.",
-        // Data untuk Diagram Donat (Total harus 100%)
         chartData: {
             karbo: 55,
             protein: 20,
             lemak: 15,
             lainnya: 10
         },
-        // Data Persentase AKG
         akg: [
             { label: "Karbohidrat", value: "28% Nilai Harian" },
             { label: "Protein", value: "35% Nilai Harian" },
@@ -23,7 +21,6 @@ export const detailedMenus = [
             { label: "Serat", value: "25% Nilai Harian" },
             { label: "Sodium", value: "12% Nilai Harian" },
         ],
-        // Rincian Nutrisi Per Komponen
         components: [
             {
                 name: "Nasi Putih",
@@ -52,9 +49,9 @@ export const detailedMenus = [
         ]
     },
     {
-        id: 2, // Terhubung ke "Soto Ayam Bening"
-        menuName: "Soto Ayam Bening",       // <-- DITAMBAHKAN
-        totalCalories: 380,                 // <-- DITAMBAHKAN
+        id: 2,
+        menuName: "Soto Ayam Bening",
+        totalCalories: 380,
         totalWeight: "450 gram/porsi",
         description: "Menu Soto Ayam memberikan hidrasi yang baik lewat kuah beningnya. Perlu perhatian khusus pada kandungan sodium dalam kuah dan tekstur suun agar aman dikonsumsi.",
         chartData: {
@@ -99,9 +96,9 @@ export const detailedMenus = [
         ]
     },
     {
-        id: 3, // Terhubung ke "Tahu Bacem Telur"
-        menuName: "Tahu Bacem Telur",       // <-- DITAMBAHKAN
-        totalCalories: 450,                 // <-- DITAMBAHKAN
+        id: 3,
+        menuName: "Tahu Bacem Telur",
+        totalCalories: 450,
         totalWeight: "420 gram/porsi",
         description: "Menu ini memiliki kandungan gula yang cukup tinggi dari proses bacem dan lemak jenuh dari telur dadar. Sayur sop memberikan sedikit serat penyeimbang.",
         chartData: {

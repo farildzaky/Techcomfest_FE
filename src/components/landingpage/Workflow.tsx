@@ -17,7 +17,7 @@ const Workflow = () => {
 
     const items = [
         {
-            icon: calender, 
+            icon: calender,
             title: "Pilih Jenis Pemeriksaan",
             desc: "Sekolah dapat memilih analisis melalui menu MBG mingguan atau mengunggah foto makanan untuk diperiksa AI."
         },
@@ -35,16 +35,13 @@ const Workflow = () => {
 
     useLayoutEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
-        
-        // Gunakan matchMedia untuk memisahkan logika animasi Mobile vs Desktop
+
         const mm = gsap.matchMedia();
 
         const ctx = gsap.context(() => {
-            
-            // --- LOGIC UMUM (Mobile & Desktop) ---
-            // Animasi item timeline (Icon & Text muncul)
+
             const itemElements = gsap.utils.toArray<HTMLElement>('.workflow-item');
-            
+
             itemElements.forEach((el) => {
                 const content = el.querySelector(".content-group");
                 const icon = el.querySelector(".icon-wrapper");
@@ -53,46 +50,45 @@ const Workflow = () => {
                 const tl = gsap.timeline({
                     scrollTrigger: {
                         trigger: el,
-                        start: "top 85%", // Sedikit lebih awal agar responsif di HP
+                        start: "top 85%",
                         toggleActions: "play none none reverse"
                     }
                 });
 
-                tl.fromTo(icon, 
-                    { scale: 0, opacity: 0 }, 
+                tl.fromTo(icon,
+                    { scale: 0, opacity: 0 },
                     { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" }
                 )
-                .fromTo(content, 
-                    { opacity: 0, y: 30 },
-                    { opacity: 1, y: 0, duration: 0.6 }, 
-                    "-=0.3"
-                );
+                    .fromTo(content,
+                        { opacity: 0, y: 30 },
+                        { opacity: 1, y: 0, duration: 0.6 },
+                        "-=0.3"
+                    );
 
                 if (line) {
-                    gsap.fromTo(line, 
+                    gsap.fromTo(line,
                         { height: 0 },
                         {
-                            height: "100%", 
+                            height: "100%",
                             ease: "none",
                             scrollTrigger: {
                                 trigger: el,
                                 start: "top 60%",
                                 end: "bottom 60%",
-                                scrub: 1 
+                                scrub: 1
                             }
                         }
                     );
                 }
             });
 
-            // --- LOGIC KHUSUS DESKTOP (Parallax Gambar) ---
             mm.add("(min-width: 1024px)", () => {
                 const tlParallax = gsap.timeline({
                     scrollTrigger: {
                         trigger: containerRef.current,
-                        start: "top bottom", 
-                        end: "bottom top",   
-                        scrub: 1             
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1
                     }
                 });
 
@@ -106,59 +102,52 @@ const Workflow = () => {
         return () => {
             ctx.revert();
             mm.revert();
-        }; 
+        };
     }, []);
 
     return (
-        <section 
-            ref={containerRef} 
+        <section
+            ref={containerRef}
             className="flex flex-col gap-8 lg:gap-[2vw] relative  w-full"
         >
-            {/* Title: 9vw Mobile -> 4.5vw Desktop */}
             <h1 className="workflow-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] px-6 lg:px-[3vw] relative z-10 text-center lg:text-left">
                 Cara Kerja
             </h1>
 
             <div className="w-full px-6 lg:px-[6vw] flex flex-col lg:flex-row items-start gap-8 lg:gap-[15vw] relative">
 
-                {/* --- MOCKUP IMAGES (HIDDEN ON MOBILE) --- */}
                 <div className="hidden lg:block w-[30vw] h-fit sticky top-[20vh] relative mt-[2vw]">
                     <div className="mock-1 relative z-0">
-                        <Image 
-                            src={mock1} 
-                            alt="Mockup 1" 
+                        <Image
+                            src={mock1}
+                            alt="Mockup 1"
                             className="w-[25vw] h-auto drop-shadow-xl"
-                            priority 
+                            priority
                         />
                     </div>
                     <div className="mock-2 absolute top-[10vw] right-[-8vw] z-10">
-                        <Image 
-                            src={mock2} 
-                            alt="Mockup 2" 
+                        <Image
+                            src={mock2}
+                            alt="Mockup 2"
                             className="w-[22vw] h-auto drop-shadow-2xl"
                             priority
                         />
                     </div>
                 </div>
 
-                {/* --- TIMELINE ITEMS --- */}
                 <div className="flex flex-col w-full lg:w-[40vw] pt-4 lg:pt-[5vw]">
                     {items.map((item, index) => (
                         <div key={index} className="flex flex-row gap-4 lg:gap-[3vw] workflow-item relative">
-                            
-                            {/* Icon & Line Column */}
+
                             <div className="flex flex-col items-center">
 
-                                {/* Icon Circle */}
-                                <div 
+                                <div
                                     className="
                                         icon-wrapper group flex justify-center items-center 
                                         bg-[#E87E2F] border-2 lg:border-[0.2vw] border-[#E87E2F] 
                                         hover:bg-white rounded-full z-10 shrink-0 cursor-pointer 
                                         transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105
-                                        /* Mobile Size */
                                         w-16 h-16
-                                        /* Desktop Size */
                                         lg:w-[8vw] lg:h-[8vw]
                                     "
                                 >
@@ -167,14 +156,13 @@ const Workflow = () => {
                                             src={item.icon}
                                             alt="icon"
                                             fill
-                                            sizes="(max-width: 768px) 32px, 5vw" 
-                                            priority 
+                                            sizes="(max-width: 768px) 32px, 5vw"
+                                            priority
                                             className="object-contain transition-all duration-300 brightness-0 invert group-hover:filter-none"
                                         />
                                     </div>
                                 </div>
 
-                                {/* Dashed Line */}
                                 {index !== items.length - 1 && (
                                     <div className="w-[2px] lg:w-[0.3vw] flex-grow min-h-[80px] lg:min-h-[15vw] relative">
                                         <div className="dashed-line absolute top-0 w-full border-l-2 lg:border-l-[0.2vw] border-dashed border-[#E87E2F] h-full origin-top"></div>
@@ -182,7 +170,6 @@ const Workflow = () => {
                                 )}
                             </div>
 
-                            {/* Text Content */}
                             <div className={`content-group flex flex-col justify-start pt-2 lg:pt-[0.5vw] w-full lg:w-[34vw] ${index !== items.length - 1 ? 'pb-8 lg:pb-[4vw]' : 'pb-0'}`}>
                                 <h2 className="satoshiBold text-xl lg:text-[2vw] text-black mb-2 lg:mb-[0.5vw]">
                                     {item.title}
@@ -199,4 +186,5 @@ const Workflow = () => {
         </section>
     )
 }
+
 export default Workflow;
