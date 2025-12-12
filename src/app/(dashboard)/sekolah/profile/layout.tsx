@@ -16,7 +16,7 @@ export default function ProfileLayout({
             {/* Sidebar Wrapper */}
             {/* Mobile: Lebar full */}
             {/* Desktop (lg): Ambil 3 kolom, Sticky, Tinggi Full Layar */}
-            <div className="w-full lg:col-span-3 lg:sticky lg:top-0 lg:h-screen x`z">
+            <div className="w-full lg:col-span-3 lg:sticky lg:top-0 lg:h-screen z-10">
                 <SidebarProfileSekolah/>
             </div>
 
