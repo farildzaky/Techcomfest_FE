@@ -110,11 +110,8 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
         setIsLoggingOut(true);
 
         try {
-            await fetch("/auth/logout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ refresh_token: getCookie("refreshToken") }),
-            });
+            const response = await fetch("/api/auth/logout", { method: "POST" });
+            console.log("Logout response:", response.status);
         } catch (error) {
             console.error("Logout error:", error);
         } finally {

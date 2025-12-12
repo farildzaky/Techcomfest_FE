@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { fetchWithAuth } from "@/src/lib/api";
 
-// --- Import Aset ---
 import scanWhite from "../../assets/common/sidebar/scan-white.png";
 import scanOrange from "../../assets/common/sidebar/scan-orange.png";
 import reportWhite from "../../assets/common/sidebar/report-white.png";
@@ -19,7 +18,6 @@ import riwayatWhite from "../../assets/common/sidebar/riwayat-white.png";
 import riwayatOrange from "../../assets/common/sidebar/riwayat-orange.png";
 import logout from "../../assets/common/sidebar/logout.png";
 
-// --- Interfaces ---
 interface DisabilityType {
     jenis_disabilitas: string;
     jumlah_siswa: number;
@@ -62,12 +60,12 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
         const loadProfile = async () => {
             try {
                 const response = await fetchWithAuth("/profile", { method: "GET" });
-                
+
                 if (response.ok) {
                     const result = await response.json();
                     if (result.success && result.data && result.data.profile_data) {
                         const data = result.data.profile_data as SchoolProfileData;
-                        
+
                         const categoriesFormatted = data.disability_types
                             ? data.disability_types.map(d => d.jenis_disabilitas).join(", ")
                             : '-';
@@ -86,7 +84,6 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
         };
 
         loadProfile();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [pathname]);
 
     const menuItems = [
@@ -102,7 +99,8 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
         setIsLoggingOut(true);
 
         try {
-            await fetch("/auth/logout", { method: "POST" });
+            const response = await fetch("/api/auth/logout", { method: "POST" });
+            console.log("Logout response:", response.status);
         } catch (error) {
             console.error("Logout error:", error);
         } finally {
@@ -116,16 +114,13 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
 
     return (
         <>
-            {/* --- Overlay Mobile --- */}
             <div
-                className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
-                    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                }`}
+                className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                 onClick={toggle}
                 aria-hidden="true"
             ></div>
 
-            {/* --- Container Sidebar Utama --- */}
             <div
                 className={`
                     fixed lg:sticky top-0 left-0 h-screen
@@ -140,10 +135,8 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                     boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)"
                 }}
             >
-                {/* --- 1. BAGIAN ATAS (STATIC - TIDAK SCROLL) --- */}
-                <div className="flex-shrink-0 bg-[#E87E2F] z-10 lg:rounded-tr-[4vw]"> {/* shrink-0 agar tidak mengecil */}
-                    
-                    {/* Tombol Tutup (Mobile) */}
+                <div className="flex-shrink-0 bg-[#E87E2F] z-10 lg:rounded-tr-[4vw]">
+
                     <div className="flex justify-end p-4 lg:hidden">
                         <button onClick={toggle} className="text-white p-1">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -152,10 +145,9 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                         </button>
                     </div>
 
-                    {/* PROFILE SECTION */}
                     <Link href="/sekolah/profile/informasi-sekolah" className="w-full block group/profile">
                         <div className="w-full py-6 lg:py-[2vw] px-4 lg:px-0 flex flex-col items-center justify-center bg-[#E87E2F] satoshiBold text-white text-center gap-3 lg:gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300 lg:rounded-tr-[4vw]">
-                            
+
                             <div className="absolute top-4 right-4 lg:top-[1.5vw] lg:right-[1.5vw] opacity-70 group-hover/profile:opacity-100 transition-opacity">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 lg:w-[1.5vw] lg:h-[1.5vw]">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -164,13 +156,13 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
 
                             <div className="w-24 h-24 lg:w-[10vw] lg:h-[10vw] bg-white rounded-full shrink-0 overflow-hidden relative shadow-md">
                                 {profile.photoUrl ? (
-                                    <Image 
+                                    <Image
                                         src={profile.photoUrl}
                                         alt="Profil Sekolah"
-                                        fill 
+                                        fill
                                         sizes="(max-width: 768px) 30vw, 15vw"
                                         className="object-cover"
-                                        unoptimized={true} 
+                                        unoptimized={true}
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
@@ -194,20 +186,18 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                     </Link>
                 </div>
 
-                {/* --- 2. BAGIAN TENGAH (SCROLLABLE MENU) --- */}
-                {/* flex-1 akan mengisi sisa ruang, overflow-y-auto memungkinkan scroll hanya di area ini */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-2 lg:gap-[0.5vw] mt-4 lg:mt-[0vw] pr-4 lg:pr-[2vw] pb-4">
                     {menuItems.map((item, index) => {
                         const isActive = pathname === item.href || pathname.startsWith(item.href);
 
                         return (
-                            <Link 
-                                key={index} 
+                            <Link
+                                key={index}
                                 href={item.href}
-                                className="block flex-shrink-0" // Mencegah item mengecil
+                                className="block flex-shrink-0"
                             >
                                 <div className="relative flex items-center p-3 lg:p-[1.2vw] cursor-pointer rounded-r-full lg:rounded-r-[2vw] group overflow-hidden">
-                                    <div 
+                                    <div
                                         className={`
                                             absolute top-0 left-0 h-full w-full bg-white rounded-r-full lg:rounded-r-[2vw]
                                             transition-transform duration-500 ease-in-out
@@ -233,7 +223,6 @@ const Sidebar = ({ isOpen, toggle }: SidebarProps) => {
                     })}
                 </div>
 
-                {/* --- 3. BAGIAN BAWAH (STATIC - TIDAK SCROLL) --- */}
                 <div className="flex-shrink-0 border-t border-white lg:border-t-[0.1vw] bg-[#E87E2F] lg:rounded-br-[4vw]">
                     <div className="flex flex-row justify-center items-center px-4 lg:px-[2vw] py-6 lg:py-[1vw]">
                         <button

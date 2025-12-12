@@ -47,12 +47,8 @@ const SidebarAdmin = ({ isOpen, toggle }: SidebarProps) => {
         setIsLoggingOut(true);
 
         try {
-            const response = await fetch("/auth/logout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ refresh_token: getCookie("refreshToken") }),
-            });
-            if (!response.ok) console.warn("Backend logout failed");
+            const response = await fetch("/api/auth/logout", { method: "POST" });
+            console.log("Logout response:", response.status);
         } catch (error) {
             console.error("Logout error:", error);
         } finally {
@@ -60,7 +56,7 @@ const SidebarAdmin = ({ isOpen, toggle }: SidebarProps) => {
             document.cookie = "refreshToken=; Max-Age=0; path=/;";
             document.cookie = "userRole=; Max-Age=0; path=/;";
             localStorage.removeItem("user");
-            router.push("/login"); // Redirect ke login umum atau admin login
+            router.push("/login");
         }
     };
 
