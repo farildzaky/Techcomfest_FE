@@ -9,17 +9,8 @@ export async function middleware(request: NextRequest) {
 
   const isAuthPage = pathname === '/login' || pathname.startsWith('/admin/login');
 
-  // --- BAGIAN INI DIHAPUS/DIKOMENTARI AGAR TIDAK BENTROK ---
-  // if (!accessToken && refreshToken && !isAuthPage) {
-  //   ... (Logic refresh middleware dihapus) ...
-  // }
-  // ---------------------------------------------------------
-
-  // Kita anggap user "Authenticated" selama dia punya Refresh Token.
-  // Urusan Access Token expired biar "fetchWithAuth" di client yang perbarui.
   const isAuthenticated = !!(accessToken || refreshToken);
 
-  // --- LOGIC REDIRECT/ROLE CHECK (TETAP SAMA) ---
   if (isAuthPage && isAuthenticated) {
     if (userRole === 'admin') {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url));
@@ -32,7 +23,7 @@ export async function middleware(request: NextRequest) {
 
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
     if (!isAuthenticated || userRole !== 'admin') {
-       return NextResponse.redirect(new URL(isAuthenticated ? '/login' : '/admin/login', request.url));
+      return NextResponse.redirect(new URL(isAuthenticated ? '/login' : '/admin/login', request.url));
     }
   }
 
