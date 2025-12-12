@@ -58,22 +58,22 @@ const Hero = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         const ctx = gsap.context(() => {
-            
+
             const tlEnter = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
-                    start: "top 75%", 
-                    toggleActions: "play none none reverse", 
+                    start: "top 75%",
+                    toggleActions: "play none none reverse",
                 }
             });
 
             tlEnter.from(".hero-title", { y: 60, opacity: 0, duration: 1.5, ease: "power3.out" })
-            .from(".hero-desc", { y: 40, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.8")
-            .from(".hero-slider-container", { x: 60, opacity: 0, duration: 1.2, ease: "power3.out" }, "-=1.0")
-            .from(".hero-box-doctor", { y: 60, opacity: 0, scale: 0.95, duration: 1, ease: "back.out(1.2)" }, "-=0.8")
-            .from(".hero-box-counter", { y: -60, opacity: 0, scale: 0.95, duration: 1, ease: "back.out(1.2)" }, "-=0.8");
+                .from(".hero-desc", { y: 40, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.8")
+                .from(".hero-slider-container", { x: 60, opacity: 0, duration: 1.2, ease: "power3.out" }, "-=1.0")
+                .from(".hero-box-doctor", { y: 60, opacity: 0, scale: 0.95, duration: 1, ease: "back.out(1.2)" }, "-=0.8")
+                .from(".hero-box-counter", { y: -60, opacity: 0, scale: 0.95, duration: 1, ease: "back.out(1.2)" }, "-=0.8");
 
-            
+
         }, containerRef);
 
         return () => ctx.revert();
@@ -81,11 +81,11 @@ const Hero = () => {
 
     return (
         <section ref={containerRef} className="flex flex-col lg:gap-0 gap-4 pt-[14vw] lg:pt-[10vw] lg:flex-row items-center relative justify-center w-full h-full px-[3vw] ">
-             <div className="w-[80%] lg:w-[40%] satoshiBold text-[4.5vw] lg:text-start text-center flex flex-col gap-[2vw] justify-center">
+            <div className="w-[80%] lg:w-[40%] satoshiBold text-[4.5vw] lg:text-start text-center flex flex-col gap-[2vw] justify-center">
                 <h1 className="hero-title text-[6.5vw] md:text-[5.5vw] lg:text-[4.5vw] text-center lg:text-start leading-tight">
                     KAMI PEDULI VALIDASI <span className="text-[#E8882F]">GIZI</span> UNTUK <span className="text-[#E8882F]">SEKOLAH INKLUSIF</span>
                 </h1>
-                
+
                 {/* Mobile: Text base (biar terbaca). Desktop: 1.5vw */}
                 <p className="hero-desc text-[3.5vw] md:text-[2.5vw] lg:text-[1.5vw] satoshiMedium text-center lg:text-start text-gray-600 lg:text-black">
                     Membantu sekolah memastikan setiap menu MBG memenuhi standar keamanan gizi dan sesuai kebutuhan siswa disabilitas dengan analisis AI.
@@ -102,9 +102,9 @@ const Hero = () => {
                                 transform: `translateX(-${currentImage * 100}%)`
                             }}
                         >
-                            <Image 
-                                src={imgSrc} 
-                                alt={`Gambar ${index + 1}`} 
+                            <Image
+                                src={imgSrc}
+                                alt={`Gambar ${index + 1}`}
                                 className="w-full h-auto object-cover"
                                 priority={index === 0}
                                 sizes="(max-width: 1024px) 100vw, 60vw"
@@ -112,26 +112,26 @@ const Hero = () => {
                         </div>
                     ))}
                 </div>
-                <div 
+                <div
                     className="hero-box-doctor absolute bottom-[2%] left-[3%] w-[60%] h-[27%] bg-[#E8882F] rounded-[3vw] lg:rounded-[1.5vw] z-10 pointer-events-none flex flex-row gap-[1vw]"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
-                    <Image 
-                        src={dokter} 
-                        alt="Dokter" 
+                    <Image
+                        src={dokter}
+                        alt="Dokter"
                         className="h-full w-auto rounded-[1vw] ml-[1vw]"
                         sizes="15vw"
                     />
                     <div className="flex flex-col gap-[0.5vw] justify-center">
                         <div className="">
-                        <h2 className="satoshiBold text-white text-[3vw] md:text-[3vw] lg:text-[1.5vw] leading-tight">dr. David Fadjar Putra, MS, Sp. G.K</h2>
+                            <h2 className="satoshiBold text-white text-[3vw] md:text-[3vw] lg:text-[1.5vw] leading-tight">dr. David Fadjar Putra, MS, Sp. G.K</h2>
                             <p className="satoshiBold text-white text-[2vw] md:text-[1.5vw] lg:text-[1.2vw] leading-none opacity-90">Spesialis Gizi Klinik</p>
                         </div>
                         <p className="satoshiMedium text-white  text-[1.5vw] md:text-[1.5vw] lg:text-[1.15vw]">"Penyandang disabilitas tetap boleh makan menu umum, namun nutrisinya harus benar-benar seimbang."</p>
                     </div>
                 </div>
 
-                <div 
+                <div
                     className="hero-box-counter absolute top-[3%] right-0 w-[24%] h-[34%] bg-[#E8882F] rounded-[3vw] lg:rounded-[1.5vw] flex flex-col justify-center items-center gap-[1vw] text-white "
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >

@@ -39,7 +39,7 @@ const Feature = () => {
 
     useLayoutEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
-        
+
         const mm = gsap.matchMedia();
 
         const ctx = gsap.context(() => {
@@ -65,7 +65,7 @@ const Feature = () => {
 
             // --- DESKTOP (PARALLAX ENTRY) ---
             mm.add("(min-width: 1024px)", () => {
-                
+
                 // Timeline utama yang terikat scroll
                 const tl = gsap.timeline({
                     scrollTrigger: {
@@ -77,20 +77,20 @@ const Feature = () => {
                 });
 
                 // 1. Judul & Lingkaran masuk duluan
-                tl.from(".feature-title", { 
-                    y: 100, 
-                    opacity: 0, 
-                    duration: 1 
+                tl.from(".feature-title", {
+                    y: 100,
+                    opacity: 0,
+                    duration: 1
                 })
-                .from(".center-circle", { 
-                    scale: 0.6, 
-                    opacity: 0, 
-                    duration: 1.5 
-                }, "-=0.5");
+                    .from(".center-circle", {
+                        scale: 0.6,
+                        opacity: 0,
+                        duration: 1.5
+                    }, "-=0.5");
 
                 // 2. Item 1, 2, 3, 4 Masuk Berurutan (Staggered Parallax)
                 const itemsLg = gsap.utils.toArray(".feature-item-lg");
-                
+
                 // Kita gunakan .from() untuk animasi masuk
                 tl.from(itemsLg, {
                     y: 300,       // Datang dari posisi SANGAT bawah (efek parallax kuat)
@@ -145,8 +145,8 @@ const Feature = () => {
     };
 
     return (
-        <section 
-            ref={containerRef} 
+        <section
+            ref={containerRef}
             className="flex flex-col w-full gap-8 lg:gap-[2vw] items-center justify-center relative px-6 lg:px-[3vw] py-10 lg:py-[5vw]"
         >
             <h1 className="feature-title satoshiBold text-[9vw] lg:text-[4.5vw] text-[#E87E2F] relative z-10 text-center">
@@ -174,9 +174,9 @@ const Feature = () => {
             <div className="hidden lg:flex flex-col items-center w-full justify-center relative gap-[5vw]">
 
                 <div className='center-circle absolute w-[70vw] h-[60vw] top-[50%]  translate-y-[-50%] pointer-events-none z-0'>
-                    <Image 
-                        src={mock} 
-                        alt="circle" 
+                    <Image
+                        src={mock}
+                        alt="circle"
                         className="w-full h-full object-contain"
                         sizes="70vw"
                         loading="lazy"

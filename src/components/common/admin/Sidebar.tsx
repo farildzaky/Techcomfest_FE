@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from "next/navigation"; 
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -43,7 +43,7 @@ const SidebarAdmin = ({ isOpen, toggle }: SidebarProps) => {
     }, [pathname]);
 
     const handleLogout = async () => {
-        if (isLoggingOut) return; 
+        if (isLoggingOut) return;
         setIsLoggingOut(true);
 
         try {
@@ -70,9 +70,8 @@ const SidebarAdmin = ({ isOpen, toggle }: SidebarProps) => {
         <>
             {/* --- Overlay Mobile --- */}
             <div
-                className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
-                    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                }`}
+                className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                 onClick={toggle}
                 aria-hidden="true"
             ></div>
@@ -87,7 +86,7 @@ const SidebarAdmin = ({ isOpen, toggle }: SidebarProps) => {
                 ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
                 lg:rounded-tr-[4vw] lg:rounded-br-[4vw]
             `}
-            style={{ boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)" }}
+                style={{ boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)" }}
             >
                 {/* --- Tombol Tutup (Mobile Only) --- */}
                 <div className="flex justify-end p-4 lg:hidden">

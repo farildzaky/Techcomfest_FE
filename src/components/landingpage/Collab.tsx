@@ -17,51 +17,51 @@ const Collab = () => {
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
-            
+
             gsap.set(overlayRef.current, { opacity: 1 });
             gsap.set(textRef.current, { scale: 1, opacity: 1 });
             gsap.set(descRef.current, { opacity: 1, y: 0 });
-            gsap.set(bgImageRef.current, { scale: 1.2, opacity: 1 }); 
+            gsap.set(bgImageRef.current, { scale: 1.2, opacity: 1 });
 
             const tl = gsap.timeline({
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top top",
-                    end: "+=200%", 
-                    pin: true,     
-                    pinSpacing: true, 
-                    scrub: 1, 
-                    anticipatePin: 1 
+                    end: "+=200%",
+                    pin: true,
+                    pinSpacing: true,
+                    scrub: 1,
+                    anticipatePin: 1
                 }
             });
 
             tl.to(textRef.current, {
-                scale: 150,       
-                ease: "power2.in", 
-                duration: 4 
+                scale: 150,
+                ease: "power2.in",
+                duration: 4
             }, 0);
 
             tl.to(descRef.current, { opacity: 0, duration: 0.5 }, 0);
 
             tl.to(overlayRef.current, {
-                opacity: 0, 
+                opacity: 0,
                 duration: 2,
                 ease: "power1.inOut"
             }, 0.5);
 
             tl.to(bgImageRef.current, {
-                scale: 1, 
+                scale: 1,
                 duration: 4,
                 ease: "none"
             }, 0);
 
             tl.to(bgImageRef.current, {
-                opacity: 0, 
-                duration: 0.5, 
+                opacity: 0,
+                duration: 0.5,
                 ease: "power1.inOut"
-            }, 3.5); 
+            }, 3.5);
 
-            tl.to({}, { duration: 0.5 }); 
+            tl.to({}, { duration: 0.5 });
 
         }, containerRef);
 
@@ -69,7 +69,7 @@ const Collab = () => {
     }, []);
 
     const orangeColor = '#E87E2F';
-    
+
     const textShadowStyle = `
             10px -10px 14.4px rgba(255, 255, 255, 0.35), 
             -10px 10px 14.4px rgba(255, 255, 255, 0.35), 
@@ -95,12 +95,12 @@ const Collab = () => {
             <div
                 ref={overlayRef}
                 className="absolute inset-0 w-full h-full z-10 pointer-events-none"
-                style={{ backgroundColor: orangeColor }} 
+                style={{ backgroundColor: orangeColor }}
             ></div>
 
             <h1 ref={textRef} className="absolute z-20 text-white text-[4.5vw] satoshiBold leading-wide text-center origin-center will-change-transform flex flex-col items-center justify-center pointer-events-none w-full whitespace-nowrap">
                 <span className="pl-[1vw] rounded-[1vw] leading-none block"
-                style={{ textShadow: textShadowStyle }}
+                    style={{ textShadow: textShadowStyle }}
                 >
                     Kolaborasi dengan SPPG
                 </span>

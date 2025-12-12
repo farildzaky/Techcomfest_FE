@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { fetchWithAuth } from "@/src/lib/api"; 
+import { fetchWithAuth } from "@/src/lib/api";
 
 import scanWhite from "../../../assets/common/sidebar/scan-white.png";
 import scanOrange from "../../../assets/common/sidebar/scan-orange.png";
@@ -36,7 +36,7 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
     const [profile, setProfile] = useState<ProfileData>({
-        nama_instansi: "", 
+        nama_instansi: "",
         photo_url: null
     });
 
@@ -85,28 +85,28 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
     }, [pathname]); // Tambahkan pathname agar update saat pindah halaman
 
     const menuItems = [
-        { 
-            label: "Beranda", 
-            href: "/sppg/dashboard", 
-            iconWhite: homeWhite, 
-            iconOrange: homeOrange 
+        {
+            label: "Beranda",
+            href: "/sppg/dashboard",
+            iconWhite: homeWhite,
+            iconOrange: homeOrange
         },
-        { 
-            label: "Menu MBG", 
-            href: "/sppg/menu-mbg", 
-            iconWhite: menuWhite, 
-            iconOrange: menuOrange 
+        {
+            label: "Menu MBG",
+            href: "/sppg/menu-mbg",
+            iconWhite: menuWhite,
+            iconOrange: menuOrange
         },
-        { 
-            label: "Pelaporan", 
-            href: "/sppg/pelaporan", 
-            iconWhite: reportWhite, 
+        {
+            label: "Pelaporan",
+            href: "/sppg/pelaporan",
+            iconWhite: reportWhite,
             iconOrange: reportOrange
         },
     ];
 
     const handleLogout = async () => {
-        if (isLoggingOut) return; 
+        if (isLoggingOut) return;
         setIsLoggingOut(true);
 
         try {
@@ -133,9 +133,8 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
         <>
             {/* --- Overlay Mobile --- */}
             <div
-                className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
-                    isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-                }`}
+                className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                    }`}
                 onClick={toggle}
                 aria-hidden="true"
             ></div>
@@ -151,8 +150,8 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
                     ${isOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0
                     lg:rounded-tr-[4vw] lg:rounded-br-[4vw] 
                 `}
-                style={{ 
-                    boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)" 
+                style={{
+                    boxShadow: "5px 10px 17.8px 0px rgba(0, 0, 0, 0.25)"
                 }}
             >
                 {/* --- Tombol Tutup (Mobile Only) --- */}
@@ -163,11 +162,11 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
                         </svg>
                     </button>
                 </div>
-                
+
                 {/* --- PROFILE SECTION --- */}
                 <Link href="/sppg/profile/informasi-instansi" className="w-full block group/profile">
                     <div className="w-full py-6 lg:py-[2vw] px-4 lg:px-0 flex flex-col items-center justify-center bg-[#D7762E] satoshiBold text-white text-center gap-3 lg:gap-[1vw] relative cursor-pointer hover:bg-[#c26a29] transition-colors duration-300">
-                        
+
                         {/* Icon Chevron */}
                         <div className="absolute top-4 right-4 lg:top-[1.5vw] lg:right-[1.5vw]">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 lg:w-[1.5vw] lg:h-[1.5vw]">
@@ -180,13 +179,13 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
                             {isLoadingProfile ? (
                                 <div className="w-full h-full bg-gray-300 animate-pulse"></div>
                             ) : profile.photo_url ? (
-                                <Image 
+                                <Image
                                     src={profile.photo_url}
                                     alt="Profil SPPG"
-                                    fill 
+                                    fill
                                     sizes="(max-width: 768px) 30vw, 10vw"
                                     className="object-cover"
-                                    unoptimized={true} 
+                                    unoptimized={true}
                                 />
                             ) : (
                                 <div className="w-full h-full bg-gray-200 flex items-center justify-center text-[#D7762E]">
@@ -209,9 +208,9 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
                                     <h1 className="text-lg lg:text-[1.8vw] leading-tight break-words max-w-[90%] lg:max-w-[18vw] line-clamp-2 min-h-[3rem] lg:min-h-[2.2vw]">
                                         {profile.nama_instansi}
                                     </h1>
-                                    
+
                                     <div className="text-sm lg:text-[1.1vw] opacity-90 mt-2 lg:mt-[0.5vw]">
-                                        {schoolCount} Sekolah 
+                                        {schoolCount} Sekolah
                                     </div>
                                 </>
                             )}
@@ -225,21 +224,21 @@ const SidebarSppg = ({ isOpen, toggle }: SidebarSppgProps) => {
                         const isActive = pathname === item.href || pathname.startsWith(item.href);
 
                         return (
-                            <Link 
-                                key={index} 
+                            <Link
+                                key={index}
                                 href={item.href}
-                                className="block" 
+                                className="block"
                             >
                                 <div className="relative flex items-center p-3 lg:p-[1.2vw] cursor-pointer rounded-r-full lg:rounded-r-[2vw] group overflow-hidden">
                                     {/* Animasi Background Putih */}
-                                    <div 
+                                    <div
                                         className={`
                                             absolute top-0 left-0 h-full w-full bg-white rounded-r-full lg:rounded-r-[2vw]
                                             transition-transform duration-500 ease-in-out
                                             ${isActive ? "translate-x-0" : "-translate-x-full"}
                                         `}
                                     />
-                                    
+
                                     {/* Konten Menu */}
                                     <div className={`
                                         relative z-10 flex items-center gap-4 lg:gap-[1.5vw] transition-colors duration-300

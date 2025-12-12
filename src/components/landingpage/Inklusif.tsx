@@ -14,7 +14,7 @@ const Inklusif = () => {
 
     useLayoutEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
-        
+
         const mm = gsap.matchMedia();
 
         const ctx = gsap.context(() => {
@@ -32,7 +32,7 @@ const Inklusif = () => {
                 });
 
                 tl.fromTo(textRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1 })
-                  .fromTo(imageRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, "-=0.8");
+                    .fromTo(imageRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, "-=0.8");
             });
 
             // --- 2. ANIMASI DESKTOP (>= 1024px) ---
@@ -49,16 +49,16 @@ const Inklusif = () => {
 
                 // Teks: Datang dari kiri (-100px) menuju posisi normal (0)
                 tl.fromTo(textRef.current,
-                    { x: -100, opacity: 0 }, 
+                    { x: -100, opacity: 0 },
                     { x: 0, opacity: 1, ease: "power2.out" },
-                    0 
+                    0
                 );
 
                 // Gambar: Datang dari kanan (100px) menuju posisi normal (0)
-                tl.fromTo(imageRef.current, 
-                    { x: 100, opacity: 0, scale: 0.9 }, 
-                    { x: 0, opacity: 1, scale: 1, ease: "power2.out" }, 
-                    0 
+                tl.fromTo(imageRef.current,
+                    { x: 100, opacity: 0, scale: 0.9 },
+                    { x: 0, opacity: 1, scale: 1, ease: "power2.out" },
+                    0
                 );
             });
 
@@ -73,13 +73,13 @@ const Inklusif = () => {
 
     return (
         <div ref={containerRef} className="w-full relative  px-[5vw] ">
-            
+
             {/* CONTAINER FLEX:
                 - Mobile: flex-col (Atas Bawah)
                 - Desktop: flex-row (Kiri Kanan)
             */}
             <div className="flex flex-col lg:flex-row items-center justify-between w-full h-full gap-[8vw] lg:gap-0">
-                
+
                 {/* --- TEKS (KIRI) --- */}
                 {/* Lebar dibatasi 50% di desktop agar tidak nabrak gambar */}
                 <h1 ref={textRef} className="relative z-10 leading-tight w-full lg:w-[50%] satoshiBold text-[8vw] lg:text-[4.5vw] text-center lg:text-left">
@@ -91,10 +91,10 @@ const Inklusif = () => {
                 {/* --- GAMBAR (KANAN) --- */}
                 {/* Lebar dibatasi 45% di desktop */}
                 <div ref={imageRef} className="relative w-full lg:w-[45%] h-auto z-0 flex justify-center lg:justify-end mt-[5vw] lg:mt-0">
-                     <Image
+                    <Image
                         src={mock}
                         alt="mock"
-                        width={800} 
+                        width={800}
                         height={800}
                         sizes="(max-width: 1024px) 80vw, 45vw"
                         className="object-contain w-[80vw] lg:w-full h-auto "

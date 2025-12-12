@@ -39,15 +39,15 @@ const Reason = () => {
                 .from(".reason-image", { x: 80, opacity: 0, duration: 1.2, ease: "power3.out" }, "-=1.0")
                 .from(".reason-subtitle", { y: 40, opacity: 0, duration: 0.9, ease: "power3.out" }, "-=0.6");
 
-            
+
         }, containerRef);
 
         return () => ctx.revert();
     }, []);
 
     return (
-        <section 
-            ref={containerRef} 
+        <section
+            ref={containerRef}
             className="flex flex-col w-full gap-[8vw] px-[5vw]  lg:py-0 lg:gap-[2vw] lg:px-[3vw]"
         >
             {/* Title: 9vw di Mobile -> 4.5vw di Desktop */}
@@ -56,12 +56,12 @@ const Reason = () => {
             </h1>
 
             <div className="flex flex-col lg:flex-row w-full h-full items-center lg:items-start">
-                
+
                 {/* --- LEFT GROUP --- */}
                 <div className="reason-left-group flex flex-col items-center lg:items-start w-full lg:w-auto">
-                    
+
                     {/* Text Box */}
-                    <div 
+                    <div
                         className="
                             bg-[#E87E2F] text-white satoshiMedium text-justify flex items-center
                             w-[90vw] h-[60vw] rounded-[4vw] p-[5vw]
@@ -78,7 +78,7 @@ const Reason = () => {
                     </div>
 
                     {/* Buttons Container */}
-                    <div 
+                    <div
                         className="
                             bg-[#E87E2F] text-white satoshiMedium flex items-center justify-start
                             /* Mobile Styles */
@@ -124,16 +124,16 @@ const Reason = () => {
 
                 {/* --- RIGHT GROUP --- */}
                 <div className="flex flex-col lg:translate-x-[-0.31vw] w-full">
-                    
+
                     {/* Gambar: HIDDEN di Mobile, BLOCK di Desktop */}
                     <div className="reason-image hidden lg:block">
-                        <Image 
-                            src={mbg} 
-                            alt="MBG" 
+                        <Image
+                            src={mbg}
+                            alt="MBG"
                             width={1200}
                             height={600}
                             sizes="59vw"
-                            className="w-[59vw]" 
+                            className="w-[59vw]"
                         />
                     </div>
 

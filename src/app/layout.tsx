@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import "./globals.css";
-import CookieConsent from '../components/CookieConsent'; 
+import CookieConsent from '../components/CookieConsent';
 
 export const metadata: Metadata = {
   title: "Inkluzi",
@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className="antialiased">
         {children}
         <SpeedInsights />
-        <CookieConsent /> 
+        <CookieConsent />
       </body>
     </html>
   );

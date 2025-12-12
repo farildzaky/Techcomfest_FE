@@ -5,7 +5,7 @@ import logoWhite from "../../assets/logo-white.png";
 const Footer = () => {
     return (
         <footer className="bg-[#E87E2F] w-full text-white font-sans">
-            
+
             {/* --- Bagian Utama (Atas) --- */}
             <div className="px-6 py-12 lg:px-16 lg:py-16">
                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
@@ -40,7 +40,7 @@ const Footer = () => {
 
                         {/* Baris 2: Grid Link (Menu, Sekolah, SPPG) */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-4">
-                            
+
                             {/* Menu */}
                             <div className="flex flex-col gap-4">
                                 <h3 className="satoshiBold text-xl lg:text-2xl">Menu</h3>
