@@ -25,7 +25,7 @@ export default function Home() {
       <Feature />
       <Collab />
       <Workflow />
-      <Inklusif/>
+      <Inklusif />
     </div>
   );
 }
