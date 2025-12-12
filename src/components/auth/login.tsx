@@ -33,7 +33,6 @@ const Login = () => {
             const user = data.data.user;
             const userRole = user.role;
 
-            // Set Cookies & LocalStorage
             document.cookie = `accessToken=${data.data.access_token}; path=/; max-age=86400; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
             if (data.data.refresh_token) {
                 document.cookie = `refreshToken=${data.data.refresh_token}; path=/; max-age=604800; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
@@ -41,7 +40,6 @@ const Login = () => {
             document.cookie = `userRole=${userRole}; path=/; max-age=86400; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
             localStorage.setItem("user", JSON.stringify(user));
 
-            // Redirect
             if (userRole === "sekolah") router.push("/sekolah/dashboard");
             else if (userRole === "sppg") router.push("/sppg/dashboard");
             else if (userRole === "admin") router.push("/admin/dashboard");
@@ -55,27 +53,21 @@ const Login = () => {
     };
 
     return (
-        // Container Utama: Flex Column di HP, Row di Desktop
         <section className="flex flex-col md:flex-row min-h-screen w-full bg-white overflow-x-hidden">
 
- 
-            {/* --- BAGIAN KANAN (FORM) --- */}
             <div className="flex flex-col w-full md:w-[60vw] md:h-screen justify-center items-center px-6  md:px-[8vw] gap-6 md:gap-[3vw] relative bg-white">
 
-                {/* Tombol Back */}
                 <Link href="/" className="fixed md:absolute cursor-pointer top-4 left-4 md:top-[2vw] md:left-[2vw] hover:scale-110 transition-transform">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-8 h-8 md:w-[3vw] md:h-[3vw] text-black">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </Link>
 
-                {/* Judul Form */}
                 <div className="flex flex-col text-[#B56225] items-center leading-none gap-2 md:gap-[0.5vw] mt-8 md:mt-0">
                     <h1 className="satoshiBold text-4xl md:text-[4.5vw]">Masuk</h1>
                     <p className="satoshiMedium text-base md:text-[1.5vw]">Masuk ke dalam akun Anda</p>
                 </div>
 
-                {/* Form Input */}
                 <form onSubmit={handleLogin} className="w-full max-w-md md:max-w-none flex flex-col gap-4 md:gap-[1.5vw]">
 
                     {error && (
@@ -84,7 +76,6 @@ const Login = () => {
                         </div>
                     )}
 
-                    {/* Input Email */}
                     <div className="flex flex-col gap-2 md:gap-[0.5vw]">
                         <label className="satoshiMedium text-[#D9833E] text-sm md:text-[1.2vw]">Email</label>
                         <input
@@ -92,14 +83,12 @@ const Login = () => {
                             placeholder="Masukkan Email Anda"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            // Mobile: Text-base (agar tidak zoom), Desktop: Text-vw
                             className="w-full border-2 md:border-[0.2vw] border-[#D9833E] rounded-lg md:rounded-[0.8vw] px-4 py-3 md:px-[1.5vw] md:py-[1vw] text-base md:text-[1.2vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.2vw] focus:ring-[#E87E2F]"
                             required
                             disabled={isLoading}
                         />
                     </div>
 
-                    {/* Input Password */}
                     <div className="flex flex-col gap-2 md:gap-[0.5vw]">
                         <label className="satoshiMedium text-[#D9833E] text-sm md:text-[1.2vw]">Password</label>
                         <input
@@ -118,7 +107,6 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {/* Tombol Login */}
                     <button
                         type="submit"
                         disabled={isLoading}
