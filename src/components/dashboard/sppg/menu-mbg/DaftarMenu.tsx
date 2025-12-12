@@ -1,12 +1,12 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import CardDetailSppg from "./CardDetail"; 
-import { fetchWithAuth } from '@/src/lib/api'; 
+import CardDetailSppg from "./CardDetail";
+import { fetchWithAuth } from '@/src/lib/api';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image'; 
-import bg from "../../../../assets/bg.png" 
-import loadingSpinner from "../../../../assets/loading.png" 
+import Image from 'next/image';
+import bg from "../../../../assets/bg.png"
+import loadingSpinner from "../../../../assets/loading.png"
 
 interface Komponen {
     nama: string;
@@ -20,7 +20,7 @@ interface GiziItem {
 
 interface MenuDetailAPI {
     menu_id: string;
-    tanggal: string; 
+    tanggal: string;
     nama_menu: string;
     hari?: string;
     status_keamanan: string;
@@ -35,21 +35,21 @@ interface MenuDetailAPI {
 
 const DaftarMenu = () => {
     const [menus, setMenus] = useState<MenuDetailAPI[]>([]);
-    const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isUpdatingId, setIsUpdatingId] = useState<string | null>(null);
     const router = useRouter();
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const parseIndonesianDate = (dateStr: string) => {
-        if (!dateStr) return new Date(0); 
+        if (!dateStr) return new Date(0);
 
         const monthMap: { [key: string]: string } = {
             'Januari': 'Jan', 'Februari': 'Feb', 'Maret': 'Mar', 'April': 'Apr', 'Mei': 'May', 'Juni': 'Jun',
             'Juli': 'Jul', 'Agustus': 'Aug', 'September': 'Sep', 'Oktober': 'Oct', 'November': 'Nov', 'Desember': 'Dec'
         };
 
-        const cleanStr = dateStr.replace(/,/g, ''); 
+        const cleanStr = dateStr.replace(/,/g, '');
         const parts = cleanStr.split(' ');
 
         let day, monthIndo, year;
@@ -63,7 +63,7 @@ const DaftarMenu = () => {
             monthIndo = parts[1];
             year = parts[2];
         } else {
-            return new Date(0); 
+            return new Date(0);
         }
 
         const monthEn = monthMap[monthIndo] || monthIndo;
@@ -84,20 +84,20 @@ const DaftarMenu = () => {
                 }
 
                 const listData = Array.isArray(listResult.data) ? listResult.data : [listResult.data];
-                
+
                 const sortedListDesc = listData.sort((a: any, b: any) => {
                     return parseIndonesianDate(b.tanggal).getTime() - parseIndonesianDate(a.tanggal).getTime();
                 });
 
                 const targetMenus = sortedListDesc.slice(0, 5);
-                
+
                 const detailedMenus: MenuDetailAPI[] = [];
                 for (const item of targetMenus) {
                     try {
                         const detailResponse = await fetchWithAuth(`/sppg/menus/${item.menu_id}`, {
                             method: 'GET'
                         });
-                        
+
                         if (detailResponse.status === 429) {
                             console.warn("Rate limit hit, skipping:", item.menu_id);
                             continue;
@@ -126,7 +126,7 @@ const DaftarMenu = () => {
     }, []);
 
     const handleUpdateMenu = async (id: string, updatedComponents: Komponen[]) => {
-        setIsUpdatingId(id); 
+        setIsUpdatingId(id);
         try {
             const response = await fetchWithAuth(`/sppg/menus/${id}`, {
                 method: 'PUT',
@@ -136,14 +136,36 @@ const DaftarMenu = () => {
 
             if (response.ok) {
                 setMenus(prev => prev.map(item => item.menu_id === id ? { ...item, komponen_menu: updatedComponents } : item));
-                setSuccessMessage("Menu berhasil diperbarui!"); 
+                setSuccessMessage("Menu berhasil diperbarui!");
             } else {
-                alert(`Gagal update`); 
+                alert(`Gagal update`);
             }
         } catch (error) {
             console.error("Error updating:", error);
         } finally {
-            setIsUpdatingId(null); 
+            setIsUpdatingId(null);
+        }
+    };
+
+    const handleDeleteMenu = async (id: string) => {
+        setIsUpdatingId(id); // Gunakan indikator loading yang sama
+        try {
+            const response = await fetchWithAuth(`/sppg/menus/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                // Hapus item dari state lokal agar UI langsung update tanpa refresh
+                setMenus(prev => prev.filter(item => item.menu_id !== id));
+                setSuccessMessage("Menu berhasil dihapus!");
+            } else {
+                alert("Gagal menghapus menu.");
+            }
+        } catch (error) {
+            console.error("Error deleting:", error);
+            alert("Terjadi kesalahan saat menghapus.");
+        } finally {
+            setIsUpdatingId(null);
         }
     };
 
@@ -179,7 +201,7 @@ const DaftarMenu = () => {
         });
 
         return sortedDisplayMenus.map((item) => {
-            const risiko = item.deteksi_risiko || {}; 
+            const risiko = item.deteksi_risiko || {};
             const riskList = [
                 ...(risiko.alergi || []),
                 ...(risiko.tekstur || []),
@@ -190,7 +212,7 @@ const DaftarMenu = () => {
                 label: gizi.komponen, value: gizi.jumlah
             })) : [];
 
-            const displayDay = item.hari || item.tanggal.split(',')[0]; 
+            const displayDay = item.hari || item.tanggal.split(',')[0];
 
             return (
                 <Link
@@ -207,6 +229,7 @@ const DaftarMenu = () => {
                         risk={riskList}
                         nutrition={nutritionList}
                         onSave={(updated) => handleUpdateMenu(item.menu_id, updated)}
+                        onDelete={() => handleDeleteMenu(item.menu_id)}
                     />
                 </Link>
             );
@@ -215,12 +238,13 @@ const DaftarMenu = () => {
 
     return (
         <div className="w-full h-full grid grid-cols-5 lg:grid-cols-7 bg-white overflow-hidden">
-            <div className="col-span-5 h-full overflow-y-auto py-[2vw] lg:px-0 px-[3vw] flex flex-col gap-[4vw] lg:gap-[2vw]">
-                <button onClick={() => router.back()} className="hover:scale-105 transition-transform translate-y-[1vw fixed cursor-pointer ">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-black">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
-                </button>
+            <button onClick={() => router.back()} className="hover:scale-105 transition-transform translate-y-[2vw] fixed cursor-pointer ">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-black">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+            <div className="col-span-5 h-full overflow-y-auto py-[2vw] lg:px-[2vw] px-[3vw] flex flex-col gap-[4vw] lg:gap-[2vw]">
+
                 {renderContent()}
             </div>
 
@@ -233,15 +257,15 @@ const DaftarMenu = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
                     <div className="relative bg-white rounded-[2vw] p-[3vw] w-[35vw] shadow-2xl flex flex-col items-center text-center">
                         <div className="relative w-[12vw] h-[12vw] flex items-center justify-center">
-                            <Image 
-                                src={bg} 
-                                alt="Background Shape" 
+                            <Image
+                                src={bg}
+                                alt="Background Shape"
                                 layout="fill"
                                 objectFit="contain"
                             />
-                            <Image 
-                                src={loadingSpinner} 
-                                alt="Spinner" 
+                            <Image
+                                src={loadingSpinner}
+                                alt="Spinner"
                                 className="w-[5vw] h-[5vw] object-contain absolute translate-y-[0.4vw] translate-x-[0.4vw] animate-spin"
                             />
                         </div>

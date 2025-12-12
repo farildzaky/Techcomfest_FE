@@ -20,10 +20,12 @@ interface CardMenuProps {
     risk: string[];        
     nutrition: NutritionItem[]; 
     onSave?: (updatedComponents: ComponentItem[]) => void;
+    // Tambahkan prop onDelete
+    onDelete?: () => void;
 }
 
 const CardDetailSppg: React.FC<CardMenuProps> = ({ 
-    menu, date, day, components, onSave 
+    menu, date, day, components, onSave, onDelete 
 }) => {
     
     const [editableComponents, setEditableComponents] = useState<ComponentItem[]>(components || []);
@@ -65,10 +67,19 @@ const CardDetailSppg: React.FC<CardMenuProps> = ({
         setIsEditing(!isEditing);
     };
 
+    // Handler untuk tombol delete utama
+    const handleDeleteMenu = (e: React.MouseEvent) => {
+        e.preventDefault(); // Mencegah navigasi Link
+        e.stopPropagation(); // Mencegah event bubbling
+        if (onDelete) {
+            // Konfirmasi sederhana sebelum menghapus (opsional, bisa juga di parent)
+            if (window.confirm("Apakah Anda yakin ingin menghapus menu ini?")) {
+                onDelete();
+            }
+        }
+    };
+
     return (
-        // CONTAINER UTAMA
-        // Mobile: flex-col-reverse (Elemen ke-2 naik ke atas)
-        // Desktop: lg:flex-row (Kiri ke Kanan, ukuran VW TETAP)
         <div className={`
             relative flex flex-col-reverse lg:flex-row w-full 
             bg-[#E87E2F] 
@@ -79,11 +90,28 @@ const CardDetailSppg: React.FC<CardMenuProps> = ({
             ${isEditing ? 'h-auto' : 'h-auto'}
         `}>
             
+            {/* TOMBOL DELETE MENU (Pojok Kanan Atas Container) */}
+            {onDelete && (
+                <button
+                    onClick={handleDeleteMenu}
+                    className="absolute top-4 right-4 lg:top-[1vw] lg:right-[1vw] z-20 
+                               w-8 h-8 lg:w-[3vw] lg:h-[3vw] 
+                               flex items-center justify-center 
+                               bg-white/20 hover:bg-red-500 text-white 
+                               rounded-full backdrop-blur-sm transition-all duration-200
+                               shadow-sm hover:shadow-md group/delete"
+                    title="Hapus Menu Ini"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 lg:w-[1.5vw] lg:h-[1.5vw]">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                    </svg>
+                </button>
+            )}
+
             {/* --- ELEMEN 1: KONTEN UTAMA --- */}
-            {/* Desktop: Di Kiri. Mobile: Di Bawah (karena reverse) */}
             <div className='flex flex-col w-full lg:w-3/5 gap-2 lg:gap-[0.5vw]'>
                 
-                <div className="flex flex-col items-start">
+                <div className="flex flex-col items-start pr-8 lg:pr-[3vw]"> {/* Padding right agar tidak ketutup tombol delete di mobile jika judul panjang */}
                     <h1 className='satoshiBold text-white text-3xl lg:text-[3vw] leading-tight lg:leading-none'>
                         {menu}
                     </h1>
@@ -108,12 +136,10 @@ const CardDetailSppg: React.FC<CardMenuProps> = ({
                     <div className={`w-full overflow-y-auto pr-2 custom-scrollbar transition-all duration-300 ${isEditing ? 'max-h-[300px] lg:max-h-[25vw]' : 'max-h-[200px] lg:max-h-[15vw]'}`}>
                         
                         {isEditing ? (
-                            // MODE EDIT
+                            // MODE EDIT (Sama seperti sebelumnya)
                             <div className="flex flex-col gap-3 lg:gap-[1vw] py-2 lg:py-[0.5vw]">
                                 {editableComponents?.map((item, index) => (
                                     <div key={index} className="flex flex-col sm:flex-row gap-2 lg:gap-[0.8vw] items-start sm:items-end bg-white/10 p-3 lg:p-[0.8vw] rounded-lg lg:rounded-[0.8vw] border border-white/20 relative group/row">
-                                        
-                                        {/* Input Nama */}
                                         <div className="flex flex-col gap-1 lg:gap-[0.3vw] w-full sm:w-[55%]">
                                             <label className="text-white/70 text-xs lg:text-[0.8vw] satoshiRegular ml-1">Nama Menu</label>
                                             <input 
@@ -125,8 +151,6 @@ const CardDetailSppg: React.FC<CardMenuProps> = ({
                                                 onClick={(e) => e.preventDefault()}
                                             />
                                         </div>
-
-                                        {/* Input Porsi */}
                                         <div className="flex flex-col gap-1 lg:gap-[0.3vw] w-full sm:w-[30%]">
                                             <label className="text-white/70 text-xs lg:text-[0.8vw] satoshiRegular ml-1">Porsi</label>
                                             <input 
@@ -138,8 +162,6 @@ const CardDetailSppg: React.FC<CardMenuProps> = ({
                                                 onClick={(e) => e.preventDefault()}
                                             />
                                         </div>
-
-                                        {/* Tombol Hapus */}
                                         <button 
                                             onClick={(e) => handleDeleteRow(index, e)}
                                             className="w-8 h-8 lg:w-[2.5vw] lg:h-[2.5vw] bg-white/20 hover:bg-red-500 text-white rounded-full text-sm lg:text-[1vw] flex justify-center items-center transition-all duration-200 self-end sm:mb-[2px]"
@@ -193,8 +215,6 @@ const CardDetailSppg: React.FC<CardMenuProps> = ({
             </div>
             
             {/* --- ELEMEN 2: KOTAK HARI --- */}
-            {/* Desktop: Di Kanan (lg:w-2/5). Mobile: Di Atas (karena flex-col-reverse) */}
-            {/* mb-4 di mobile agar ada jarak ke konten di bawahnya. lg:mb-0 agar nempel di desktop */}
             <div className='flex-grow flex justify-center items-center bg-white rounded-[1vw] p-[1vw] shadow-sm'>
                 <h1 className='satoshiBold text-4xl lg:text-[3vw] text-[#E87E2F] uppercase tracking-wide'>
                     {day}

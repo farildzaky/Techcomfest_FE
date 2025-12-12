@@ -3,9 +3,12 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { fetchWithAuth } from '@/src/lib/api';
 import Image from 'next/image';
+
+// Import Assets
 import trash from "../../../../assets/trash.png"
 import bg from "../../../../assets/bg.png"
 import loading from "../../../../assets/loading.png"
+import alertIcon from "../../../../assets/alert.png" // Pastikan file ini ada sesuai struktur folder
 
 interface ProfileData {
     nama_sekolah: string;
@@ -26,28 +29,62 @@ interface TableRow {
     sppg: string;
 }
 
-const DaftarPenetapan = () => {
-    const [tableData, setTableData] = useState<TableRow[]>([]);
-    const [loadingData, setLoadingData] = useState(true); 
-    const [error, setError] = useState("");
-    const [deletingId, setDeletingId] = useState<string | null>(null); 
+type ModalType = 'delete' | 'loading' | 'error' | null;
 
+const DaftarPenetapan = () => {
+    // Data States
+    const [tableData, setTableData] = useState<TableRow[]>([]);
+    const [isTableLoading, setIsTableLoading] = useState(true); // Loading skeleton tabel awal
+
+    // Modal States
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<ModalType>(null);
+    const [modalMessage, setModalMessage] = useState({ title: "", desc: "" });
+    
+    // Action States
     const [itemToDelete, setItemToDelete] = useState<{ id: string, namaSekolah: string } | null>(null);
 
+    // Pagination
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 
+    // --- HELPER UNTUK MEMBUKA MODAL ---
+    const showLoadingModal = () => {
+        setModalType('loading');
+        setIsModalOpen(true);
+    };
+
+    const showErrorModal = (title: string, message: string) => {
+        setModalType('error');
+        setModalMessage({ title: title, desc: message });
+        setIsModalOpen(true);
+    };
+
+    const showDeleteConfirmModal = (schoolId: string, namaSekolah: string) => {
+        setItemToDelete({ id: schoolId, namaSekolah });
+        setModalType('delete');
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        // Jangan tutup jika sedang loading proses
+        if (modalType === 'loading') return;
+        setIsModalOpen(false);
+        setModalType(null);
+        setItemToDelete(null);
+    };
+
+    // --- LOGIC DATA ---
+
     const loadData = async () => {
-        setLoadingData(true);
-        setError("");
+        setIsTableLoading(true);
         try {
             const response = await fetchWithAuth("/admin/users", {
                 method: "GET",
                 headers: { "Content-Type": "application/json" }
             });
 
-            if (!response.ok) throw new Error("Gagal memuat data user");
+            if (!response.ok) throw new Error("Gagal mengambil data user dari server.");
 
             const responseJson = await response.json();
             const allUsers: UserData[] = responseJson.data;
@@ -86,43 +123,38 @@ const DaftarPenetapan = () => {
             setTableData(validRows);
 
         } catch (err: any) {
-            setError("Gagal memuat data penetapan.");
+            // Tampilkan error menggunakan Modal, bukan teks merah
+            showErrorModal("Gagal Memuat Data", "Terjadi kesalahan saat mengambil data penetapan. Silakan refresh halaman.");
         } finally {
-            setLoadingData(false);
+            setIsTableLoading(false);
         }
-    };
-
-    const openDeleteModal = (schoolId: string, namaSekolah: string) => {
-        setItemToDelete({ id: schoolId, namaSekolah: namaSekolah });
-        setIsModalOpen(true);
-    };
-
-    const closeDeleteModal = () => {
-        if (deletingId) return;
-        setIsModalOpen(false);
-        setItemToDelete(null);
     };
 
     const executeDelete = async () => {
         if (!itemToDelete) return;
 
-        setDeletingId(itemToDelete.id);
+        // Ubah modal menjadi loading state
+        showLoadingModal();
+
         try {
             const response = await fetchWithAuth(
                 `/admin/schools/${itemToDelete.id}`,
                 { method: "DELETE" }
             );
 
-            if (!response.ok) throw new Error("Gagal menghapus data");
+            if (!response.ok) throw new Error("Gagal menghapus data dari server.");
 
+            // Hapus item dari state tabel lokal
             setTableData(prev => prev.filter(row => row.id !== itemToDelete.id));
-            setIsModalOpen(false); 
+            
+            // Tutup modal setelah sukses
+            setIsModalOpen(false);
+            setModalType(null);
             setItemToDelete(null);
 
         } catch (error: any) {
-            alert("Gagal menghapus: " + error.message);
-        } finally {
-            setDeletingId(null); 
+            // Jika gagal delete, ubah modal jadi Error
+            showErrorModal("Penghapusan Gagal", "Pastikan jaringan stabil atau coba lagi beberapa saat lagi.");
         }
     };
 
@@ -130,6 +162,7 @@ const DaftarPenetapan = () => {
         loadData();
     }, []);
 
+    // Pagination Logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
@@ -138,10 +171,7 @@ const DaftarPenetapan = () => {
     const handleNextPage = () => { if (currentPage < totalPages) setCurrentPage(currentPage + 1); };
     const handlePrevPage = () => { if (currentPage > 1) setCurrentPage(currentPage - 1); };
 
-    if (error) return <div className="w-full h-screen flex justify-center items-center text-red-500 satoshiBold text-xl lg:text-[1.5vw]">{error}</div>;
-
     return (
-        // Container Utama: p-4 (Mobile), p-[3vw] (Desktop)
         <div className="w-full min-h-screen p-4 lg:p-[3vw] font-sans flex flex-col relative">
 
             <div className="mb-6 lg:mb-[2vw]">
@@ -152,14 +182,9 @@ const DaftarPenetapan = () => {
             </div>
 
             {/* --- TABLE CONTAINER --- */}
-            {/* overflow-x-auto: Agar bisa digeser horizontal di Mobile */}
             <div className="w-full bg-[#E87E2F] rounded-xl lg:rounded-[1.5vw] overflow-hidden border-2 lg:border-[0.2vw] border-[#E87E2F] overflow-x-auto">
-
-                {/* min-w-[600px]: Memaksa tabel tetap lebar (seperti desktop) meskipun layar kecil */}
                 <div className="min-w-[600px] w-full">
-                    
                     <div className="flex bg-[#E87E2F] text-white rounded-t-lg lg:rounded-t-[1.3vw]">
-                        {/* Header Columns: Mobile (text-base py-4). Desktop (text-[1.5vw] py-[1vw]) */}
                         <div className="w-[45%] py-4 lg:py-[1vw] flex justify-center items-center border-r border-white lg:border-r-[0.15vw] satoshiBold text-base lg:text-[1.5vw]">
                             Sekolah
                         </div>
@@ -167,12 +192,13 @@ const DaftarPenetapan = () => {
                             SPPG
                         </div>
                         <div className="w-[10%] py-4 lg:py-[1vw] flex justify-center items-center satoshiBold text-base lg:text-[1.5vw]">
-                            {/* Empty Header for Action */}
+                            Hapus 
                         </div>
                     </div>
 
                     <div className="flex flex-col bg-white lg:rounded-b-[1.3vw]">
-                        {loadingData ? (
+                        {isTableLoading ? (
+                            // Skeleton Loading UI
                             Array.from({ length: 3 }).map((_, index) => (
                                 <div key={index} className="flex border-b border-[#E87E2F] lg:border-b-[0.15vw] animate-pulse">
                                     <div className="w-[45%] py-4 lg:py-[1.5vw] px-4"><div className="h-4 w-full lg:h-[1.5vw] bg-gray-200 rounded"></div></div>
@@ -197,9 +223,8 @@ const DaftarPenetapan = () => {
 
                                     <div className="w-[10%] flex justify-center items-center py-2 lg:py-0">
                                         <button
-                                            onClick={() => openDeleteModal(item.id, item.sekolah)}
-                                            disabled={deletingId !== null}
-                                            className="group p-2 lg:p-[0.5vw] rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50"
+                                            onClick={() => showDeleteConfirmModal(item.id, item.sekolah)}
+                                            className="group p-2 lg:p-[0.5vw] rounded-lg hover:bg-red-50 transition-colors"
                                             title="Hapus Penetapan"
                                         >
                                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 lg:w-[1.8vw] lg:h-[1.8vw] text-gray-400 group-hover:text-red-500 transition-colors">
@@ -245,7 +270,6 @@ const DaftarPenetapan = () => {
                 </button>
             </div>
 
-            {/* Link Box */}
             <Link href="/admin/penetapan/assign-sppg" className="block w-full group mb-8 lg:mb-0">
                 <div className="w-full bg-[#E87E2F] rounded-xl lg:rounded-[1.5vw] p-6 lg:p-[2vw] flex justify-between items-center shadow-md transition-all duration-300 hover:bg-[#c27233] hover:shadow-lg hover:scale-[1.01]">
                     <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
@@ -264,85 +288,118 @@ const DaftarPenetapan = () => {
                 </div>
             </Link>
 
-            {/* MODAL (Responsif) */}
-            {isModalOpen && itemToDelete && (
+            {/* --- UNIVERSAL MODAL SYSTEM --- */}
+            {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div
                         className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-                        onClick={closeDeleteModal}
+                        onClick={closeModal}
                     ></div>
 
                     <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
 
-                        {deletingId === itemToDelete.id ? (
-                            <div className="flex flex-col items-center justify-center py-8 lg:py-[4vw] px-4 lg:px-[2vw]">
-                                <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
-                                    <Image 
-                                        src={bg} 
-                                        alt="Background Shape" 
-                                        layout="fill"
-                                        objectFit="contain"
-                                        className="opacity-70"
-                                    />
-                                    <Image 
-                                        src={loading} 
-                                        alt="Sedang Diproses" 
-                                        className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-1 lg:translate-y-[0.4vw] translate-x-1 lg:translate-x-[0.3vw] object-contain absolute animate-spin"
-                                    />
-                                </div>
-                                
-                                <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
-                                <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
-                                    Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
-                                </p>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
-                                    <Image 
-                                        src={bg} 
-                                        alt="Background Shape" 
-                                        layout="fill"
-                                        objectFit="contain"
-                                    />
-                                    <Image 
-                                        src={trash} 
-                                        alt="Sedang Diproses" 
-                                        className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-1 lg:translate-y-[0.4vw] translate-x-1 lg:translate-x-[0.3vw] object-contain absolute "
-                                    />
-                                </div>
+                        {/* ICON SECTION */}
+                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
+                            {/* Background Circle */}
+                            <Image 
+                                src={bg} 
+                                alt="Background Shape" 
+                                layout="fill"
+                                objectFit="contain" 
+                            />
 
-                                <div className="flex flex-col gap-2">
+                            {/* Overlay Icon based on Modal Type */}
+                            {modalType === 'loading' && (
+                                <Image 
+                                    src={loading} 
+                                    alt="Loading" 
+                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
+                                />
+                            )}
+                            
+                            {modalType === 'delete' && (
+                                <Image 
+                                    src={trash} 
+                                    alt="Hapus" 
+                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute"
+                                />
+                            )}
+
+                            {modalType === 'error' && (
+                                <Image 
+                                    src={alertIcon} 
+                                    alt="Error" 
+                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute"
+                                />
+                            )}
+                        </div>
+
+                        {/* TEXT CONTENT SECTION */}
+                        <div className="flex flex-col gap-2">
+                            {modalType === 'loading' && (
+                                <>
+                                    <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                        Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
+                                    </p>
+                                </>
+                            )}
+
+                            {modalType === 'delete' && itemToDelete && (
+                                <>
                                     <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#B56225]">Yakin Ingin Menghapus?</h3>
                                     <p className="satoshiMedium text-sm lg:text-[1.2vw] text-[#B56225]">
                                         Anda yakin ingin menghapus penetapan untuk sekolah <br />
                                         <span className="satoshiBold text-red-600">{itemToDelete.namaSekolah}</span>?
                                     </p>
-                                </div>
+                                </>
+                            )}
 
-                                <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            {modalType === 'error' && (
+                                <>
+                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#B56225]">{modalMessage.title}</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-[#B56225] px-4">
+                                        {modalMessage.desc}
+                                    </p>
+                                </>
+                            )}
+                        </div>
+
+                        {/* BUTTON ACTION SECTION */}
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            {modalType === 'delete' && (
+                                <>
                                     <button
-                                        onClick={closeDeleteModal}
-                                        disabled={deletingId !== null}
-                                        className="flex-1 py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] border-2 lg:border-[0.2vw] border-gray-300 text-gray-700 satoshiBold text-sm lg:text-[1.2vw] hover:bg-gray-100 transition-colors disabled:opacity-50"
+                                        onClick={closeModal}
+                                        className="flex-1 py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] border-2 lg:border-[0.2vw] border-gray-300 text-gray-700 satoshiBold text-sm lg:text-[1.2vw] hover:bg-gray-100 transition-colors"
                                     >
                                         Batal
                                     </button>
                                     <button
                                         onClick={executeDelete}
-                                        disabled={deletingId !== null}
-                                        className="flex-1 py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-red-600 text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-red-700 transition-colors shadow-md flex items-center justify-center gap-2 lg:gap-[0.5vw] disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-1 py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-red-600 text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-red-700 transition-colors shadow-md"
                                     >
-                                        {"Ya, Hapus"}
+                                        Ya, Hapus
                                     </button>
-                                </div>
-                            </>
-                        )}
+                                </>
+                            )}
+
+                            {/* Tombol OK untuk Error Modal */}
+                            {modalType === 'error' && (
+                                <button
+                                    onClick={closeModal}
+                                    className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                                >
+                                    Mengerti
+                                </button>
+                            )}
+                            
+                            {/* Loading tidak perlu tombol */}
+                        </div>
 
                     </div>
                 </div>
             )}
-
         </div>
     )
 }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api';
 
-// ... (Interfaces tetap sama) ...
+// ... (Interfaces & Imports tetap sama) ...
 interface ReportListItem {
     id: string;
     no: number;
@@ -37,11 +37,11 @@ interface CustomDropdownProps {
 const monthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
 const DetailPelaporanSekolahSppg = () => {
-    // ... (Logic State & Effect TETAP SAMA, tidak ada perubahan) ...
     const router = useRouter();
     const params = useParams();
     const targetSchoolId = params?.id as string; 
 
+    // ... (State & Effect tetap sama) ...
     const [reports, setReports] = useState<ReportListItem[]>([]);
     const [schoolName, setSchoolName] = useState("Memuat Nama Sekolah...");
     const [loading, setLoading] = useState(true);
@@ -207,18 +207,10 @@ const DetailPelaporanSekolahSppg = () => {
     const toggleDropdown = (name: string) => setOpenDropdown(openDropdown === name ? null : name);
 
     return (
-        // Container Utama: padding standar di mobile, VW di desktop
         <div className="flex-1 w-full min-h-screen p-4 lg:p-[3vw] flex flex-col font-sans relative" onClick={() => setOpenDropdown(null)}>
             
             {/* Header Title */}
             <div className="mb-6 lg:mb-[2vw]">
-                {/* Tombol Back Mobile */}
-                <button onClick={() => router.back()} className="lg:hidden mb-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 w-fit">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 text-gray-700">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg>
-                </button>
-
                 <h1 className="satoshiBold text-2xl lg:text-[2.5vw] text-black">Pelaporan Sekolah</h1>
                 <h2 className="satoshiMedium text-base lg:text-[1.5vw] text-gray-600 mt-1 lg:mt-0">
                     {loading ? (
@@ -247,18 +239,10 @@ const DetailPelaporanSekolahSppg = () => {
                 )}
             </div>
 
-            {/* --- TABLE CONTAINER YANG DIMODIFIKASI --- */}
-            {/* KUNCI: overflow-x-auto agar bisa digeser ke samping di HP */}
+            {/* Table Container */}
             <div className="w-full bg-[#E87E2F] rounded-xl lg:rounded-[1.5vw] overflow-hidden border-2 lg:border-[0.2vw] border-[#E87E2F] relative z-10 overflow-x-auto">
-                
-                {/* INNER CONTAINER: min-w-[800px]
-                   Ini memaksa tabel memiliki lebar minimal 800px.
-                   Jika layar HP < 800px, scrollbar horizontal akan muncul.
-                   Tampilan Desktop (lg) tidak akan terpengaruh karena layarnya > 1024px.
-                */}
                 <div className="min-w-[800px] w-full">
-                    
-                    {/* Header Table (SAMA SEPERTI DESKTOP) */}
+                    {/* Header Table */}
                     <div className="flex bg-[#E87E2F] text-white">
                         <div className="w-[10%] py-4 lg:py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-base lg:text-[1.5vw]">No</div>
                         <div className="w-[25%] py-4 lg:py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-base lg:text-[1.5vw]">Tanggal Lapor</div>
@@ -272,55 +256,24 @@ const DetailPelaporanSekolahSppg = () => {
                         {loading ? (
                              [...Array(5)].map((_, i) => (
                                 <div key={i} className="flex border-b border-[#E87E2F] lg:border-b-[0.15vw] bg-white animate-pulse">
-                                    <div className="w-[10%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]">
-                                        <div className="w-4 h-4 lg:w-[1.5vw] lg:h-[1.5vw] bg-gray-200 rounded"></div>
-                                    </div>
-                                    <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]">
-                                        <div className="w-24 h-4 lg:w-[10vw] lg:h-[1.2vw] bg-gray-200 rounded"></div>
-                                    </div>
-                                    <div className="w-[30%] py-4 lg:py-[1.5vw] px-2 lg:px-[1vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]">
-                                        <div className="w-32 h-4 lg:w-[15vw] lg:h-[1.2vw] bg-gray-200 rounded"></div>
-                                    </div>
-                                    <div className="w-[20%] px-4 lg:px-[2vw] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]">
-                                        <div className="w-full h-8 lg:h-[2vw] bg-gray-200 rounded-full lg:rounded-[1vw]"></div>
-                                    </div>
-                                    <div className="w-[15%] py-4 lg:py-[1.5vw] flex justify-center items-center">
-                                        <div className="w-12 h-4 lg:w-[5vw] lg:h-[1.2vw] bg-gray-200 rounded"></div>
-                                    </div>
+                                    <div className="w-[10%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]"><div className="w-4 h-4 lg:w-[1.5vw] lg:h-[1.5vw] bg-gray-200 rounded"></div></div>
+                                    <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]"><div className="w-24 h-4 lg:w-[10vw] lg:h-[1.2vw] bg-gray-200 rounded"></div></div>
+                                    <div className="w-[30%] py-4 lg:py-[1.5vw] px-2 lg:px-[1vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]"><div className="w-32 h-4 lg:w-[15vw] lg:h-[1.2vw] bg-gray-200 rounded"></div></div>
+                                    <div className="w-[20%] px-4 lg:px-[2vw] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]"><div className="w-full h-8 lg:h-[2vw] bg-gray-200 rounded-full lg:rounded-[1vw]"></div></div>
+                                    <div className="w-[15%] py-4 lg:py-[1.5vw] flex justify-center items-center"><div className="w-12 h-4 lg:w-[5vw] lg:h-[1.2vw] bg-gray-200 rounded"></div></div>
                                 </div>
                             ))
                         ) : currentItems.length > 0 ? (
                             currentItems.map((item, index) => (
-                                // Struktur Row sama persis antara Mobile dan Desktop
                                 <div key={item.id} className={`flex border-b border-[#E87E2F] lg:border-b-[0.15vw] last:border-b-0 transition-colors ${(indexOfFirstItem + index) % 2 === 1 ? 'bg-[#FFF3EB]' : 'bg-white'} hover:bg-orange-50 lg:hover:opacity-95`}>
-                                    
-                                    <div className="w-[10%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">
-                                        {indexOfFirstItem + index + 1}
-                                    </div>
-                                    
-                                    <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">
-                                        {item.tanggal} {item.bulan} {item.tahun}
-                                    </div>
-                                    
-                                    <div className="w-[30%] py-4 lg:py-[1.5vw] px-2 lg:px-[1vw] flex justify-center items-center text-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">
-                                        {item.menu}
-                                    </div>
-                                    
+                                    <div className="w-[10%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">{indexOfFirstItem + index + 1}</div>
+                                    <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">{item.tanggal} {item.bulan} {item.tahun}</div>
+                                    <div className="w-[30%] py-4 lg:py-[1.5vw] px-2 lg:px-[1vw] flex justify-center items-center text-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">{item.menu}</div>
                                     <div className="w-[20%] px-2 lg:px-[2vw] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]">
-                                        <button 
-                                            onClick={() => handleStatusClick(item)}
-                                            className={`${getStatusColor(item.status)} text-white satoshiBold text-xs lg:text-[1vw] px-3 py-1 lg:px-[2vw] lg:py-[0.5vw] rounded-lg lg:rounded-[1vw] shadow-sm w-full text-center capitalize transition-colors`} 
-                                            style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
-                                            title={item.status === 'processing' ? "Klik untuk selesaikan" : "Sudah selesai"}
-                                        >
-                                            {item.status}
-                                        </button>
+                                        <button onClick={() => handleStatusClick(item)} className={`${getStatusColor(item.status)} text-white satoshiBold text-xs lg:text-[1vw] px-3 py-1 lg:px-[2vw] lg:py-[0.5vw] rounded-lg lg:rounded-[1vw] shadow-sm w-full text-center capitalize transition-colors`} style={{ boxShadow: '0px 4px 4px 0px #00000040' }} title={item.status === 'processing' ? "Klik untuk selesaikan" : "Sudah selesai"}>{item.status}</button>
                                     </div>
-                                    
                                     <div className="w-[15%] py-4 lg:py-[1.5vw] flex justify-center items-center">
-                                        <button onClick={() => handleViewDetail(item.id)} className="text-[#E87E2F] underline satoshiMedium text-sm lg:text-[1.2vw] hover:text-[#b06a33] cursor-pointer">
-                                            Lihat Detail
-                                        </button>
+                                        <button onClick={() => handleViewDetail(item.id)} className="text-[#E87E2F] underline satoshiMedium text-sm lg:text-[1.2vw] hover:text-[#b06a33] cursor-pointer">Lihat Detail</button>
                                     </div>
                                 </div>
                             ))
@@ -331,9 +284,14 @@ const DetailPelaporanSekolahSppg = () => {
                 </div>
             </div>
 
-            {/* Pagination */}
-            {totalPages > 0 && (
-                <div className="flex justify-end mt-4 lg:mt-[1vw] mb-8 lg:mb-[2vw]">
+            {/* Pagination & Back Button Section */}
+            <div className="flex justify-between items-center mt-4 lg:mt-[2vw] mb-8 lg:mb-[3vw]">
+                
+                {/* Spacer agar tombol Back tetap di kanan meskipun pagination tidak muncul */}
+                <div className="flex-1"></div> 
+
+                {/* Pagination (Tengah/Kanan) */}
+                {totalPages > 0 && (
                     <div className="flex items-center gap-4 lg:gap-[1vw]">
                         <span className="text-[#E87E2F] satoshiMedium text-sm lg:text-[1.2vw]">Halaman {currentPage} dari {totalPages}</span>
                         <div className="flex gap-2 lg:gap-[0.5vw]">
@@ -341,10 +299,21 @@ const DetailPelaporanSekolahSppg = () => {
                             <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages} className={`w-8 h-8 lg:w-[2vw] lg:h-[2vw] flex items-center justify-center rounded-full ${currentPage === totalPages ? 'bg-gray-200 cursor-not-allowed' : 'bg-[#E87E2F] text-white'}`}>&gt;</button>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* DETAIL MODAL (Responsif: Max Width standar di mobile, VW di desktop) */}
+            </div>
+
+            {/* Tombol Kembali (Pojok Kanan Bawah Halaman) */}
+            <div className="flex justify-end pb-8 lg:pb-[2vw]">
+                <button 
+                    onClick={() => router.back()} 
+                    className="bg-white border-2 cursor-pointer border-[#E87E2F] text-[#E87E2F] hover:bg-[#E87E2F] hover:text-white transition-colors satoshiBold text-sm lg:text-[1.2vw] px-6 py-2 lg:px-[2vw] lg:py-[0.8vw] rounded-xl lg:rounded-[1vw] shadow-md flex items-center gap-2 lg:gap-[0.5vw]"
+                >
+                    Kembali
+                </button>
+            </div>
+
+            {/* MODALS (Detail & Confirmation) - Kode tetap sama ... */}
             {selectedDetail && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 lg:p-[3vw]">
                     <div className="bg-[#E87E2F] w-full max-w-lg lg:w-[50vw] lg:max-w-none max-h-[90vh] overflow-y-auto rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] shadow-2xl relative flex flex-col gap-4 lg:gap-[1.5vw]">
@@ -375,7 +344,6 @@ const DetailPelaporanSekolahSppg = () => {
                 </div>
             )}
 
-            {/* CONFIRMATION MODAL */}
             {itemToUpdate && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 lg:p-[3vw]">
                     <div className="bg-white w-full max-w-md lg:w-[30vw] lg:max-w-none rounded-2xl lg:rounded-[2vw] p-6 lg:p-[2vw] shadow-2xl relative flex flex-col gap-4 lg:gap-[1.5vw] text-center">
@@ -407,6 +375,7 @@ const DetailPelaporanSekolahSppg = () => {
     );
 }
 
+// ... (Component CustomDropdown tetap sama) ...
 const CustomDropdown = ({ label, options, isOpen, onToggle, onSelect }: CustomDropdownProps) => {
     return (
         <div className="relative w-[30%] lg:w-[12vw]">

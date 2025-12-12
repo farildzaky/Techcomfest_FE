@@ -175,11 +175,11 @@ const RegisterSppgPage = () => {
                         <>
                             <h3 className="satoshiBold text-[#E87E2F] text-lg md:text-[1.5vw] mb-1 md:mb-[0.5vw]">Identitas Instansi SPPG</h3>
 
-                            <InputGroup label="Nama Instansi/Dinas" name="namaInstansi" value={formData.namaInstansi} onChange={handleChange} placeholder="Masukkan nama instansi" error={errors.namaInstansi} />
-                            <InputGroup label="Wilayah Kerja" name="wilayahKerja" value={formData.wilayahKerja} onChange={handleChange} placeholder="Contoh: Kota Malang" error={errors.wilayahKerja} />
-                            <InputGroup label="Alamat Lengkap" name="alamat" value={formData.alamat} onChange={handleChange} placeholder="Jl. Veteran No. 10" error={errors.alamat} />
-                            <InputGroup label="Email Instansi" name="email" value={formData.email} onChange={handleChange} placeholder="email@instansi.com" type="email" error={errors.email} />
-                            <InputGroup label="Password" name="password" value={formData.password} onChange={handleChange} placeholder="Minimal 6 karakter" type="password" error={errors.password} />
+                            <InputGroup label="Nama Instansi/Dinas" name="namaInstansi" value={formData.namaInstansi} onChange={handleChange} placeholder="Masukkan nama instansi atau Dinas anda" error={errors.namaInstansi} />
+                            <InputGroup label="Wilayah Kerja" name="wilayahKerja" value={formData.wilayahKerja} onChange={handleChange} placeholder="Masukkan wilayah kecamatan Instansi/Dinas" error={errors.wilayahKerja} />
+                            <InputGroup label="Alamat Instansi" name="alamat" value={formData.alamat} onChange={handleChange} placeholder="Masukkan alamat lengkap Instansi/Dinas" error={errors.alamat} />
+                            <InputGroup label="Email Instansi" name="email" value={formData.email} onChange={handleChange} placeholder="Masukkan email Instansi (untuk login)" type="email" error={errors.email} />
+                            <InputGroup label="Password" name="password" value={formData.password} onChange={handleChange} placeholder="Masukkan password (untuk login)" type="password" error={errors.password} />
 
                             <div className="flex justify-end mt-4 md:mt-[1vw]">
                                 <button onClick={handleNext} className="satoshiBold text-[#E87E2F] text-base md:text-[1.2vw] hover:text-[#B56225] transition-colors">Lanjut</button>
@@ -192,9 +192,9 @@ const RegisterSppgPage = () => {
                         <>
                             <h3 className="satoshiBold text-[#E87E2F] text-lg md:text-[1.5vw] mb-1 md:mb-[0.5vw]">Identitas Penanggung Jawab</h3>
 
-                            <InputGroup label="Nama Penanggung Jawab" name="penanggungJawab" value={formData.penanggungJawab} onChange={handleChange} placeholder="Nama lengkap" error={errors.penanggungJawab} />
-                            <InputGroup label="Jabatan" name="jabatan" value={formData.jabatan} onChange={handleChange} placeholder="Contoh: Staff Admin" error={errors.jabatan} />
-                            <InputGroup label="Nomor WhatsApp Aktif" name="nomor" value={formData.nomor} onChange={handleNumberChange} placeholder="08123456789" type="text" error={errors.nomor} />
+                            <InputGroup label="Nama Penanggung Jawab" name="penanggungJawab" value={formData.penanggungJawab} onChange={handleChange} placeholder="Masukkan nama penanggung jawab" error={errors.penanggungJawab} />
+                            <InputGroup label="Jabatan" name="jabatan" value={formData.jabatan} onChange={handleChange} placeholder="Masukkan jabatan penanggung jawab" error={errors.jabatan} />
+                            <InputGroup label="Nomor WhatsApp Aktif" name="nomor" value={formData.nomor} onChange={handleNumberChange} placeholder="Masukkan nomor" type="text" error={errors.nomor} />
 
                             <div className="flex justify-start mt-2 md:mt-[0.5vw] mb-4 md:mb-[1vw]">
                                 <button onClick={() => setStep(1)} className="satoshiBold text-[#E87E2F] text-base md:text-[1.2vw] hover:text-[#B56225] transition-colors">Kembali</button>

@@ -4,15 +4,19 @@ const nextConfig: NextConfig = {
   // 1. Konfigurasi Gambar (Supaya gambar dari Cloudinary/API bisa muncul)
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'api.inkluzi.my.id',
-      },
-    ],
+            {
+                protocol: 'http', // API Anda mengembalikan link http
+                hostname: 'res.cloudinary.com',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https', // Jaga-jaga jika ada link https nanti
+                hostname: 'res.cloudinary.com',
+                port: '',
+                pathname: '/**',
+            },
+        ],
   },
 
   // 2. Proxy API (Agar tidak terkena CORS saat fetch ke backend)

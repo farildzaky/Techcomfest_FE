@@ -2,6 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api';
+import Image from 'next/image';
+
+// Import Assets
+import bg from "../../../../assets/bg.png";
+import loadingIcon from "../../../../assets/loading.png";
+import alertIcon from "../../../../assets/alert.png"; 
 
 interface ProfileData {
     nama_sekolah: string;
@@ -23,12 +29,16 @@ const AssignSekolah = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [schoolList, setSchoolList] = useState<SchoolData[]>([]);
     const [selectedSchools, setSelectedSchools] = useState<string[]>([]); 
-    const [loading, setLoading] = useState(true);
-    const [submitting, setSubmitting] = useState(false);
+    const [loadingData, setLoadingData] = useState(true);
+    
+    // Modal State
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<'loading' | 'error' | null>(null);
+    const [modalMessage, setModalMessage] = useState("");
 
     useEffect(() => {
         const fetchSekolah = async () => {
-            setLoading(true);
+            setLoadingData(true);
             try {
                 const resList = await fetchWithAuth("/admin/users", {
                     method: "GET",
@@ -63,7 +73,7 @@ const AssignSekolah = () => {
             } catch (error) {
                 console.error("Error fetching schools:", error);
             } finally {
-                setLoading(false);
+                setLoadingData(false);
             }
         };
 
@@ -87,10 +97,15 @@ const AssignSekolah = () => {
 
     const handleSelesai = async () => {
         if (selectedSchools.length === 0) {
-            alert("Pilih minimal satu sekolah.");
+            setModalType('error');
+            setModalMessage("Pilih minimal satu sekolah.");
+            setIsModalOpen(true);
             return;
         }
-        setSubmitting(true);
+
+        setModalType('loading');
+        setIsModalOpen(true);
+
         try {
             const res = await fetchWithAuth(`/admin/sppg/${sppgId}`, {
                 method: "POST",
@@ -99,47 +114,48 @@ const AssignSekolah = () => {
             });
 
             const responseData = await res.json();
-            if (!res.ok) throw new Error(responseData.message || "Gagal menetapkan sekolah.");
+            
+            if (!res.ok) {
+                throw new Error(responseData.message || "Gagal menetapkan sekolah.");
+            }
 
-            alert(`Berhasil! ${selectedSchools.length} sekolah berhasil ditambahkan.`);
-            router.push("/admin/penetapan/assign-sppg");
+            // Sukses - Modal tetap loading sebentar atau langsung redirect
+            // Disini kita biarkan loading state aktif sampai redirect terjadi
+            router.push("/admin/penetapan");
 
         } catch (error: any) {
-            alert(`Gagal: ${error.message}`);
-        } finally {
-            setSubmitting(false);
-        }
+            setModalType('error');
+            setModalMessage(error.message || "Terjadi kesalahan sistem.");
+        } 
+    };
+
+    const closeModal = () => {
+        // Jangan tutup jika sedang loading proses API
+        if (modalType === 'loading') return;
+        setIsModalOpen(false);
+        setModalType(null);
     };
 
     return (
-        // Container Utama: Flex Column penuh
         <div className="w-full h-screen flex flex-col font-sans relative bg-white overflow-hidden">
             
             {/* Header Section */}
             <div className="w-full shrink-0 bg-white z-20 pt-4 lg:pt-0 border-b lg:border-none border-gray-100 pb-4 lg:pb-0">
-                {/* Tombol Back */}
-                <button 
-                    onClick={() => router.back()} 
-                    className="hover:bg-gray-100 p-2 lg:p-[0.5vw] rounded-full absolute left-4 lg:left-[2vw] top-4 lg:top-[2vw] transition-colors z-30"
-                >
+                <button onClick={() => router.back()} className="hover:bg-gray-100 p-2 lg:p-[0.5vw] rounded-full absolute left-4 lg:left-[2vw] top-4 lg:top-[2vw] transition-colors z-30">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 lg:w-[2vw] lg:h-[2vw] text-black">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </button>
 
-                {/* Judul & Search Bar */}
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-start px-4 lg:px-[3vw] pt-12 lg:pt-[2vw] pb-4 lg:pb-[1vw] lg:pl-[6vw] gap-4 lg:gap-0">
                     <div className="flex flex-col w-full lg:w-auto">
                         <h1 className="satoshiBold text-2xl lg:text-[2.5vw] text-black leading-tight">Sekolah Terdaftar</h1>
                         <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-600 mt-1 lg:mt-0">Pilih sekolah yang belum memiliki SPPG</p>
                     </div>
                     
-                    {/* Search Bar */}
                     <div className="relative w-full lg:w-[30%]">
                         <input 
-                            type="text" 
-                            placeholder="Cari sekolah..." 
-                            value={searchQuery}
+                            type="text" placeholder="Cari sekolah..." value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full rounded-lg lg:rounded-[0.8vw] border border-gray-200 py-3 lg:py-[0.8vw] pl-10 lg:pl-[3vw] pr-4 lg:pr-[1vw] text-sm lg:text-[1vw] outline-none focus:border-[#E87E2F] placeholder:text-gray-400 shadow-sm transition-colors"
                         />
@@ -150,9 +166,9 @@ const AssignSekolah = () => {
                 </div>
             </div>
 
-            {/* List Sekolah (Scrollable Area) */}
+            {/* List Sekolah */}
             <div className="flex-1 overflow-y-auto px-4 lg:px-[3vw] pt-4 lg:pt-[1vw] pb-24 lg:pb-[3vw]">
-                {loading ? (
+                {loadingData ? (
                     <div className="text-center mt-10 lg:mt-[5vw] text-gray-500 satoshiMedium text-sm lg:text-[1.2vw]">Memeriksa data...</div>
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-[1.5vw]">
@@ -164,33 +180,21 @@ const AssignSekolah = () => {
                                 <div 
                                     key={school.id} onClick={() => toggleSelection(school.id)}
                                     className={`
-                                        flex items-center gap-3 lg:gap-[1.5vw] 
-                                        p-4 lg:p-[1.5vw] 
-                                        rounded-xl lg:rounded-[1vw] 
-                                        border-2 lg:border-[0.15vw] 
+                                        flex items-center gap-3 lg:gap-[1.5vw] p-4 lg:p-[1.5vw] rounded-xl lg:rounded-[1vw] border-2 lg:border-[0.15vw] 
                                         cursor-pointer transition-all duration-200 
                                         ${isSelected ? 'border-[#D9833E] bg-white shadow-sm' : 'border-[#D9833E] bg-white hover:bg-orange-50'}
                                     `}
                                 >
-                                    {/* Checkbox Circle */}
-                                    <div className={`
-                                        w-6 h-6 lg:w-[2vw] lg:h-[2vw] 
-                                        rounded-full border-2 lg:border-[0.15vw] border-[#D9833E] 
-                                        flex items-center justify-center shrink-0 transition-colors 
-                                        ${isSelected ? 'bg-[#D9833E]' : 'bg-white'}
-                                    `}>
+                                    <div className={`w-6 h-6 lg:w-[2vw] lg:h-[2vw] rounded-full border-2 lg:border-[0.15vw] border-[#D9833E] flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'bg-[#D9833E]' : 'bg-white'}`}>
                                         {isSelected && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 lg:w-[1.2vw] lg:h-[1.2vw] text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>}
                                     </div>
-                                    
-                                    <span className={`satoshiBold text-sm lg:text-[1.3vw] text-[#D9833E]`}>
-                                        {displayName}
-                                    </span>
+                                    <span className={`satoshiBold text-sm lg:text-[1.3vw] text-[#D9833E]`}>{displayName}</span>
                                 </div>
                             );
                         })}
                     </div>
                 )}
-                {!loading && filteredSchools.length === 0 && (
+                {!loadingData && filteredSchools.length === 0 && (
                     <div className="flex flex-col items-center justify-center mt-10 lg:mt-[5vw] text-gray-400">
                         <p className="satoshiMedium text-sm lg:text-[1.5vw] text-center">
                            {schoolList.length === 0 ? "Semua sekolah sudah memiliki SPPG" : "Sekolah tidak ditemukan"}
@@ -199,25 +203,95 @@ const AssignSekolah = () => {
                 )}
             </div>
 
-            {/* Footer Button (Fixed Bottom on Mobile) */}
+            {/* Footer Button */}
             <div className="relative lg:static flex justify-end px-4 lg:px-[3vw] pb-4 lg:pb-[2vw] pt-4 lg:pt-[1vw] bg-white border-t border-gray-100 z-30 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] lg:shadow-none">
                 <button 
                     onClick={handleSelesai} 
-                    disabled={submitting} 
-                    className={`
-                        w-full lg:w-auto
-                        text-white satoshiBold 
-                        text-base lg:text-[1.2vw] 
-                        py-3 lg:py-[1vw] px-8 lg:px-[5vw] 
-                        rounded-xl lg:rounded-[1.5vw] 
-                        shadow-md lg:shadow-xl transition-all active:scale-95 
-                        ${submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C67C3E] hover:bg-[#b06a33]'}
-                    `}
+                    disabled={isModalOpen} // Disable saat modal terbuka
+                    className={`w-full lg:w-auto text-white satoshiBold text-base lg:text-[1.2vw] py-3 lg:py-[1vw] px-8 lg:px-[5vw] rounded-xl lg:rounded-[1.5vw] shadow-md lg:shadow-xl transition-all active:scale-95 ${isModalOpen ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C67C3E] hover:bg-[#b06a33]'}`}
                 >
-                    {submitting ? "Menyimpan..." : "Selesai"}
+                    Selesai
                 </button>
             </div>
+
+            {/* --- MODAL SYSTEM (No Delete, Just Loading & Error) --- */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+                        onClick={closeModal}
+                    ></div>
+
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
+
+                        {/* ICON SECTION - MATCHED LAYOUT */}
+                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
+                            {/* Background Circle */}
+                            <Image 
+                                src={bg} 
+                                alt="Background Shape" 
+                                layout="fill"
+                                objectFit="contain" 
+                            />
+
+                            {/* Overlay Icon based on Modal Type */}
+                            {modalType === 'loading' && (
+                                <Image 
+                                    src={loadingIcon} 
+                                    alt="Loading" 
+                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
+                                />
+                            )}
+                            
+                            {modalType === 'error' && (
+                                <Image 
+                                    src={alertIcon} 
+                                    alt="Error" 
+                                    className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute"
+                                />
+                            )}
+                        </div>
+
+                        {/* TEXT CONTENT SECTION */}
+                        <div className="flex flex-col gap-2">
+                            {modalType === 'loading' && (
+                                <>
+                                    <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                        Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
+                                    </p>
+                                </>
+                            )}
+
+                            {modalType === 'error' && (
+                                <>
+                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#B56225]">Gagal Menyimpan</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-[#B56225] px-4">
+                                        {modalMessage}
+                                    </p>
+                                </>
+                            )}
+                        </div>
+
+                        {/* BUTTON ACTION SECTION */}
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            {modalType === 'error' && (
+                                <button
+                                    onClick={closeModal}
+                                    className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                                >
+                                    Mengerti
+                                </button>
+                            )}
+                            {/* Loading state tidak butuh tombol */}
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }
+
 export default AssignSekolah;

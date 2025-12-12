@@ -210,12 +210,12 @@ const RegisterSekolahPage = () => {
                             <h3 className="satoshiBold text-[#D9833E] text-lg md:text-[1.5vw] mb-1 md:mb-[0.5vw]">Identitas Sekolah</h3>
                             
                             <InputGroup label="Nama Sekolah" name="namaSekolah" value={formData.namaSekolah} onChange={handleChange} placeholder="Masukkan nama sekolah" error={errors.namaSekolah} />
-                            <InputGroup label="Jenis Sekolah" name="jenisSekolah" value={formData.jenisSekolah} onChange={handleChange} placeholder="Contoh: SLB-B" error={errors.jenisSekolah} />
-                            <InputGroup label="NPSN" name="npsn" value={formData.npsn} onChange={handleNumberChange} placeholder="Masukkan NPSN" type="text" error={errors.npsn} />
-                            <InputGroup label="Alamat Lengkap" name="alamat" value={formData.alamat} onChange={handleChange} placeholder="Jl. Contoh No. 1" error={errors.alamat} />
+                            <InputGroup label="Jenis Sekolah" name="jenisSekolah" value={formData.jenisSekolah} onChange={handleChange} placeholder="Masukkan jenis sekolah" error={errors.jenisSekolah} />
+                            <InputGroup label="NPSN" name="npsn" value={formData.npsn} onChange={handleNumberChange} placeholder="Masukkan NPSN sekolah" type="text" error={errors.npsn} />
+                            <InputGroup label="Alamat Lengkap" name="alamat" value={formData.alamat} onChange={handleChange} placeholder="Masukkan alamat sekolah" error={errors.alamat} />
 
-                            <InputGroup label="Email Sekolah" name="email" value={formData.email} onChange={handleChange} placeholder="Masukkan email untuk login" type="email" error={errors.email} />
-                            <InputGroup label="Buat Password" name="password" value={formData.password} onChange={handleChange} placeholder="Minimal 6 karakter" type="password" error={errors.password} />
+                            <InputGroup label="Email Sekolah" name="email" value={formData.email} onChange={handleChange} placeholder="Masukkan email sekolah (untuk login)" type="email" error={errors.email} />
+                            <InputGroup label="Buat Password" name="password" value={formData.password} onChange={handleChange} placeholder="Masukkan password (untuk login)" type="password" error={errors.password} />
 
                             {/* Bagian Disabilitas */}
                             <div className="flex flex-col gap-2 md:gap-[0.5vw] mt-2 md:mt-[0.5vw]">
@@ -227,14 +227,14 @@ const RegisterSekolahPage = () => {
                                                 type="text" 
                                                 value={item.jenis} 
                                                 onChange={(e) => handleDisabilitasChange(index, 'jenis', e.target.value)} 
-                                                placeholder={`Jenis (misal: Tunarungu)`} 
+                                                placeholder={`Masukkan jenis disabilitas `} 
                                                 className="w-[70%] border-2 md:border-[0.15vw] border-[#D9833E] rounded-lg md:rounded-[0.6vw] px-4 md:px-[1vw] py-3 md:py-[0.8vw] text-base md:text-[1vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.15vw] focus:ring-[#E87E2F]" 
                                             />
                                             <input 
                                                 type="text" 
                                                 value={item.jumlah} 
                                                 onChange={(e) => handleDisabilitasChange(index, 'jumlah', e.target.value)} 
-                                                placeholder="Jml Siswa" 
+                                                placeholder="Jumlah siswa" 
                                                 className="w-[30%] border-2 md:border-[0.15vw] border-[#D9833E] rounded-lg md:rounded-[0.6vw] px-2 md:px-[1vw] py-3 md:py-[0.8vw] text-base md:text-[1vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.15vw] focus:ring-[#E87E2F] text-center" 
                                             />
                                         </div>
@@ -247,7 +247,7 @@ const RegisterSekolahPage = () => {
                                 </div>
                             </div>
 
-                            <InputGroup label="Total Siswa Keseluruhan" name="jumlahSiswa" value={formData.jumlahSiswa} onChange={handleNumberChange} placeholder="Total seluruh siswa" type="text" error={errors.jumlahSiswa} />
+                            <InputGroup label="Total Siswa Keseluruhan" name="jumlahSiswa" value={formData.jumlahSiswa} onChange={handleNumberChange} placeholder="Masukkan jumlah siswa keseluruhan" type="text" error={errors.jumlahSiswa} />
 
                             <div className="flex justify-end mt-4 md:mt-[1vw]">
                                 <button onClick={handleNext} className="satoshiBold text-[#D9833E] text-base md:text-[1.2vw] hover:text-[#B56225] transition-colors">Lanjut</button>
@@ -259,9 +259,9 @@ const RegisterSekolahPage = () => {
                     {step === 2 && (
                         <>
                             <h3 className="satoshiBold text-[#D9833E] text-lg md:text-[1.5vw] mb-1 md:mb-[0.5vw]">Identitas Penanggung Jawab</h3>
-                            <InputGroup label="Nama Penanggung Jawab" name="penanggungJawab" value={formData.penanggungJawab} onChange={handleChange} placeholder="Masukkan nama lengkap" error={errors.penanggungJawab} />
-                            <InputGroup label="Jabatan" name="jabatan" value={formData.jabatan} onChange={handleChange} placeholder="Contoh: Kepala Sekolah" error={errors.jabatan} />
-                            <InputGroup label="Nomor WhatsApp Aktif" name="nomor" value={formData.nomor} onChange={handleNumberChange} placeholder="Contoh: 08123456789" type="text" error={errors.nomor} />
+                            <InputGroup label="Nama Penanggung Jawab" name="penanggungJawab" value={formData.penanggungJawab} onChange={handleChange} placeholder="Masukkan nama penanggung jawab" error={errors.penanggungJawab} />
+                            <InputGroup label="Jabatan" name="jabatan" value={formData.jabatan} onChange={handleChange} placeholder="Masukkan jabatan penanggung jawab" error={errors.jabatan} />
+                            <InputGroup label="Nomor WhatsApp Aktif" name="nomor" value={formData.nomor} onChange={handleNumberChange} placeholder="Masukkan nomor" type="text" error={errors.nomor} />
 
                             <div className="flex justify-start mt-2 md:mt-[0.5vw] mb-4 md:mb-[1vw]">
                                 <button onClick={() => setStep(1)} className="satoshiBold text-[#D9833E] text-base md:text-[1.2vw] hover:text-[#B56225] transition-colors">Kembali</button>
