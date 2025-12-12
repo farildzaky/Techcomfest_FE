@@ -1,26 +1,13 @@
-import { getCookie, refreshAccessToken } from './auth'; 
+import { getCookie, setCookie, refreshAccessToken } from './auth';
 
-// Default tetap ke proxy
 export const BASE_URL = "/api/proxy";
 
 let isRefreshing = false;
-let refreshSubscribers: ((token: string) => void)[] = [];
-
-const subscribeTokenRefresh = (cb: (token: string) => void) => {
-  refreshSubscribers.push(cb);
-};
-
-const onRefreshed = (token: string) => {
-  refreshSubscribers.forEach((cb) => cb(token));
-  refreshSubscribers = [];
-};
+let refreshPromise: Promise<string | null> | null = null;
 
 export const fetchWithAuth = async (endpoint: string, options: RequestInit = {}) => {
   let url = "";
 
-  // LOGIC BARU:
-  // Jika endpoint dimulai dengan "http", gunakan langsung (Bypass Proxy)
-  // Jika tidak, tempelkan BASE_URL (Pakai Proxy)
   if (endpoint.startsWith("http")) {
     url = endpoint;
   } else {
@@ -38,44 +25,52 @@ export const fetchWithAuth = async (endpoint: string, options: RequestInit = {})
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Penting: Jangan set Content-Type manual untuk FormData
   if (options.body && options.body instanceof FormData) {
-      // Biarkan browser set boundary otomatis
   } else {
-      headers['Content-Type'] = 'application/json';
+    headers['Content-Type'] = 'application/json';
   }
 
   let response = await fetch(url, { ...options, headers });
 
-  if (response.status === 401) {
+  if (response.status === 401 || response.status === 403) {
+    console.log(`🔄 [API] Got ${response.status}, attempting token refresh...`);
+
+    let newToken: string | null = null;
+
     if (!isRefreshing) {
       isRefreshing = true;
+      refreshPromise = refreshAccessToken();
+
       try {
-        console.log("🔄 Access Token expired. Refreshing...");
-        const newToken = await refreshAccessToken();
-        isRefreshing = false;
+        newToken = await refreshPromise;
+        console.log("✅ [API] Refresh completed, new token:", newToken ? "YES" : "NO");
 
         if (newToken) {
-          onRefreshed(newToken);
-        } else {
-           isRefreshing = false;
+          setCookie('accessToken', newToken, 60 * 15);
+          console.log("✅ [API] Cookie updated with new token");
         }
       } catch (error) {
+        console.error("❌ [API] Refresh error:", error);
+      } finally {
         isRefreshing = false;
-        console.error("❌ Refresh process error:", error);
+        refreshPromise = null;
       }
+    } else {
+      console.log("⏳ [API] Already refreshing, waiting...");
+      newToken = await refreshPromise;
     }
 
-    const retryToken = await new Promise<string>((resolve) => {
-      subscribeTokenRefresh((newToken) => resolve(newToken));
-    });
+    if (newToken) {
+      console.log("🔁 [API] Retrying request with new token...");
 
-    if (retryToken) {
       const newHeaders = {
         ...headers,
-        Authorization: `Bearer ${retryToken}`,
+        Authorization: `Bearer ${newToken}`,
       };
+
       return fetch(url, { ...options, headers: newHeaders });
+    } else {
+      console.error("❌ [API] No token available for retry, redirecting to login...");
     }
   }
 
