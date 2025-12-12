@@ -249,7 +249,7 @@ const RiwayatScan = () => {
                                                 {/* Detail Button */}
                                                 <div className='w-[20%] py-4 lg:py-[1.2vw] flex items-center justify-center'>
                                                     <Link
-                                                        href={`/sekolah/riwayat-scan/${item.id}`}
+                                                        href={`/sekolah/scan-nutrisi/${item.id}`}
                                                         className='text-[#E87E2F] underline hover:text-[#b06a33] satoshiMedium text-sm lg:text-[1.2vw] whitespace-nowrap cursor-pointer'
                                                     >
                                                         Detail

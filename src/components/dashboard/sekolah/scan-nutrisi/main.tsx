@@ -3,11 +3,14 @@ import React, { useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import bg from "../../../../assets/bg.png";
-import loadingSpinner from "../../../../assets/loading.png";
-import jam from "../../../../assets/dashboard/sppg/jam.png";
-import { fetchWithAuth } from '@/src/lib/api';
 
+// Import Assets
+import bg from "../../../../assets/bg.png";
+import loadingIcon from "../../../../assets/loading.png";
+import alertIcon from "../../../../assets/alert.png"; 
+import jam from "../../../../assets/dashboard/sppg/jam.png";
+
+// Config
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const COMPRESSION_QUALITY = 0.8;
 const MAX_IMG_WIDTH = 1024;
@@ -46,49 +49,48 @@ const compressImage = (file: File): Promise<Blob> => {
     });
 };
 
-const ScanNutrisiSkeleton = () => {
-    return (
-        <div className="w-full min-h-screen px-4 py-6 lg:px-[3vw] lg:py-[2vw] flex flex-col gap-6 lg:gap-[1vw] relative animate-pulse">
-
-            <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-0">
-                <div className="flex flex-col gap-2 lg:gap-[0.5vw] w-full lg:w-[70%]">
-                    <div className="h-8 lg:h-[3.5vw] w-[80%] bg-gray-300 rounded-md"></div>
-                    <div className="h-4 lg:h-[2vw] w-full bg-gray-200 rounded-md mt-2 lg:mt-[0.5vw]"></div>
-                    <div className="h-4 lg:h-[2vw] w-[90%] bg-gray-200 rounded-md"></div>
-                </div>
-
-                <div className="w-12 h-12 lg:w-[3.5vw] lg:h-[3.5vw] bg-gray-300 rounded-full shrink-0 self-end lg:self-start"></div>
-            </div>
-
-            <div className="relative w-full lg:w-[90%] h-64 lg:h-[35vw] bg-gray-300 rounded-xl lg:rounded-[1.5vw] mt-4 lg:mt-[1vw] flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4 lg:gap-[1vw]">
-                    <div className="w-16 h-16 lg:w-[6vw] lg:h-[6vw] bg-gray-400 rounded-full"></div>
-                    <div className="w-32 lg:w-[15vw] h-4 lg:h-[2vw] bg-gray-400 rounded-full"></div>
-                </div>
-            </div>
-
-            <div className="h-4 lg:h-[1.5vw] w-[50%] lg:w-[30%] bg-gray-200 rounded-md mt-2 lg:mt-[0.5vw]"></div>
-
-            <div className="flex justify-end mt-4 lg:mt-[1vw]">
-                <div className="h-10 lg:h-[3.5vw] w-32 lg:w-[15vw] bg-gray-300 rounded-full lg:rounded-[2vw]"></div>
-            </div>
-        </div>
-    );
-};
-
 const ScanNutrisiMain = () => {
     const router = useRouter();
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string>("");
     const [fileObj, setFileObj] = useState<File | null>(null);
-    const [loading, setLoading] = useState(false);
+    
+    // MODAL STATES
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState<'loading' | 'error' | null>(null);
+    const [errorMessage, setErrorMessage] = useState("");
 
+    // --- HELPER MODAL ---
+    const showLoading = () => {
+        setModalType('loading');
+        setIsModalOpen(true);
+    };
+
+    const showError = (msg: string) => {
+        setModalType('error');
+        setErrorMessage(msg);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        if (modalType === 'loading') return; 
+        setIsModalOpen(false);
+        setModalType(null);
+    };
+
+    // --- FILE HANDLER ---
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-            if (!validTypes.includes(file.type)) return alert("Mohon unggah file bertipe JPG atau PNG.");
-            if (file.size > MAX_FILE_SIZE) return alert("Ukuran file terlalu besar. Maksimal 5MB.");
+            if (!validTypes.includes(file.type)) {
+                showError("Mohon unggah file bertipe JPG atau PNG.");
+                return;
+            }
+            if (file.size > MAX_FILE_SIZE) {
+                showError("Ukuran file terlalu besar. Maksimal 5MB.");
+                return;
+            }
 
             const objectUrl = URL.createObjectURL(file);
             setImagePreview(objectUrl);
@@ -97,11 +99,14 @@ const ScanNutrisiMain = () => {
         }
     };
 
-
+    // --- SUBMIT HANDLER ---
     const handleKirim = async () => {
-        if (!imagePreview || !fileObj) return alert("Silakan unggah foto terlebih dahulu.");
+        if (!imagePreview || !fileObj) {
+            showError("Silakan unggah foto terlebih dahulu.");
+            return;
+        }
 
-        setLoading(true);
+        showLoading();
 
         try {
             const token = getCookie('accessToken');
@@ -113,15 +118,10 @@ const ScanNutrisiMain = () => {
             const formData = new FormData();
             formData.append('image', compressedFile);
 
-            // PERUBAHAN DISINI:
-            // Gunakan URL LENGKAP Backend Asli untuk bypass proxy Next.js
-            // Pastikan URL ini sama persis dengan yang ada di Apidog/Postman
-
-            const response = await fetch("/api/scan-proxy", { // <--- Ganti URL ini
+            const response = await fetch("/api/scan-proxy", { 
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`
-                    // Jangan ada Content-Type
                 },
                 body: formData
             });
@@ -140,10 +140,10 @@ const ScanNutrisiMain = () => {
 
         } catch (error: any) {
             console.error("Error upload:", error);
-            alert(`Pengiriman gagal: ${error.message}`);
-        } finally {
-            setLoading(false);
-        }
+            // Tutup loading dulu, baru tampilkan error
+            setIsModalOpen(false); 
+            setTimeout(() => showError(`Pengiriman gagal: ${error.message}`), 100);
+        } 
     };
 
     return (
@@ -161,16 +161,10 @@ const ScanNutrisiMain = () => {
                     </p>
                 </div>
 
-                {/* Tombol Riwayat (Fixed di pojok kanan atas di Mobile agar mudah dijangkau atau tetap di flow) */}
                 <Link href="/sekolah/riwayat-scan" className="group flex items-center bg-white/50 backdrop-blur-sm rounded-full p-2 lg:p-[0.5vw] hover:bg-white transition-all duration-500 shadow-sm border border-[#E87E2F]/20 h-fit self-end lg:self-auto">
                     <div className="w-8 h-8 lg:w-[3vw] lg:h-[3vw] flex items-center justify-center transition-transform duration-700 ease-in-out group-hover:rotate-[360deg] shrink-0 relative">
-                        <Image
-                            src={jam}
-                            alt="Riwayat"
-                            className="w-full h-full object-contain"
-                        />
+                        <Image src={jam} alt="Riwayat" className="w-full h-full object-contain" />
                     </div>
-
                     <span className="max-w-0 overflow-hidden whitespace-nowrap satoshiBold text-[#E87E2F] text-sm lg:text-[1.2vw] transition-all duration-700 ease-in-out group-hover:max-w-[200px] lg:group-hover:max-w-[15vw] pl-0 group-hover:pl-2 lg:group-hover:pl-[0.8vw] pr-0 group-hover:pr-4 lg:group-hover:pr-[1.5vw] opacity-0 group-hover:opacity-100">
                         Riwayat Pemindaian
                     </span>
@@ -202,39 +196,68 @@ const ScanNutrisiMain = () => {
 
             {fileName && <p className="text-sm lg:text-[1.2vw] text-gray-600 italic mt-2 lg:mt-[0.5vw] truncate max-w-full">File terpilih: <span className="text-[#E87E2F] font-bold">{fileName}</span></p>}
 
-            <div className="flex justify-end mt-4 lg:mt-[1vw]  lg:pb-0">
+            <div className="flex justify-end mt-4 lg:mt-[1vw] lg:pb-0">
                 <button
                     onClick={handleKirim}
-                    disabled={loading || !fileObj}
+                    disabled={modalType === 'loading' || !fileObj}
                     className={`text-white satoshiBold font-bold text-base lg:text-[1.5vw] py-3 lg:py-[0.8vw] px-8 lg:px-[4vw] rounded-full lg:rounded-[2vw] transition-all shadow-md active:scale-95 w-full lg:w-auto text-center
-                        ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E87E2F] hover:bg-[#b06e36]'}
+                        ${modalType === 'loading' ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#E87E2F] hover:bg-[#b06e36]'}
                     `}
                 >
-                    {loading ? "Menganalisis..." : "Kirim"}
+                    {modalType === 'loading' ? "Menganalisis..." : "Kirim"}
                 </button>
             </div>
 
-            {/* Loading Modal */}
-            {loading && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center">
-                        <div className="relative w-32 h-32 lg:w-[12vw] lg:h-[12vw] flex items-center justify-center">
-                            <Image
-                                src={bg}
-                                alt="Background Shape"
-                                layout="fill"
-                                objectFit="contain"
-                            />
-                            <Image
-                                src={loadingSpinner}
-                                alt="Spinner"
-                                className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] object-contain absolute translate-y-1 lg:translate-y-[0.4vw] translate-x-1 lg:translate-x-[0.4vw] animate-spin"
-                            />
+            {/* --- UNIVERSAL MODAL SYSTEM --- */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={closeModal}></div>
+
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
+                        
+                        {/* ICON SECTION */}
+                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            
+                            {modalType === 'loading' && (
+                                <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                            )}
+                            
+                            {modalType === 'error' && (
+                                <Image src={alertIcon} alt="Error" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute" />
+                            )}
                         </div>
-                        <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
-                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
-                            Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
-                        </p>
+
+                        {/* TEXT CONTENT */}
+                        <div className="flex flex-col gap-2">
+                            {modalType === 'loading' && (
+                                <>
+                                    <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                        Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
+                                    </p>
+                                </>
+                            )}
+
+                            {modalType === 'error' && (
+                                <>
+                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-red-500">Terjadi Kesalahan</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{errorMessage}</p>
+                                </>
+                            )}
+                        </div>
+
+                        {/* BUTTON ACTION */}
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            {modalType === 'error' && (
+                                <button
+                                    onClick={closeModal}
+                                    className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                                >
+                                    Mengerti
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}

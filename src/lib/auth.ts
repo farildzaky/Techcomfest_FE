@@ -1,6 +1,34 @@
+import { BASE_URL } from "@/src/lib/api"; 
 
 let isRefreshing = false;
 let refreshSubscribers: ((token: string) => void)[] = [];
+
+// --- HELPER: Decode JWT ---
+const parseJwt = (token: string) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    console.error("🔍 [DEBUG AUTH] Gagal parse JWT:", e);
+    return null;
+  }
+};
+
+// --- HELPER: Cek Expired ---
+const isTokenExpired = (token: string) => {
+  const decoded = parseJwt(token);
+  if (!decoded || !decoded.exp) {
+    console.log("🔍 [DEBUG AUTH] Token tidak valid atau tidak ada exp.");
+    return true;
+  }
+  
+  const currentTime = Math.floor(Date.now() / 1000);
+  const timeLeft = decoded.exp - currentTime;
+  
+  console.log(`🔍 [DEBUG AUTH] Sisa Waktu Token: ${timeLeft} detik`);
+  
+  // Buffer 10 detik
+  return currentTime > (decoded.exp - 10);
+};
 
 const subscribeTokenRefresh = (cb: (token: string) => void) => {
   refreshSubscribers.push(cb);
@@ -18,54 +46,74 @@ export const getCookie = (name: string) => {
   return null;
 };
 
+// --- FUNGSI REFRESH KE SERVER ---
 export const refreshAccessToken = async (): Promise<string | null> => {
-  console.log('🔄 [Auth] Attempting to refresh access token...');
+  console.log('🔄 [DEBUG AUTH] Memicu refreshAccessToken()...');
   
   try {
     const response = await fetch("/api/auth/refresh", {
       method: "POST",
-      credentials: 'include', 
+      headers: { "Content-Type": "application/json" },
     });
+
+    console.log(`🔄 [DEBUG AUTH] Status response refresh endpoint: ${response.status}`);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("❌ [Auth] Refresh failed:", response.status, errorText);
-      throw new Error("Internal refresh failed");
+      console.error(`❌ [DEBUG AUTH] Gagal Refresh di server: ${errorText}`);
+      throw new Error("Refresh failed");
     }
 
-    const data = await response.json();
-    const newAccessToken = data.accessToken;
+    const resJson = await response.json();
+    console.log("✅ [DEBUG AUTH] Sukses dapat JSON baru:", resJson);
 
-    console.log('✅ [Auth] Refresh successful, new token received');
+    const newAccessToken = resJson.data?.access_token; 
+
+    if(!newAccessToken) {
+        console.error("❌ [DEBUG AUTH] Token baru tidak ditemukan di response JSON!");
+        throw new Error("No access token in response");
+    }
+
     return newAccessToken;
   } catch (error) {
-    console.error("❌ [Auth] Session expired. Logging out...", error);
+    console.error("❌ [DEBUG AUTH] Exception saat refresh:", error);
     
+    // Logout paksa jika gagal total
     document.cookie = "accessToken=; Max-Age=0; path=/;";
     document.cookie = "userRole=; Max-Age=0; path=/;";
-    
     if (typeof window !== 'undefined') {
       localStorage.removeItem("user");
       window.location.href = "/login";
     }
-    
     return null;
   }
 };
 
+// --- FETCH WRAPPER UTAMA ---
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   let token = getCookie('accessToken');
+  let needsRefresh = false;
 
+  console.log(`🚀 [DEBUG AUTH] Request ke: ${url}`);
+
+  // 1. CEK PROAKTIF (Client Side Check)
   if (!token) {
-    console.log('⚠️ [Auth] No access token found, attempting refresh...');
-    
+    console.warn("⚠️ [DEBUG AUTH] Token kosong di cookie.");
+    needsRefresh = true;
+  } else if (isTokenExpired(token)) {
+    console.warn("⚠️ [DEBUG AUTH] Token terdeteksi EXPIRED secara lokal.");
+    needsRefresh = true;
+  }
+
+  // 2. JALANKAN REFRESH JIKA PERLU
+  if (needsRefresh) {
     if (!isRefreshing) {
       isRefreshing = true;
       token = await refreshAccessToken();
       isRefreshing = false;
       if (token) onRefreshed(token);
     } else {
-      console.log('⏳ [Auth] Waiting for ongoing refresh...');
+      console.log('⏳ [DEBUG AUTH] Menunggu antrian refresh...');
       token = await new Promise<string>((resolve) => {
         subscribeTokenRefresh((newToken) => resolve(newToken));
       });
@@ -73,7 +121,15 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
   }
 
   if (!token) {
-    throw new Error('No access token available');
+    console.error("❌ [DEBUG AUTH] Tidak ada token valid. Melempar error.");
+    throw new Error('Session expired. Please login again.');
+  }
+
+  // 3. SIAPKAN URL & HEADER
+  let finalUrl = url;
+  if (!url.startsWith("http")) {
+     const path = url.startsWith("/") ? url : `/${url}`;
+     finalUrl = `${BASE_URL}${path}`; 
   }
 
   const headers = {
@@ -82,49 +138,44 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
     Authorization: `Bearer ${token}`,
   } as HeadersInit;
 
-  let response = await fetch(url, { 
-    ...options, 
-    headers,
-    credentials: 'include', 
-  });
+  // 4. TEMBAK API PERTAMA KALI
+  console.log(`📡 [DEBUG AUTH] Sending fetch ke ${finalUrl}...`);
+  let response = await fetch(finalUrl, { ...options, headers });
+  console.log(`📡 [DEBUG AUTH] Response Status: ${response.status}`);
 
-  if (response.status === 401) {
-    console.warn("⚠️ [Auth] Got 401, access token expired. Trying refresh...");
+  // 5. PENANGANAN 401 ATAU 403 (Token Basi tapi lolos cek lokal)
+  // KITA TAMBAHKAN 403 DI SINI KARENA KASUSMU MENGEMBALIKAN FORBIDDEN
+  if (response.status === 401 || response.status === 403) {
+    console.warn(`⚠️ [DEBUG AUTH] Mendapat status ${response.status}. Mencoba refresh token ulang (Retry Logic)...`);
 
     if (!isRefreshing) {
       isRefreshing = true;
-      
-      try {
-        const newToken = await refreshAccessToken();
-        isRefreshing = false;
+      const newToken = await refreshAccessToken();
+      isRefreshing = false;
 
-        if (newToken) {
-          onRefreshed(newToken);
-          
-          console.log('🔁 [Auth] Retrying request with new token...');
-          return fetch(url, {
+      if (newToken) {
+        console.log("🔁 [DEBUG AUTH] Retry request dengan token baru...");
+        onRefreshed(newToken);
+        return fetch(finalUrl, {
             ...options,
             headers: { ...headers, Authorization: `Bearer ${newToken}` },
-            credentials: 'include',
-          });
-        }
-      } catch (error) {
-        isRefreshing = false;
-        throw error;
+        });
+      } else {
+        console.error("❌ [DEBUG AUTH] Retry gagal karena tidak dapat token baru.");
       }
+    } else {
+        // Jika request lain sedang me-refresh, kita tunggu hasilnya lalu retry
+        const retryToken = await new Promise<string>((resolve) => {
+            subscribeTokenRefresh((newToken) => resolve(newToken));
+        });
+        if (retryToken) {
+             console.log("🔁 [DEBUG AUTH] Retry request (from queue) dengan token baru...");
+             return fetch(finalUrl, {
+                ...options,
+                headers: { ...headers, Authorization: `Bearer ${retryToken}` },
+            });
+        }
     }
-
-    return new Promise<Response>((resolve) => {
-      subscribeTokenRefresh((newToken) => {
-        console.log('🔁 [Auth] Retrying request after queue...');
-        const newHeaders = { ...headers, Authorization: `Bearer ${newToken}` };
-        resolve(fetch(url, { 
-          ...options, 
-          headers: newHeaders,
-          credentials: 'include',
-        }));
-      });
-    });
   }
 
   return response;

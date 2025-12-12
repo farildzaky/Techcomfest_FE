@@ -5,7 +5,7 @@ import CardFormMenuMbg, { MenuData } from "./CardForm";
 import { fetchWithAuth } from '@/src/lib/api';
 import Image from 'next/image';
 
-// Import Assets (Pastikan path sesuai)
+// Import Assets
 import bg from "../../../../assets/bg.png";
 import loadingIcon from "../../../../assets/loading.png";
 import alertIcon from "../../../../assets/alert.png"; 
@@ -17,17 +17,75 @@ const MainMenuMbg = () => {
     const [weeklyMenuData, setWeeklyMenuData] = useState<Record<string, MenuData>>({});
     const [pageLoading, setPageLoading] = useState(true);
     const [resetKey, setResetKey] = useState(0);
+    
+    // State untuk menyimpan tanggal menu yang sudah ada (Format YYYY-MM-DD)
+    const [existingDates, setExistingDates] = useState<Set<string>>(new Set());
 
     // --- MODAL STATE ---
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'loading' | 'error' | 'success' | null>(null);
     const [modalMessage, setModalMessage] = useState({ title: "", desc: "" });
 
+    // --- HELPER: KONVERSI TANGGAL API KE YYYY-MM-DD ---
+    // Input: "Rabu, 21 Januari 2026" -> Output: "2026-01-21"
+    const convertApiDateToStandard = (dateStr: string) => {
+        try {
+            if (!dateStr) return "";
+            
+            // 1. Pecah string (misal: "Rabu, 21 Januari 2026")
+            // Ambil bagian setelah koma jika ada
+            const cleanDate = dateStr.includes(',') ? dateStr.split(',')[1].trim() : dateStr;
+            const parts = cleanDate.split(' '); // ["21", "Januari", "2026"]
+
+            if (parts.length < 3) return "";
+
+            const day = parts[0].padStart(2, '0'); // "21"
+            const monthStr = parts[1].toLowerCase(); // "januari"
+            const year = parts[2]; // "2026"
+
+            // Mapping bulan Indo ke Angka
+            const monthMap: { [key: string]: string } = {
+                'januari': '01', 'februari': '02', 'maret': '03', 'april': '04', 
+                'mei': '05', 'juni': '06', 'juli': '07', 'agustus': '08', 
+                'september': '09', 'oktober': '10', 'november': '11', 'desember': '12'
+            };
+
+            const month = monthMap[monthStr];
+            
+            if (!month) return ""; // Jika bulan tidak valid
+
+            return `${year}-${month}-${day}`; // Format standar YYYY-MM-DD
+        } catch (e) {
+            return "";
+        }
+    };
+
+    // --- FETCH DATA AWAL (Cek Menu Existing) ---
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setPageLoading(false);
-        }, 1000);
-        return () => clearTimeout(timer);
+        const initData = async () => {
+            try {
+                const res = await fetchWithAuth("/sppg/menus", { method: "GET" });
+                const json = await res.json();
+                
+                if (res.ok && Array.isArray(json.data)) {
+                    // Konversi semua tanggal dari API ke format standar YYYY-MM-DD
+                    const dates = new Set<string>();
+                    json.data.forEach((item: any) => {
+                        const standardDate = convertApiDateToStandard(item.tanggal);
+                        if (standardDate) dates.add(standardDate);
+                    });
+                    
+                    setExistingDates(dates);
+                    console.log("Tanggal terdaftar (Formatted):", Array.from(dates)); 
+                }
+            } catch (error) {
+                console.error("Gagal memuat data menu existing:", error);
+            } finally {
+                setTimeout(() => setPageLoading(false), 1000);
+            }
+        };
+
+        initData();
     }, []);
 
     const handleUpdateMenu = useCallback((hari: string, data: MenuData) => {
@@ -43,45 +101,61 @@ const MainMenuMbg = () => {
         setIsModalOpen(true);
     };
 
-    const showErrorModal = (message: string) => {
+    const showErrorModal = (title: string, message: string) => {
         setModalType('error');
-        setModalMessage({ title: "Gagal Menyimpan", desc: message });
+        setModalMessage({ title, desc: message });
         setIsModalOpen(true);
     };
 
     const showSuccessModal = () => {
-        setModalType('success'); // Kita gunakan success modal sebentar sebelum redirect
+        setModalType('success');
         setModalMessage({ title: "Berhasil Disimpan", desc: "Menu mingguan berhasil ditambahkan." });
         setIsModalOpen(true);
         
-        // Redirect otomatis setelah 1.5 detik
         setTimeout(() => {
             router.push("/sppg/menu-mbg/weekly-menu");
         }, 1500);
     };
 
     const closeModal = () => {
-        if (modalType === 'loading' || modalType === 'success') return; // Jangan tutup manual jika loading/success redirect
+        if (modalType === 'loading' || modalType === 'success') return; 
         setIsModalOpen(false);
         setModalType(null);
     };
 
     // --- SUBMIT ---
     const handleSubmit = async () => {
+        // 1. Filter hari yang diisi user
+        const filledDaysEntries = Object.entries(weeklyMenuData).filter(
+            ([_, item]) => item.tanggal && item.nama_menu && item.komponen_menu.length > 0
+        );
+
+        if (filledDaysEntries.length === 0) {
+            showErrorModal("Data Kosong", "Mohon isi minimal satu menu harian dengan lengkap.");
+            return;
+        }
+
+        // 2. Validasi Tanggal Duplikat
+        // Bandingkan input user (format YYYY-MM-DD) dengan data existing yang sudah dikonversi
+        const duplicateEntries = filledDaysEntries.filter(([hari, item]) => {
+            return existingDates.has(item.tanggal); // item.tanggal dari input type="date" biasanya sudah YYYY-MM-DD
+        });
+        
+        if (duplicateEntries.length > 0) {
+            const conflictDetails = duplicateEntries
+                .map(([hari, item]) => `${hari} (${item.tanggal})`)
+                .join(", ");
+            
+            showErrorModal(
+                "Tanggal Sudah Terisi", 
+                `Tidak boleh mengisi di tanggal yang sama. Menu untuk tanggal berikut sudah ada di database: ${conflictDetails}. Silakan pilih tanggal lain.`
+            );
+            return; // STOP proses
+        }
+
         showLoadingModal();
         
         try {
-            const filledDaysEntries = Object.entries(weeklyMenuData).filter(
-                ([_, item]) => item.tanggal && item.nama_menu && item.komponen_menu.length > 0
-            );
-
-            if (filledDaysEntries.length === 0) {
-                // Tutup loading dulu baru tampil error
-                setIsModalOpen(false);
-                setTimeout(() => showErrorModal("Mohon isi minimal satu menu harian dengan lengkap."), 100);
-                return;
-            }
-
             const results = await Promise.all(filledDaysEntries.map(async ([hari, menuData]) => {
                 try {
                     const res = await fetchWithAuth("/sppg/menus", {
@@ -91,7 +165,14 @@ const MainMenuMbg = () => {
                     });
 
                     const responseJson = await res.json();
-                    if (!res.ok) return { success: false, hari, message: responseJson.message || "Gagal menyimpan." };
+                    
+                    if (!res.ok) {
+                        return { 
+                            success: false, 
+                            hari, 
+                            message: responseJson.message || "Gagal menyimpan." 
+                        };
+                    }
                     return { success: true, hari, message: "Berhasil" };
 
                 } catch (err) {
@@ -104,16 +185,15 @@ const MainMenuMbg = () => {
             if (failures.length > 0) {
                 const errorMsg = failures.map(f => `${f.hari}: ${f.message}`).join(", ");
                 setIsModalOpen(false);
-                setTimeout(() => showErrorModal(`Beberapa menu gagal: ${errorMsg}`), 100);
+                setTimeout(() => showErrorModal("Gagal Menyimpan", `Beberapa menu gagal disimpan: ${errorMsg}`), 100);
             } else {
-                // Sukses Semua
                 showSuccessModal();
             }
 
         } catch (error) {
             console.error("Error submitting menu:", error);
             setIsModalOpen(false);
-            setTimeout(() => showErrorModal("Terjadi kesalahan sistem saat memproses data."), 100);
+            setTimeout(() => showErrorModal("Error Sistem", "Terjadi kesalahan sistem saat memproses data."), 100);
         }
     };
 
@@ -195,7 +275,7 @@ const MainMenuMbg = () => {
                         
                         {/* ICON SECTION */}
                         <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
-                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain"  />
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
                             
                             {modalType === 'loading' && (
                                 <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
