@@ -8,13 +8,22 @@ export default function ProfileLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="grid grid-cols-9 min-h-screen bg-[#E87E2F] w-full">
+        // Container Utama:
+        // Mobile: Flex Column (atas-bawah)
+        // Desktop (lg): Grid 9 Kolom (kiri-kanan)
+        <div className="flex flex-col lg:grid lg:grid-cols-9 min-h-screen bg-[#E87E2F] w-full">
             
-            <div className="col-span-3 sticky top-0 h-screen z-50">
+            {/* Sidebar Wrapper */}
+            {/* Mobile: Lebar full */}
+            {/* Desktop (lg): Ambil 3 kolom, Sticky, Full Height */}
+            <div className="w-full lg:col-span-3 lg:sticky lg:top-0 lg:h-screen ">
                 <SidebarProfileSppg />
             </div>
 
-            <div className="col-span-6 overflow-y-auto h-screen ">
+            {/* Content Wrapper */}
+            {/* Mobile: Lebar full, tinggi auto (scroll body normal) */}
+            {/* Desktop (lg): Ambil 6 kolom, Internal Scroll, Full Height */}
+            <div className="w-full lg:col-span-6 lg:overflow-y-auto lg:h-screen">
                 {children}
             </div>
 

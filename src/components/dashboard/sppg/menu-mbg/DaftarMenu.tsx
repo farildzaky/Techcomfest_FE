@@ -214,9 +214,9 @@ const DaftarMenu = () => {
     };
 
     return (
-        <div className="w-full h-full grid grid-cols-7 bg-white overflow-hidden">
-            <div className="col-span-5 h-full overflow-y-auto py-[2vw] flex flex-col gap-[2vw]">
-                <button onClick={() => router.back()} className="hover:scale-105 transition-transform translate-y-[1vw] fixed cursor-pointer ">
+        <div className="w-full h-full grid grid-cols-5 lg:grid-cols-7 bg-white overflow-hidden">
+            <div className="col-span-5 h-full overflow-y-auto py-[2vw] lg:px-0 px-[3vw] flex flex-col gap-[4vw] lg:gap-[2vw]">
+                <button onClick={() => router.back()} className="hover:scale-105 transition-transform translate-y-[1vw fixed cursor-pointer ">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-black">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
@@ -224,7 +224,7 @@ const DaftarMenu = () => {
                 {renderContent()}
             </div>
 
-            <div className="col-span-2 h-screen relative">
+            <div className="lg:col-span-2 lg:block hidden h-screen relative">
                 <div className="w-full h-full fixed bg-[#F5DDCA] [clip-path:ellipse(45%_70%_at_50%_50%)]">
                 </div>
             </div>

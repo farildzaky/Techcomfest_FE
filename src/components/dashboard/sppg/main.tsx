@@ -3,12 +3,17 @@ import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { fetchWithAuth } from '@/src/lib/api';
+
+// Komponen CardMenu yang sama dengan Sekolah
 import CardMenu from "../sekolah/CardMenu";
+// Komponen CardPelaporan (Khusus SPPG, tapi kita styling agar senada)
 import CardPelaporan from "./CardPelaporan";
+
 import information from "../../../assets/dashboard/sekolah/information.png";
 import menuImg from "../../../assets/dashboard/sekolah/menu.png";
 import logoOrange from "../../../assets/logo-orange.png";
 
+// --- Interfaces ---
 interface MenuItem {
     id: string;
     day: string;
@@ -17,8 +22,8 @@ interface MenuItem {
 }
 
 interface ReportItem {
-    id: string;       // ID Laporan (untuk Key)
-    schoolId: string; // ID Sekolah (Untuk Link URL) -> INI YANG BARU
+    id: string;
+    schoolId: string;
     sekolah: string;
     pelaporan: string;
 }
@@ -28,30 +33,55 @@ interface SchoolItem {
     nama_sekolah: string;
 }
 
+// --- Skeleton Loading (Persis Sekolah) ---
+const DashboardSkeleton = () => {
+    return (
+        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-8 lg:pb-[1vw] animate-pulse gap-6 lg:gap-0">
+            <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-6 lg:gap-[2vw] flex flex-col">
+                <div className="w-full h-10 lg:h-[3vw] bg-gray-300 rounded-full" />
+                <div className="w-full h-48 lg:h-[15vw] bg-gray-300 rounded-2xl lg:rounded-[2vw]" />
+                <div className="w-48 lg:w-[15vw] h-8 lg:h-[3vw] bg-gray-300 rounded-md" />
+                <div className="flex flex-row overflow-hidden gap-4 lg:gap-[1vw]">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="min-w-[30%] lg:flex-1 h-32 lg:h-[11vw] bg-gray-300 rounded-xl lg:rounded-[1vw]" />
+                    ))}
+                </div>
+            </div>
+            <div className="lg:col-span-2 px-4 lg:pr-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col">
+                <div className="w-full h-12 lg:h-[4vw] bg-gray-300 rounded-md" />
+                <div className="bg-gray-300 rounded-2xl lg:rounded-[2vw] p-4 h-96 lg:h-[30vw]" />
+            </div>
+        </div>
+    );
+};
+
 const MainDashboardSppg = () => {
+    // --- STATE ---
     const [menus, setMenus] = useState<MenuItem[]>([]);
     const [reports, setReports] = useState<ReportItem[]>([]);
     const [schools, setSchools] = useState<SchoolItem[]>([]);
-    const [alertMsg, setAlertMsg] = useState("Memuat informasi validasi gizi...");
+    const [alertMsg, setAlertMsg] = useState("Memuat informasi...");
     const [loading, setLoading] = useState(true);
 
+    // --- FETCH DATA ---
     useEffect(() => {
         const loadDashboardData = async () => {
             try {
+                // Fetch data parallel
                 const [menuRes, reportRes, schoolRes] = await Promise.all([
                     fetchWithAuth('/sppg/menus', { method: 'GET' }),
-                    fetchWithAuth('/sppg/reports', { method: 'GET' }), 
-                    fetchWithAuth('/sppg/schools', { method: 'GET' })  
+                    fetchWithAuth('/sppg/reports', { method: 'GET' }),
+                    fetchWithAuth('/sppg/schools', { method: 'GET' })
                 ]);
 
                 const menuResult = await menuRes.json();
                 const reportResult = await reportRes.json();
                 const schoolResult = await schoolRes.json();
 
-                // --- 1. PROSES MENU ---
+                // 1. DATA MENU
                 if (menuResult.status === 'success' && Array.isArray(menuResult.data)) {
                     const validMenus = menuResult.data.filter((item: any) => item.menu_id);
-                    
+
                     const formattedMenus = validMenus.map((item: any) => {
                         const dayName = item.tanggal ? item.tanggal.split(',')[0].trim().toLowerCase() : 'senin';
                         return {
@@ -62,6 +92,7 @@ const MainDashboardSppg = () => {
                         };
                     });
 
+                    // Sorting Hari (Senin - Minggu)
                     const dayOrder: { [key: string]: number } = {
                         "senin": 1, "selasa": 2, "rabu": 3, "kamis": 4, "jumat": 5, "sabtu": 6, "minggu": 7
                     };
@@ -70,53 +101,17 @@ const MainDashboardSppg = () => {
                     const targetMenus = formattedMenus.slice(0, 5);
                     setMenus(targetMenus);
 
-                    // Fetch detail menu untuk alert gizi
                     if (targetMenus.length > 0) {
-                        const detailPromises = targetMenus.map((menu: MenuItem) => {
-                            if (!menu.id) return Promise.resolve(null);
-                            return fetchWithAuth(`/sppg/menus/${menu.id}`, { method: 'GET' })
-                                .then(res => res.json())
-                                .catch(() => null);
-                        });
-
-                        const detailsResults = await Promise.all(detailPromises);
-                        let foundImportantNote: string | null = null;
-                        let totalSafetyScore = 0;
-                        let maxScore = 0;
-
-                        detailsResults.forEach((res: any) => {
-                            if (res && res.status === 'success' && res.data) {
-                                maxScore += 2;
-                                const data = res.data;
-                                if (!foundImportantNote && data.catatan_tambahan) {
-                                    foundImportantNote = `Catatan ${data.nama_menu}: ${data.catatan_tambahan}`;
-                                }
-                                if (data.status_keamanan === 'aman') totalSafetyScore += 2;
-                                else if (data.status_keamanan === 'perlu_perhatian') totalSafetyScore += 1;
-                            }
-                        });
-
-                        if (foundImportantNote) {
-                            setAlertMsg(foundImportantNote);
-                        } else if (maxScore > 0) {
-                            const riskPercentage = Math.round(((maxScore - totalSafetyScore) / maxScore) * 100);
-                            if (riskPercentage > 50) {
-                                setAlertMsg("Peringatan: Beberapa menu minggu ini memerlukan perhatian gizi.");
-                            } else {
-                                setAlertMsg("Menu minggu ini terpantau aman dan sesuai standar.");
-                            }
-                        } else {
-                             setAlertMsg("Data detail menu belum tersedia.");
-                        }
+                        setAlertMsg("Menu minggu ini telah divalidasi dan siap didistribusikan.");
                     } else {
-                        setAlertMsg("Belum ada data menu untuk divalidasi.");
+                        setAlertMsg("Belum ada jadwal menu yang dibuat.");
                     }
                 } else {
                     setMenus([]);
                     setAlertMsg("Belum ada data menu.");
                 }
 
-                // --- 2. PROSES DATA SEKOLAH (Disimpan dulu untuk lookup) ---
+                // 2. DATA SEKOLAH (Untuk List Kanan)
                 let rawSchools: any[] = [];
                 if (schoolResult.success && Array.isArray(schoolResult.data)) {
                     rawSchools = schoolResult.data;
@@ -128,25 +123,23 @@ const MainDashboardSppg = () => {
                     setSchools(formattedSchools);
                 }
 
-                // --- 3. PROSES DATA PELAPORAN (MATCHING SCHOOL ID) ---
-                if (reportResult.success) { 
+                // 3. DATA LAPORAN (Untuk Bagian Bawah)
+                if (reportResult.success) {
                     const rawData = reportResult.data;
                     const reportsArray = Array.isArray(rawData) ? rawData : (rawData ? [rawData] : []);
                     const validReports = reportsArray.filter((item: any) => item.id);
 
                     const formattedReports = validReports.slice(0, 3).map((item: any) => {
-                        // LOGIC PENTING: Cari ID Sekolah berdasarkan nama sekolah di laporan
-                        // Ini diperlukan karena endpoint laporan tidak return school_id, cuma school_name
-                        const matchedSchool = rawSchools.find((s: any) => 
+                        // Cari ID sekolah agar linknya valid
+                        const matchedSchool = rawSchools.find((s: any) =>
                             s.nama_sekolah === item.school_name || s.school_name === item.school_name
                         );
 
                         return {
                             id: item.id,
-                            // Gunakan ID dari sekolah yang cocok, jika tidak ada fallback ke null
-                            schoolId: matchedSchool ? matchedSchool.id : null, 
-                            sekolah: item.school_name || item.sekolah?.nama_sekolah || "Sekolah Tidak Diketahui",
-                            pelaporan: `${item.menu_name || item.menu?.nama_menu || "Menu"} - Status: ${item.status || "Pending"}`
+                            schoolId: matchedSchool ? matchedSchool.id : null,
+                            sekolah: item.school_name || "Sekolah Tidak Diketahui",
+                            pelaporan: `${item.menu_name} - ${item.status || "Pending"}`
                         };
                     });
                     setReports(formattedReports);
@@ -163,120 +156,92 @@ const MainDashboardSppg = () => {
         loadDashboardData();
     }, []);
 
+    if (loading) {
+        return <DashboardSkeleton />;
+    }
+
     return (
-        <div className="pb-[1vw] flex flex-col">
-            <div className="grid-cols-7 grid ">
-                <div className="col-span-5 p-[1vw] pt-[1vw] gap-[1vw] flex flex-col ">
-                    
-                    <div className="bg-[#D7762E] w-full rounded-full px-[1vw] py-[0.5vw] satoshiMedium text-white text-[1vw] items-center flex flex-row "
-                        style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
-                    >
-                        <Image src={information} alt="information" className="mr-[0.5vw] w-[1.5vw] " />
-                        <span className="truncate w-full">
-                            {loading ? (
-                                <div className="h-[1.2vw] bg-white/30 rounded w-1/2 animate-pulse"></div>
-                            ) : (
-                                alertMsg
-                            )}
-                        </span>
-                    </div>
+        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-4 lg:pb-[1vw] overflow-hidden font-sans">
 
-                    <div className="bg-[#E87E2F] w-full rounded-[2vw] pl-[2vw]  flex flex-row  items-center "
-                        style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
-                    >
-                        <div className="flex flex-col w-[55%]">
-                            <h1 className="satoshiBold text-[2.5vw] text-white">Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif</h1>
-                            <p className="satoshiMedium text-[1.3vw] text-white">Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.</p>
-                        </div>
-                        <Image src={menuImg} alt="menu image" className="w-[55%] " />
-                    </div>
+            {/* --- KOLOM KIRI (UTAMA) --- */}
+            <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col">
 
-                    <h2 className="satoshiBold text-[2vw]">Menu Minggu Depan</h2>
-                    <div className="bg-[#F5DDCA] p-[2vw] rounded-[2vw] flex flex-row gap-[1vw] items-start pt-[4vw] min-h-[15vw]"
-                        style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
-                    >
-                        {loading ? (
-                            [...Array(5)].map((_, i) => (
-                                <div key={i} className="flex-1 bg-white rounded-[1vw] h-[10vw] animate-pulse flex flex-col p-[1vw] gap-[0.5vw] opacity-70">
-                                    <div className="h-[1.5vw] w-[60%] bg-gray-200 rounded"></div>
-                                    <div className="h-[3vw] w-full bg-gray-200 rounded mt-auto"></div>
-                                </div>
-                            ))
-                        ) : menus.length > 0 ? (
-                            menus.map((item) => (
-                                <Link 
-                                    key={item.id} 
-                                    href={`/sppg/menu-mbg/weekly-menu/${item.id}`} 
-                                    className="flex-1 min-w-0 hover:scale-105 transition-transform duration-200"
-                                >
-                                    <CardMenu
-                                        day={item.day}
-                                        menu={item.menu}
-                                    />
-                                </Link>
-                            ))
-                        ) : (
-                            <div className="w-full text-center py-[2vw] satoshiBold text-[#E87E2F] text-[1.5vw]">Belum ada jadwal menu.</div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="col-span-2 pr-[1vw] pt-[1vw] gap-[1vw] flex flex-col ">
-                    <div className="w-full text-[4vw] satoshiBold flex flex-row items-center">
-                        <Image src={logoOrange} alt="logo" className="w-[5vw] mr-[1vw] " />
-                        <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
-                    </div>                    
-                    
-                    <div className="bg-[#F5DDCA] rounded-[2vw] flex flex-col items-center h-[38.7vw] overflow-hidden"
-                        style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
-                    >
-                        <h1 className="bg-[#E87E2F] w-full text-center flex items-center justify-center text-white rounded-[1.5vw] py-[0.5vw] text-[1.8vw] satoshiBold shrink-0 z-10">Daftar Sekolah</h1>
-                        
-                        <div className="w-full overflow-y-auto p-[1vw] flex flex-col gap-[1vw]">
-                            {loading ? (
-                                [...Array(6)].map((_, i) => (
-                                    <div key={i} className="w-full bg-white p-[0.8vw] rounded-[0.8vw] shadow-sm flex items-center animate-pulse opacity-80">
-                                        <div className="w-[2vw] h-[2vw] bg-gray-200 rounded-full mr-[0.8vw]"></div>
-                                        <div className="h-[1vw] w-[60%] bg-gray-200 rounded"></div>
-                                    </div>
-                                ))
-                            ) : schools.length > 0 ? (
-                                schools.map((school, i) => (
-                                    <div key={school.id} className="w-full  flex items-center">
-                                        <div className=" bg-[#E87E2F] rounded-full mr-[0.8vw] w-[5vw] h-[5vw] flex flex-col justify-center items-center text-white text-[3.5vw] satoshiMedium">{i + 1}</div>
-                                        <h2 className="satoshiBold text-[1.5vw] text-[#8C4C1D]  text-black">{school.nama_sekolah}</h2>
-                                        
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="text-center satoshiMedium text-gray-500 mt-[2vw]">Tidak ada sekolah terdaftar.</div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex-col flex gap-[1vw] mt-[1vw]">
-                <h2 className="satoshiBold text-[2vw] mx-[1vw] leadding-none">Pelaporan Terbaru</h2>
-
-                <div className="bg-[#F5DDCA] p-[1vw] rounded-[1vw] flex flex-row gap-[1vw] items-start mx-[1vw] min-h-[8vw]"
+                {/* 1. Alert Bar (Sama Persis Sekolah) */}
+                <div className="bg-[#D7762E] w-full rounded-full px-4 lg:px-[1vw] py-2 lg:py-[0.5vw] satoshiMedium text-white text-sm lg:text-[1vw] items-center flex flex-row shadow-md lg:shadow-none"
                     style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                 >
-                    {loading ? (
-                        [...Array(3)].map((_, i) => (
-                             <div key={i} className="flex-1 bg-white rounded-[1vw] h-[6vw] animate-pulse flex flex-col justify-center px-[1.5vw] gap-[0.5vw] opacity-70">
-                                <div className="h-[1.2vw] w-[40%] bg-gray-200 rounded"></div>
-                                <div className="h-[1vw] w-[70%] bg-gray-200 rounded"></div>
-                            </div>
-                        ))
-                    ) : reports.length > 0 ? (
-                        reports.map((item) => (
-                            <Link 
+                    <Image src={information} alt="information" className="mr-2 lg:mr-[0.5vw] w-5 lg:w-[1.5vw] h-5 lg:h-[1.5vw]" />
+                    <span className="truncate">{alertMsg}</span>
+                </div>
+
+                {/* 2. Hero Section (Sama Persis Sekolah) */}
+                <div className="bg-[#E87E2F] w-full rounded-2xl lg:rounded-[2vw] pl-4 lg:pl-[2vw] flex flex-row items-center shadow-md lg:shadow-none"
+                    style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
+                >
+                    <div className="flex flex-col w-[55%] py-4 lg:py-0">
+                        <h1 className="satoshiBold text-[4.5vw] lg:text-[2.5vw] text-white leading-tight mb-2 lg:mb-0">
+                            Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif
+                        </h1>
+                        <p className="satoshiMedium text-[3vw] lg:text-[1.3vw] text-white">
+                            Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.
+                        </p>
+                    </div>
+                    <div className="w-[45%] relative h-auto">
+                        <Image src={menuImg} alt="menu image" className="object-contain w-full h-full" />
+                    </div>
+                </div>
+
+                {/* 3. Menu Minggu Depan (LAYOUT SAMA PERSIS SEKOLAH) */}
+                <h2 className="satoshiBold text-[4.5vw] md:text-[3vw] lg:text-[2vw] mt-2 lg:mt-0">
+                    Menu Minggu Depan
+                </h2>
+
+                {/* Container Beige dengan CardMenu di dalamnya (Bukan Card Putih terpisah) */}
+                <div className="bg-[#F5DDCA] p-4 lg:p-[2vw] rounded-2xl lg:rounded-[2vw] flex flex-row gap-4 lg:gap-[1vw] items-start pt-8 lg:pt-[4vw] min-h-[15vw] w-full shadow-md lg:shadow-none overflow-x-auto lg:overflow-visible no-scrollbar scroll-smooth"
+                    style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
+                >
+                    {menus.length > 0 ? (
+                        menus.map((item) => (
+                            <Link
                                 key={item.id}
-                                // PERBAIKAN: Menggunakan item.schoolId, BUKAN item.id
-                                // Jika schoolId tidak ketemu, fallback ke '#' atau halaman 404
-                                href={item.schoolId ? `/sppg/pelaporan/${item.schoolId}` : '#'} 
-                                className="flex-1 min-w-0 hover:scale-105 transition-transform duration-200"
+                                href={`/sppg/menu-mbg/weekly-menu/${item.id}`} // Link ke detail menu SPPG
+                                className="w-[30%] md:w-[22%] flex-shrink-0 lg:w-auto lg:flex-1 min-w-0 hover:scale-105 transition-transform duration-200"
+                            >
+                                <CardMenu
+                                    day={item.day}
+                                    menu={item.menu}
+                                />
+                            </Link>
+                        ))
+                    ) : (
+                        <div className="w-full text-center py-10 satoshiBold text-[#E87E2F] text-lg lg:text-[1.5vw]">
+                            Belum ada jadwal menu.
+                        </div>
+                    )}
+                </div>
+
+                {/* 4. Pelaporan Terbaru (Tambahan di Bawah Menu) */}
+                <h2 className="satoshiBold text-[4.5vw] md:text-[3vw] lg:text-[2vw] mt-4 lg:mt-[1vw]">
+                    Pelaporan Terbaru
+                </h2>
+                <div className="
+                    bg-[#F5DDCA] p-4 lg:p-[1.5vw] rounded-2xl lg:rounded-[2vw] 
+                    shadow-md lg:shadow-none 
+                    
+                    grid grid-cols-3 gap-4 lg:gap-[1.5vw]
+                ">
+                    {reports.length > 0 ? (
+                        reports.map((item) => (
+                            <Link
+                                key={item.id}
+                                href={item.schoolId ? `/sppg/pelaporan/${item.schoolId}` : '#'}
+                                className="
+                                    /* Hapus min-w, biarkan grid mengatur lebar */
+                                    hover:scale-[1.02] transition-transform duration-200 
+                                    
+                                    /* KUNCI: h-full agar Link mengisi tinggi sel grid */
+                                    h-full block 
+                                "
                             >
                                 <CardPelaporan
                                     sekolah={item.sekolah}
@@ -285,9 +250,54 @@ const MainDashboardSppg = () => {
                             </Link>
                         ))
                     ) : (
-                        <div className="w-full text-center py-[1vw] satoshiBold text-[#E87E2F]">Belum ada pelaporan baru.</div>
+                        <div className="col-span-full w-full text-center py-6 text-[#E87E2F] satoshiMedium lg:text-[1.2vw]">
+                            Belum ada laporan masuk.
+                        </div>
                     )}
                 </div>
+            </div>
+
+            {/* --- KOLOM KANAN (SIDEBAR) --- */}
+            <div className="lg:col-span-2 px-4 lg:pr-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col mb-8 lg:mb-0">
+                {/* Logo */}
+                <div className="w-full text-2xl lg:text-[4vw] satoshiBold lg:flex lg:flex-row hidden items-center justify-center lg:justify-start ">
+                    <Image src={logoOrange} alt="logo" className="w-12 lg:w-[5vw] mr-2 lg:mr-[0.5vw]" />
+                    <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
+                </div>
+
+                {/* DAFTAR SEKOLAH (Layout mirip "Risiko Menu" di Sekolah) */}
+                <div className="bg-[#F5DDCA] rounded-2xl lg:rounded-[2vw] relative flex flex-col items-center max-h-[40vw] lg:pb-[1vw] shadow-md lg:shadow-none h-full  overflow-hidden border border-[#F5DDCA]"
+                    style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
+                >
+                    {/* Header Box (Orange) */}
+                    <h1 className="bg-[#E87E2F] w-full z-20 text-center flex relative items-center justify-center text-white rounded-xl lg:rounded-[1.5vw] py-2 lg:py-[0.8vw] text-lg lg:text-[1.8vw] satoshiBold shrink-0 z-10">
+                        Daftar Sekolah
+                    </h1>
+
+                    {/* List Sekolah (Scrollable) */}
+                    <div className="w-full flex-1 relative overflow-y-auto lg:p-[0vw] flex flex-col gap-3 lg:gap-[0.5vw] custom-scrollbar">
+                        {schools.length > 0 ? (
+                            schools.map((school, index) => (
+                                <div key={school.id} className="w-full p-2 lg:p-[0.8vw] rounded-xl lg:rounded-[1vw]  flex items-center gap-3 lg:gap-[0.8vw]">
+                                    {/* Nomor Urut */}
+                                    <div className="w-16 h-16 lg:w-[4vw] lg:h-[4vw] bg-[#E87E2F] rounded-full flex items-center justify-center text-white satoshiBold text-[5vw] lg:text-[2.5vw] shrink-0">
+                                        {index + 1}
+                                    </div>
+                                    {/* Nama Sekolah */}
+                                    <h2 className="satoshiBold text-[3vw] lg:text-[1.3vw] text-[#5A3E2B] line-clamp-2 leading-tight">
+                                        {school.nama_sekolah}
+                                    </h2>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-center satoshiMedium text-gray-500 mt-4 lg:mt-[2vw]">
+                                Tidak ada sekolah terdaftar.
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                
             </div>
         </div>
     );

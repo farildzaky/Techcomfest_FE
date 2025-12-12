@@ -29,9 +29,7 @@ const DaftarSekolahAdmin = () => {
             try {
                 const res = await fetchWithAuth("/admin/users", {
                     method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                 });
 
                 if (!res.ok) throw new Error("Gagal mengambil data sekolah");
@@ -69,9 +67,7 @@ const DaftarSekolahAdmin = () => {
         try {
             const res = await fetchWithAuth(`/admin/users/${id}`, {
                 method: "PATCH", 
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ status: newStatus.toLowerCase() })
             });
 
@@ -89,32 +85,35 @@ const DaftarSekolahAdmin = () => {
         }
     };
 
-    if (error) return <div className="w-full h-screen flex justify-center items-center text-red-500 satoshiBold text-[1.5vw]">{error}</div>;
+    if (error) return <div className="w-full h-screen flex justify-center items-center text-red-500 satoshiBold text-xl lg:text-[1.5vw]">{error}</div>;
 
     return (
-        <div className="w-full min-h-screen p-[3vw] font-sans relative" onClick={() => { setOpenRowId(null); setIsFilterOpen(false); }}>
+        // Container Utama: Mobile (p-4), Desktop (p-[3vw])
+        <div className="w-full min-h-screen p-4 lg:p-[3vw] font-sans relative" onClick={() => { setOpenRowId(null); setIsFilterOpen(false); }}>
             
-            <div className="flex justify-between items-center mb-[2vw]">
-                <h1 className="satoshiBold text-[2.5vw] text-black">Sekolah</h1>
+            {/* Header & Filter */}
+            <div className="flex justify-between items-center mb-6 lg:mb-[2vw]">
+                <h1 className="satoshiBold text-2xl lg:text-[2.5vw] text-black">Sekolah</h1>
                 
                 <div className="relative z-30" onClick={(e) => e.stopPropagation()}>
                     <button 
                         onClick={() => setIsFilterOpen(!isFilterOpen)}
-                        className="bg-[#E87E2F] text-white satoshiBold text-[1vw] px-[1.5vw] py-[0.5vw] rounded-[0.5vw] flex items-center gap-[0.5vw]"
+                        // Mobile: text-sm px-4 py-2. Desktop: text-[1vw] px-[1.5vw] py-[0.5vw]
+                        className="bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1vw] px-4 py-2 lg:px-[1.5vw] lg:py-[0.5vw] rounded-lg lg:rounded-[0.5vw] flex items-center gap-2 lg:gap-[0.5vw]"
                     >
                         Filter: {filterStatus}
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-[1vw] h-[1vw] transition-transform ${isFilterOpen ? 'rotate-180' : ''}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-4 h-4 lg:w-[1vw] lg:h-[1vw] transition-transform ${isFilterOpen ? 'rotate-180' : ''}`}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                         </svg>
                     </button>
                     
                     {isFilterOpen && (
-                        <div className="absolute right-0 top-full mt-[0.5vw] bg-white shadow-lg rounded-[0.5vw] w-[10vw] overflow-hidden z-20 border border-gray-100">
+                        <div className="absolute right-0 top-full mt-2 lg:mt-[0.5vw] bg-white shadow-lg rounded-lg lg:rounded-[0.5vw] w-32 lg:w-[10vw] overflow-hidden z-20 border border-gray-100">
                             {["All", "Active", "Pending", "Inactive"].map((status) => (
                                 <div 
                                     key={status}
                                     onClick={() => { setFilterStatus(status); setIsFilterOpen(false); setCurrentPage(1); }}
-                                    className="px-[1vw] py-[0.5vw] hover:bg-orange-50 cursor-pointer satoshiMedium text-[0.9vw] text-gray-700"
+                                    className="px-4 py-2 lg:px-[1vw] lg:py-[0.5vw] hover:bg-orange-50 cursor-pointer satoshiMedium text-sm lg:text-[0.9vw] text-gray-700"
                                 >
                                     {status}
                                 </div>
@@ -124,116 +123,129 @@ const DaftarSekolahAdmin = () => {
                 </div>
             </div>
 
-            <div className="w-full bg-[#E87E2F] rounded-[1.5vw] border-[0.2vw] border-[#E87E2F]">
+            {/* --- TABEL CONTAINER --- */}
+            {/* overflow-x-auto: Agar bisa digeser horizontal di Mobile */}
+            <div className="w-full bg-[#E87E2F] rounded-xl lg:rounded-[1.5vw] border-2 lg:border-[0.2vw] border-[#E87E2F] overflow-x-auto">
                 
-                <div className="flex bg-[#E87E2F] text-white rounded-t-[1.3vw]">
-                    <div className="w-[10%] py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-[1.5vw]">No</div>
-                    <div className="w-[30%] py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-[1.5vw]">Sekolah</div>
-                    <div className="w-[25%] py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-[1.5vw]">Jumlah Siswa</div>
-                    <div className="w-[20%] py-[1vw] flex justify-center items-center border-r-[0.15vw] border-white satoshiBold text-[1.5vw]">Status</div>
-                    <div className="w-[15%] py-[1vw] flex justify-center items-center satoshiBold text-[1.5vw]">Detail</div>
-                </div>
+                {/* min-w-[900px]: Memaksa tabel tetap lebar (seperti desktop) meskipun layar kecil */}
+                <div className="min-w-[900px] w-full">
+                    
+                    <div className="flex bg-[#E87E2F] text-white rounded-t-lg lg:rounded-t-[1.3vw]">
+                        {/* Header Columns: Mobile (text-base py-4). Desktop (text-[1.5vw] py-[1vw]) */}
+                        <div className="w-[10%] py-4 lg:py-[1vw] flex justify-center items-center border-r border-white lg:border-r-[0.15vw] satoshiBold text-base lg:text-[1.5vw]">No</div>
+                        <div className="w-[30%] py-4 lg:py-[1vw] flex justify-center items-center border-r border-white lg:border-r-[0.15vw] satoshiBold text-base lg:text-[1.5vw]">Sekolah</div>
+                        <div className="w-[25%] py-4 lg:py-[1vw] flex justify-center items-center border-r border-white lg:border-r-[0.15vw] satoshiBold text-base lg:text-[1.5vw]">Jumlah Siswa</div>
+                        <div className="w-[20%] py-4 lg:py-[1vw] flex justify-center items-center border-r border-white lg:border-r-[0.15vw] satoshiBold text-base lg:text-[1.5vw]">Status</div>
+                        <div className="w-[15%] py-4 lg:py-[1vw] flex justify-center items-center satoshiBold text-base lg:text-[1.5vw]">Detail</div>
+                    </div>
 
-                <div className="flex flex-col bg-white rounded-b-[1.3vw]">
-                    {loading ? (
-                        Array.from({ length: 7 }).map((_, index) => (
-                            <div key={index} className="flex border-b-[0.15vw] border-[#E87E2F] animate-pulse">
-                                <div className="w-[10%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E]">
-                                    <div className="h-[1.5vw] w-[2vw] bg-gray-200 rounded"></div>
+                    <div className="flex flex-col bg-white lg:rounded-b-[1.3vw]">
+                        {loading ? (
+                            Array.from({ length: 7 }).map((_, index) => (
+                                <div key={index} className="flex border-b border-[#E87E2F] lg:border-b-[0.15vw] animate-pulse">
+                                    <div className="w-[10%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw]">
+                                        <div className="h-4 w-6 lg:h-[1.5vw] lg:w-[2vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                    <div className="w-[30%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw]">
+                                        <div className="h-4 w-32 lg:h-[1.5vw] lg:w-[12vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                    <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw]">
+                                        <div className="h-4 w-20 lg:h-[1.5vw] lg:w-[8vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                    <div className="w-[20%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw]">
+                                        <div className="h-4 w-12 lg:h-[1.5vw] lg:w-[5vw] bg-gray-200 rounded"></div>
+                                    </div>
+                                    <div className="w-[15%] py-4 lg:py-[1.5vw] flex justify-center items-center">
+                                        <div className="h-4 w-16 lg:h-[1.5vw] lg:w-[6vw] bg-gray-200 rounded"></div>
+                                    </div>
                                 </div>
-                                <div className="w-[30%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E]">
-                                    <div className="h-[1.5vw] w-[12vw] bg-gray-200 rounded"></div>
-                                </div>
-                                <div className="w-[25%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E]">
-                                    <div className="h-[1.5vw] w-[8vw] bg-gray-200 rounded"></div>
-                                </div>
-                                <div className="w-[20%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E]">
-                                    <div className="h-[1.5vw] w-[5vw] bg-gray-200 rounded"></div>
-                                </div>
-                                <div className="w-[15%] py-[1.5vw] flex justify-center items-center">
-                                    <div className="h-[1.5vw] w-[6vw] bg-gray-200 rounded"></div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        currentItems.map((item, index) => {
-                            const globalIndex = indexOfFirstItem + index + 1;
-                            const displayStatus = item.status.charAt(0).toUpperCase() + item.status.slice(1);
+                            ))
+                        ) : (
+                            currentItems.map((item, index) => {
+                                const globalIndex = indexOfFirstItem + index + 1;
+                                const displayStatus = item.status.charAt(0).toUpperCase() + item.status.slice(1);
 
-                            return (
-                                <div 
-                                    key={item.id} 
-                                    className={`flex border-b-[0.15vw] border-[#E87E2F] transition-colors relative z-10 
-                                        ${index % 2 === 1 ? 'bg-[#FFF3EB]' : 'bg-white'}
-                                        ${index === currentItems.length - 1 ? 'last:border-b-0 rounded-b-[1.3vw]' : ''} 
-                                    `}
-                                    style={{ zIndex: openRowId === item.id ? 50 : 10 }}
-                                >
-                                    
-                                    <div className="w-[10%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E] satoshiMedium text-[1.2vw] text-black">
-                                        {globalIndex}
-                                    </div>
-                                    
-                                    <div className="w-[30%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E] satoshiMedium text-[1.2vw] text-black">
-                                        {item.profile_name || item.email} 
-                                    </div>
-                                    
-                                    <div className="w-[25%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E] satoshiMedium text-[1.2vw] text-black">
-                                        {item.total_siswa || 0} Siswa 
-                                    </div>
-                                    
+                                return (
                                     <div 
-                                        className="w-[20%] py-[1.5vw] flex justify-center items-center border-r-[0.15vw] border-[#D9833E] relative cursor-pointer px-[2vw]"
-                                        onClick={(e) => {
-                                            e.stopPropagation(); 
-                                            setOpenRowId(openRowId === item.id ? null : item.id);
-                                        }}
+                                        key={item.id} 
+                                        className={`flex border-b border-[#E87E2F] lg:border-b-[0.15vw] transition-colors relative z-10 
+                                            ${index % 2 === 1 ? 'bg-[#FFF3EB]' : 'bg-white'}
+                                            ${index === currentItems.length - 1 ? 'last:border-b-0 lg:rounded-b-[1.3vw]' : ''} 
+                                        `}
+                                        style={{ zIndex: openRowId === item.id ? 50 : 10 }}
                                     >
-                                        <div className="w-full flex items-center justify-center relative">
-                                            <span className={`satoshiBold text-[1.2vw] text-[#E87E2F]`}>
-                                                {displayStatus}
-                                            </span>
-                                            <div className="absolute right-[-1vw] top-1/2 -translate-y-1/2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-[1.2vw] h-[1.2vw] text-[#E87E2F] transition-transform ${openRowId === item.id ? 'rotate-180' : ''}`}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                                </svg>
-                                            </div>
+                                        
+                                        {/* No */}
+                                        <div className="w-[10%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">
+                                            {globalIndex}
                                         </div>
-
-                                        {openRowId === item.id && (
-                                            <div className="absolute top-[100%] left-[10%] w-[80%] bg-white border border-[#E87E2F] rounded-[0.5vw] shadow-xl z-50 flex flex-col overflow-hidden mt-[0.5vw]">
-                                                {["Active", "Pending", "Inactive"].map((statusOption) => (
-                                                    <div 
-                                                        key={statusOption}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleStatusChange(item.id, statusOption);
-                                                        }}
-                                                        className="px-[1vw] py-[0.5vw] hover:bg-[#E87E2F] hover:text-white cursor-pointer satoshiMedium text-[1vw] text-[#E87E2F] border-b border-orange-100 last:border-0 text-center transition-colors"
-                                                    >
-                                                        {statusOption}
-                                                    </div>
-                                                ))}
+                                        
+                                        {/* Sekolah */}
+                                        <div className="w-[30%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black text-center px-2">
+                                            {item.profile_name || item.email} 
+                                        </div>
+                                        
+                                        {/* Jumlah Siswa */}
+                                        <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">
+                                            {item.total_siswa || 0} Siswa 
+                                        </div>
+                                        
+                                        {/* Status */}
+                                        <div 
+                                            className="w-[20%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#D9833E] lg:border-r-[0.15vw] relative cursor-pointer px-4 lg:px-[2vw]"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); 
+                                                setOpenRowId(openRowId === item.id ? null : item.id);
+                                            }}
+                                        >
+                                            <div className="w-full flex items-center justify-center relative">
+                                                <span className={`satoshiBold text-sm lg:text-[1.2vw] text-[#E87E2F]`}>
+                                                    {displayStatus}
+                                                </span>
+                                                <div className="absolute right-[-1vw] top-1/2 -translate-y-1/2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className={`w-4 h-4 lg:w-[1.2vw] lg:h-[1.2vw] text-[#E87E2F] transition-transform ${openRowId === item.id ? 'rotate-180' : ''}`}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                                    </svg>
+                                                </div>
                                             </div>
-                                        )}
+
+                                            {openRowId === item.id && (
+                                                <div className="absolute top-[100%] left-[10%] w-[80%] bg-white border border-[#E87E2F] rounded-lg lg:rounded-[0.5vw] shadow-xl z-50 flex flex-col overflow-hidden mt-2 lg:mt-[0.5vw]">
+                                                    {["Active", "Pending", "Inactive"].map((statusOption) => (
+                                                        <div 
+                                                            key={statusOption}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleStatusChange(item.id, statusOption);
+                                                            }}
+                                                            className="px-4 py-2 lg:px-[1vw] lg:py-[0.5vw] hover:bg-[#E87E2F] hover:text-white cursor-pointer satoshiMedium text-sm lg:text-[1vw] text-[#E87E2F] border-b border-orange-100 last:border-0 text-center transition-colors"
+                                                        >
+                                                            {statusOption}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Detail */}
+                                        <div className="w-[15%] py-4 lg:py-[1.5vw] flex justify-center items-center">
+                                            <Link href={`/admin/sekolah/${item.id}`} className="text-[#D9833E] underline satoshiMedium text-sm lg:text-[1.2vw] hover:text-[#b06a33]">
+                                                Lihat Detail
+                                            </Link>
+                                        </div>
                                     </div>
-                                    
-                                    <div className="w-[15%] py-[1.5vw] flex justify-center items-center">
-                                        <Link href={`/admin/sekolah/${item.id}`} className="text-[#D9833E] underline satoshiMedium text-[1.2vw] hover:text-[#b06a33]">
-                                            Lihat Detail
-                                        </Link>
-                                    </div>
-                                </div>
-                            );
-                        })
-                    )}
+                                );
+                            })
+                        )}
+                    </div>
                 </div>
             </div>
 
-            <div className="flex justify-end mt-[1.5vw] items-center gap-[1vw]">
-                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className={`w-[2vw] h-[2vw] flex items-center justify-center rounded-full border border-[#E87E2F] transition-colors ${currentPage === 1 ? 'bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed' : 'bg-white text-[#E87E2F] hover:bg-[#E87E2F] hover:text-white'}`}>&lt;</button>
-                <p className="satoshiMedium text-[#E87E2F] text-[1.2vw]">Halaman {currentPage} dari {totalPages || 1}</p>
-                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className={`w-[2vw] h-[2vw] flex items-center justify-center rounded-full border border-[#E87E2F] transition-colors ${currentPage === totalPages ? 'bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed' : 'bg-white text-[#E87E2F] hover:bg-[#E87E2F] hover:text-white'}`}>&gt;</button>
+            {/* Pagination */}
+            <div className="flex justify-end mt-4 lg:mt-[1.5vw] items-center gap-4 lg:gap-[1vw]">
+                <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className={`w-8 h-8 lg:w-[2vw] lg:h-[2vw] flex items-center justify-center rounded-full border border-[#E87E2F] transition-colors ${currentPage === 1 ? 'bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed' : 'bg-white text-[#E87E2F] hover:bg-[#E87E2F] hover:text-white'}`}>&lt;</button>
+                <p className="satoshiMedium text-[#E87E2F] text-sm lg:text-[1.2vw]">Halaman {currentPage} dari {totalPages || 1}</p>
+                <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className={`w-8 h-8 lg:w-[2vw] lg:h-[2vw] flex items-center justify-center rounded-full border border-[#E87E2F] transition-colors ${currentPage === totalPages ? 'bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed' : 'bg-white text-[#E87E2F] hover:bg-[#E87E2F] hover:text-white'}`}>&gt;</button>
             </div>
 
         </div>

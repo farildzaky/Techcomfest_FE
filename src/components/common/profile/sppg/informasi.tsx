@@ -93,19 +93,24 @@ const InformasiInstansiPage = () => {
         }
     };
 
+    // --- Loading State Responsif ---
     if (loadingData) {
         return (
-            <div className="w-full min-h-screen p-[3vw] font-sans">
-                <div className="flex flex-col gap-[2vw]">
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <div className="h-[3vw] w-[25vw] bg-white/30 rounded-[0.5vw] animate-pulse"></div>
-                        <div className="h-[1.5vw] w-[5vw] bg-white/30 rounded-[0.5vw] animate-pulse"></div>
+            <div className="w-full min-h-screen p-6 lg:p-[3vw] font-sans">
+                <div className="flex flex-col gap-6 lg:gap-[2vw]">
+                    <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                        {/* Skeleton Title */}
+                        <div className="h-10 lg:h-[3vw] w-48 lg:w-[25vw] bg-white/30 rounded-lg lg:rounded-[0.5vw] animate-pulse"></div>
+                        {/* Skeleton Subtitle */}
+                        <div className="h-4 lg:h-[1.5vw] w-20 lg:w-[5vw] bg-white/30 rounded lg:rounded-[0.5vw] animate-pulse"></div>
                     </div>
-                    <div className="flex flex-col gap-[1.5vw] w-[80%]">
+                    <div className="flex flex-col gap-4 lg:gap-[1.5vw] w-full lg:w-[80%]">
                         {[...Array(6)].map((_, i) => (
-                            <div key={i} className="flex flex-col gap-[0.5vw]">
-                                <div className="h-[1.5vw] w-[15vw] bg-white/30 rounded-[0.4vw] animate-pulse"></div>
-                                <div className="h-[3.5vw] w-full bg-white/30 rounded-[0.8vw] animate-pulse"></div>
+                            <div key={i} className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                                {/* Skeleton Label */}
+                                <div className="h-5 lg:h-[1.5vw] w-32 lg:w-[15vw] bg-white/30 rounded lg:rounded-[0.4vw] animate-pulse"></div>
+                                {/* Skeleton Input */}
+                                <div className="h-12 lg:h-[3.5vw] w-full bg-white/30 rounded-lg lg:rounded-[0.8vw] animate-pulse"></div>
                             </div>
                         ))}
                     </div>
@@ -115,57 +120,67 @@ const InformasiInstansiPage = () => {
     }
 
     if (fetchError) {
-        return <div className="w-full min-h-screen flex justify-center items-center bg-[#D9833E] text-red-100 satoshiBold text-[2vw]">{fetchError}</div>;
+        return <div className="w-full min-h-screen flex justify-center items-center bg-[#D9833E] text-red-100 satoshiBold text-xl lg:text-[2vw] text-center px-4">{fetchError}</div>;
     }
 
+    // --- Main Content ---
     return (
-        <div className="w-full min-h-screen  p-[3vw] font-sans">
+        // Padding: 24px (mobile) -> 3vw (desktop)
+        <div className="w-full min-h-screen p-6 lg:p-[3vw] font-sans">
             
-            <div className="flex flex-col gap-[2vw]">
+            <div className="flex flex-col gap-6 lg:gap-[2vw]">
                 
+                {/* Header Section */}
                 <div className="flex flex-col">
-                    <h1 className="satoshiBold text-[2.5vw] text-white leading-tight">
+                    {/* H1: Text 30px (mobile) -> 2.5vw (desktop) */}
+                    <h1 className="satoshiBold text-3xl lg:text-[2.5vw] text-white leading-tight">
                         Informasi Instansi
                     </h1>
                     
                     {!isEditing && (
                         <button 
                             onClick={() => setIsEditing(true)}
-                            className="text-white italic text-[1vw] opacity-80 hover:opacity-100 hover:underline w-fit mt-[0.2vw]"
+                            // Text small (mobile) -> 1vw (desktop)
+                            className="text-white italic text-sm lg:text-[1vw] opacity-80 hover:opacity-100 hover:underline w-fit mt-1 lg:mt-[0.2vw]"
                         >
                             Edit
                         </button>
                     )}
                     {isEditing && (
-                        <span className="text-white italic text-[1vw] opacity-80 mt-[0.2vw]">
+                        <span className="text-white italic text-sm lg:text-[1vw] opacity-80 mt-1 lg:mt-[0.2vw]">
                             Mode Edit Aktif
                         </span>
                     )}
                 </div>
 
-                <div className="flex flex-col gap-[1.5vw] w-[80%]">
+                {/* Form Container: Width Full (mobile) -> 80% (desktop) */}
+                <div className="flex flex-col gap-4 lg:gap-[1.5vw] w-full lg:w-[80%]">
                     
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiBold text-[1.2vw] text-white">Email</label>
+                    {/* Input Field Component (Repeated Logic) */}
+                    <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                        <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Email</label>
                         <input 
                             type="email" 
                             name="email"
                             value={formData.email}
                             readOnly={true} 
-                            className={`w-full rounded-[0.8vw] px-[1.5vw] py-[0.8vw] satoshiMedium text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
+                            // Input Styles: Rounded-lg, Text-base, Padding standard -> VW on desktop
+                            className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
+                                satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
                                 bg-white/90 cursor-default opacity-80`}
                         />
                     </div>
 
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiBold text-[1.2vw] text-white">Nama Instansi</label>
+                    <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                        <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Nama Instansi</label>
                         <input 
                             type="text" 
                             name="namaInstansi"
                             value={formData.namaInstansi}
                             onChange={handleChange}
                             readOnly={!isEditing}
-                            className={`w-full rounded-[0.8vw] px-[1.5vw] py-[0.8vw] satoshiMedium text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
+                            className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
+                                satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
                                 ${isEditing 
                                     ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
                                     : 'bg-white/90 cursor-default'
@@ -173,15 +188,16 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiBold text-[1.2vw] text-white">Wilayah Kerja</label>
+                    <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                        <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Wilayah Kerja</label>
                         <input 
                             type="text" 
                             name="wilayahKerja"
                             value={formData.wilayahKerja}
                             onChange={handleChange}
                             readOnly={!isEditing}
-                            className={`w-full rounded-[0.8vw] px-[1.5vw] py-[0.8vw] satoshiMedium text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
+                            className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
+                                satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
                                 ${isEditing 
                                     ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
                                     : 'bg-white/90 cursor-default'
@@ -189,15 +205,16 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiBold text-[1.2vw] text-white">Penanggung Jawab</label>
+                    <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                        <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Penanggung Jawab</label>
                         <input 
                             type="text" 
                             name="penanggungJawab"
                             value={formData.penanggungJawab}
                             onChange={handleChange}
                             readOnly={!isEditing}
-                            className={`w-full rounded-[0.8vw] px-[1.5vw] py-[0.8vw] satoshiMedium text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
+                            className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
+                                satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
                                 ${isEditing 
                                     ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
                                     : 'bg-white/90 cursor-default'
@@ -205,15 +222,16 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiBold text-[1.2vw] text-white">Nomor Kontak</label>
+                    <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                        <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Nomor Kontak</label>
                         <input 
                             type="text" 
                             name="nomorKontak"
                             value={formData.nomorKontak}
                             onChange={handleChange}
                             readOnly={!isEditing}
-                            className={`w-full rounded-[0.8vw] px-[1.5vw] py-[0.8vw] satoshiMedium text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
+                            className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
+                                satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
                                 ${isEditing 
                                     ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
                                     : 'bg-white/90 cursor-default'
@@ -221,16 +239,16 @@ const InformasiInstansiPage = () => {
                         />
                     </div>
 
-
-                    <div className="flex flex-col gap-[0.5vw]">
-                        <label className="satoshiBold text-[1.2vw] text-white">Alamat</label>
+                    <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
+                        <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Alamat</label>
                         <input 
                             type="text" 
                             name="alamat"
                             value={formData.alamat}
                             onChange={handleChange}
                             readOnly={!isEditing}
-                            className={`w-full rounded-[0.8vw] px-[1.5vw] py-[0.8vw] satoshiMedium text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
+                            className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
+                                satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
                                 ${isEditing 
                                     ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
                                     : 'bg-white/90 cursor-default'
@@ -241,11 +259,13 @@ const InformasiInstansiPage = () => {
                 </div>
 
                 {isEditing && (
-                    <div className="flex justify-end w-[80%] mt-[2vw] ">
+                    <div className="flex justify-end w-full lg:w-[80%] mt-6 lg:mt-[2vw]">
                         <button 
                             onClick={handleSave}
                             disabled={isSaving}
-                            className={`bg-white text-[#D9833E] satoshiBold text-[1.2vw] py-[0.8vw] px-[4vw] rounded-full shadow-lg transition-transform active:scale-95
+                            className={`bg-white text-[#D9833E] satoshiBold text-base lg:text-[1.2vw] 
+                                py-2 px-8 lg:py-[0.8vw] lg:px-[4vw] 
+                                rounded-full shadow-lg transition-transform active:scale-95
                                 ${isSaving ? 'opacity-70 cursor-not-allowed' : 'hover:bg-gray-100'}
                             `}
                         >
@@ -256,11 +276,12 @@ const InformasiInstansiPage = () => {
 
             </div>
             
+            {/* Loading Modal Overlay */}
             {isSaving && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="relative bg-white rounded-[2vw] p-[3vw] w-[35vw] shadow-2xl flex flex-col items-center text-center">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[35vw] shadow-2xl flex flex-col items-center text-center">
                         
-                        <div className="relative w-[12vw] h-[12vw] flex items-center justify-center">
+                        <div className="relative w-24 h-24 lg:w-[12vw] lg:h-[12vw] flex items-center justify-center">
                             <Image 
                                 src={bg} 
                                 alt="Background Shape" 
@@ -270,33 +291,34 @@ const InformasiInstansiPage = () => {
                             <Image 
                                 src={loadingSpinner} 
                                 alt="Spinner" 
-                                className="w-[5vw] h-[5vw] object-contain absolute inset-0 m-auto animate-spin"
+                                className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute inset-0 m-auto animate-spin"
                             />
                         </div>
                         
-                        <h3 className="satoshiBold text-[2.5vw] text-[#E87E2F] mt-[2vw]">Sedang Diproses</h3>
-                        <p className="satoshiMedium text-[1.2vw] text-gray-500 mt-[0.5vw]">
+                        <h3 className="satoshiBold text-2xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
+                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
                             Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
                         </p>
                     </div>
                 </div>
             )}
 
+            {/* Success Modal Overlay */}
             {successMessage && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="relative bg-white rounded-[1.5vw] p-[3vw] w-[28vw] shadow-2xl flex flex-col items-center text-center gap-[2vw]">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[28vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
                         
-                        <div className="w-[5vw] h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-green-600">
+                        <div className="w-16 h-16 lg:w-[5vw] lg:h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8 lg:w-[3vw] lg:h-[3vw] text-green-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                         </div>
                         
-                        <h3 className="satoshiBold text-[1.8vw] text-gray-800">{successMessage}</h3>
+                        <h3 className="satoshiBold text-xl lg:text-[1.8vw] text-gray-800">{successMessage}</h3>
                         
                         <button
                             onClick={handleSuccessConfirm}
-                            className="py-[0.8vw] px-[3vw] rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                            className="py-2 px-6 lg:py-[0.8vw] lg:px-[3vw] rounded-lg lg:rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
                         >
                             OKE
                         </button>

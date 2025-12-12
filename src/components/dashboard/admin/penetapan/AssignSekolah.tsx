@@ -32,9 +32,7 @@ const AssignSekolah = () => {
             try {
                 const resList = await fetchWithAuth("/admin/users", {
                     method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                 });
 
                 if (!resList.ok) throw new Error("Gagal ambil data user");
@@ -45,9 +43,7 @@ const AssignSekolah = () => {
                 const detailedChecks = await Promise.all(
                     candidateSchools.map(async (school: SchoolData) => {
                         try {
-                            const resDetail = await fetchWithAuth(`/admin/users/${school.id}`, {
-                                method: "GET"
-                            });
+                            const resDetail = await fetchWithAuth(`/admin/users/${school.id}`, { method: "GET" });
                             const detailJson = await resDetail.json();
                             return detailJson.data; 
                         } catch (err) {
@@ -58,9 +54,7 @@ const AssignSekolah = () => {
 
                 const availableSchools = detailedChecks.filter((u: SchoolData | null) => {
                     if (!u) return false;
-                    
                     if (!u.profile_data) return false; 
-
                     return u.profile_data.sppg === null;
                 });
                 
@@ -100,9 +94,7 @@ const AssignSekolah = () => {
         try {
             const res = await fetchWithAuth(`/admin/sppg/${sppgId}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ school_ids: selectedSchools })
             });
 
@@ -120,36 +112,50 @@ const AssignSekolah = () => {
     };
 
     return (
-        <div className="w-full h-screen flex flex-col font-sans relative bg-white">
-            <div className="w-full shrink-0 bg-white z-20 pt-[1vw]">
-                <button onClick={() => router.back()} className="hover:bg-gray-100 p-[0.5vw] rounded-full absolute left-[3vw] top-[3vw] transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-[2vw] h-[2vw] text-black">
+        // Container Utama: Flex Column penuh
+        <div className="w-full h-screen flex flex-col font-sans relative bg-white overflow-hidden">
+            
+            {/* Header Section */}
+            <div className="w-full shrink-0 bg-white z-20 pt-4 lg:pt-0 border-b lg:border-none border-gray-100 pb-4 lg:pb-0">
+                {/* Tombol Back */}
+                <button 
+                    onClick={() => router.back()} 
+                    className="hover:bg-gray-100 p-2 lg:p-[0.5vw] rounded-full absolute left-4 lg:left-[2vw] top-4 lg:top-[2vw] transition-colors z-30"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 lg:w-[2vw] lg:h-[2vw] text-black">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                     </svg>
                 </button>
-                <div className="flex justify-between items-start px-[3vw] pt-[2vw] pb-[1vw] pl-[6vw]">
-                    <div className="flex flex-col">
-                        <h1 className="satoshiBold text-[2.5vw] text-black leading-tight">Sekolah Terdaftar dalam Inkluzi</h1>
-                        <p className="satoshiMedium text-[1.2vw] text-gray-600">Pilih sekolah yang belum memiliki SPPG</p>
+
+                {/* Judul & Search Bar */}
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-start px-4 lg:px-[3vw] pt-12 lg:pt-[2vw] pb-4 lg:pb-[1vw] lg:pl-[6vw] gap-4 lg:gap-0">
+                    <div className="flex flex-col w-full lg:w-auto">
+                        <h1 className="satoshiBold text-2xl lg:text-[2.5vw] text-black leading-tight">Sekolah Terdaftar</h1>
+                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-600 mt-1 lg:mt-0">Pilih sekolah yang belum memiliki SPPG</p>
                     </div>
-                    <div className="relative w-[30%]">
+                    
+                    {/* Search Bar */}
+                    <div className="relative w-full lg:w-[30%]">
                         <input 
-                            type="text" placeholder="Cari sekolah..." value={searchQuery}
+                            type="text" 
+                            placeholder="Cari sekolah..." 
+                            value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full rounded-[0.8vw] border border-gray-200 py-[0.8vw] pl-[3vw] pr-[1vw] text-[1vw] outline-none focus:border-[#E87E2F] placeholder:text-gray-400 shadow-sm"
+                            className="w-full rounded-lg lg:rounded-[0.8vw] border border-gray-200 py-3 lg:py-[0.8vw] pl-10 lg:pl-[3vw] pr-4 lg:pr-[1vw] text-sm lg:text-[1vw] outline-none focus:border-[#E87E2F] placeholder:text-gray-400 shadow-sm transition-colors"
                         />
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[1.2vw] h-[1.2vw] text-[#E87E2F] absolute left-[1vw] top-1/2 -translate-y-1/2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 lg:w-[1.2vw] lg:h-[1.2vw] text-[#E87E2F] absolute left-3 lg:left-[1vw] top-1/2 -translate-y-1/2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                         </svg>
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-[3vw] pt-[1vw] pb-[3vw]">
+            {/* List Sekolah (Scrollable Area) */}
+            <div className="flex-1 overflow-y-auto px-4 lg:px-[3vw] pt-4 lg:pt-[1vw] pb-24 lg:pb-[3vw]">
                 {loading ? (
-                    <div className="text-center mt-[5vw] text-gray-500">Memeriksa data...</div>
+                    <div className="text-center mt-10 lg:mt-[5vw] text-gray-500 satoshiMedium text-sm lg:text-[1.2vw]">Memeriksa data...</div>
                 ) : (
-                    <div className="grid grid-cols-2 gap-[1.5vw]">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-[1.5vw]">
                         {filteredSchools.map((school) => {
                             const isSelected = selectedSchools.includes(school.id);
                             const displayName = school.profile_data?.nama_sekolah || school.email;
@@ -157,12 +163,26 @@ const AssignSekolah = () => {
                             return (
                                 <div 
                                     key={school.id} onClick={() => toggleSelection(school.id)}
-                                    className={`flex items-center gap-[1.5vw] p-[1.5vw] rounded-[1vw] border-[0.15vw] cursor-pointer transition-all duration-200 ${isSelected ? 'border-[#D9833E] bg-white shadow-sm' : 'border-[#D9833E] bg-white hover:bg-orange-50'}`}
+                                    className={`
+                                        flex items-center gap-3 lg:gap-[1.5vw] 
+                                        p-4 lg:p-[1.5vw] 
+                                        rounded-xl lg:rounded-[1vw] 
+                                        border-2 lg:border-[0.15vw] 
+                                        cursor-pointer transition-all duration-200 
+                                        ${isSelected ? 'border-[#D9833E] bg-white shadow-sm' : 'border-[#D9833E] bg-white hover:bg-orange-50'}
+                                    `}
                                 >
-                                    <div className={`w-[2vw] h-[2vw] rounded-full border-[0.15vw] border-[#D9833E] flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'bg-[#D9833E]' : 'bg-white'}`}>
-                                        {isSelected && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-[1.2vw] h-[1.2vw] text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>}
+                                    {/* Checkbox Circle */}
+                                    <div className={`
+                                        w-6 h-6 lg:w-[2vw] lg:h-[2vw] 
+                                        rounded-full border-2 lg:border-[0.15vw] border-[#D9833E] 
+                                        flex items-center justify-center shrink-0 transition-colors 
+                                        ${isSelected ? 'bg-[#D9833E]' : 'bg-white'}
+                                    `}>
+                                        {isSelected && <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4 lg:w-[1.2vw] lg:h-[1.2vw] text-white"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>}
                                     </div>
-                                    <span className={`satoshiBold text-[1.3vw] text-[#D9833E]`}>
+                                    
+                                    <span className={`satoshiBold text-sm lg:text-[1.3vw] text-[#D9833E]`}>
                                         {displayName}
                                     </span>
                                 </div>
@@ -171,16 +191,29 @@ const AssignSekolah = () => {
                     </div>
                 )}
                 {!loading && filteredSchools.length === 0 && (
-                    <div className="flex flex-col items-center justify-center mt-[5vw] text-gray-400">
-                        <p className="satoshiMedium text-[1.5vw]">
+                    <div className="flex flex-col items-center justify-center mt-10 lg:mt-[5vw] text-gray-400">
+                        <p className="satoshiMedium text-sm lg:text-[1.5vw] text-center">
                            {schoolList.length === 0 ? "Semua sekolah sudah memiliki SPPG" : "Sekolah tidak ditemukan"}
                         </p>
                     </div>
                 )}
             </div>
 
-            <div className="relative flex justify-end px-[3vw] pb-[2vw] z-30 pt-[1vw] border-t border-gray-100">
-                <button onClick={handleSelesai} disabled={submitting} className={`text-white satoshiBold text-[1.2vw] py-[1vw] px-[5vw] rounded-[1.5vw] shadow-xl transition-all active:scale-95 ${submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C67C3E] hover:bg-[#b06a33]'}`}>
+            {/* Footer Button (Fixed Bottom on Mobile) */}
+            <div className="relative lg:static flex justify-end px-4 lg:px-[3vw] pb-4 lg:pb-[2vw] pt-4 lg:pt-[1vw] bg-white border-t border-gray-100 z-30 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] lg:shadow-none">
+                <button 
+                    onClick={handleSelesai} 
+                    disabled={submitting} 
+                    className={`
+                        w-full lg:w-auto
+                        text-white satoshiBold 
+                        text-base lg:text-[1.2vw] 
+                        py-3 lg:py-[1vw] px-8 lg:px-[5vw] 
+                        rounded-xl lg:rounded-[1.5vw] 
+                        shadow-md lg:shadow-xl transition-all active:scale-95 
+                        ${submitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C67C3E] hover:bg-[#b06a33]'}
+                    `}
+                >
                     {submitting ? "Menyimpan..." : "Selesai"}
                 </button>
             </div>
