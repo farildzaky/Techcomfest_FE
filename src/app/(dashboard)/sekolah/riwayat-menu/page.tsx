@@ -221,7 +221,7 @@ const RiwayatMenuPage = () => {
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="p-8 lg:p-[4vw] text-center satoshiMedium text-sm lg:text-[1.2vw] text-gray-500">
+                                    <div className="p-8 lg:p-[2vw] text-center satoshiBold text-sm lg:text-[1.5vw] text-gray-500">
                                         Belum ada riwayat menu.
                                     </div>
                                 )}
