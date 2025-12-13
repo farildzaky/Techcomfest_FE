@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://inkluzi.my.id'),
   keywords: ['MBG', 'gizi', 'sekolah inklusif', 'menu bergizi', 'disabilitas', 'nutrisi'],
   authors: [{ name: 'Inkluzi Team' }],
+  icons: {
+    icon: '/favicon.ico',
+  },
   openGraph: {
     title: 'Inkluzi - Validasi Gizi untuk Sekolah Inklusif',
     description: 'Membantu sekolah memastikan setiap menu MBG memenuhi standar keamanan gizi dan sesuai kebutuhan siswa disabilitas dengan analisis AI.',
