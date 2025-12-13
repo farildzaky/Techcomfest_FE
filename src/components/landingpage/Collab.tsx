@@ -14,6 +14,7 @@ const Collab = () => {
     const bgImageRef = useRef<HTMLImageElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
     const descRef = useRef<HTMLDivElement>(null);
+    const arrowRef = useRef<HTMLDivElement>(null);
 
     useLayoutEffect(() => {
         let ctx = gsap.context(() => {
@@ -22,6 +23,7 @@ const Collab = () => {
             gsap.set(textRef.current, { scale: 1, opacity: 1 });
             gsap.set(descRef.current, { opacity: 1, y: 0 });
             gsap.set(bgImageRef.current, { scale: 1.2, opacity: 1 });
+            gsap.set(arrowRef.current, { opacity: 1 });
 
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -42,6 +44,9 @@ const Collab = () => {
             }, 0);
 
             tl.to(descRef.current, { opacity: 0, duration: 0.5 }, 0);
+
+            // Arrow fade out cepat di awal scroll (sebelum zoom text jadi besar)
+            tl.to(arrowRef.current, { opacity: 0, duration: 0.3, ease: "power1.out" }, 0);
 
             tl.to(overlayRef.current, {
                 opacity: 0,
@@ -104,24 +109,25 @@ const Collab = () => {
                 >
                     Kolaborasi dengan SPPG
                 </span>
-                <div className="mt-[1vw] animate-bounce">
-        <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            className="w-[3.5vw] h-[3.5vw]" // Menggunakan VW agar proporsional dengan teks
-            style={{ filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.5))' }} // Efek glow agar senada dengan teks
-        >
-            <path d="M12 5v14" />
-            <path d="M19 12l-7 7-7-7" />
-        </svg>
-    </div>
             </h2>
-            
+
+            {/* Arrow - posisi absolute terpisah dari h2 agar tidak mempengaruhi layout text */}
+            <div ref={arrowRef} className="absolute z-30 top-[62%] left-1/2 -translate-x-1/2 animate-bounce pointer-events-none">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-[4vw] h-[4vw]"
+                    style={{ filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.7))' }}
+                >
+                    <path d="M12 5v14" />
+                    <path d="M19 12l-7 7-7-7" />
+                </svg>
+            </div>
 
             <div ref={descRef} className="absolute bottom-[5vw] right-[5vw] w-[66%] z-20 text-right">
                 <p className="text-white satoshiMedium text-[1.5vw] px-[0.5vw]">
