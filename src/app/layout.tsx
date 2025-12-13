@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   keywords: ['MBG', 'gizi', 'sekolah inklusif', 'menu bergizi', 'disabilitas', 'nutrisi'],
   authors: [{ name: 'Inkluzi Team' }],
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.ico?v=2',
   },
   openGraph: {
     title: 'Inkluzi - Validasi Gizi untuk Sekolah Inklusif',
