@@ -143,9 +143,17 @@ const InformasiSekolah = () => {
         setIsSaving(true);
         try {
             const payload = {
-                ...formData,
+                nama_sekolah: formData.nama_sekolah,
+                npsn: formData.npsn,
+                jenis_sekolah: formData.jenis_sekolah,
+                alamat: formData.alamat,
+                penanggung_jawab: formData.penanggung_jawab,
+                nomor_kontak: formData.nomor_kontak,
                 total_siswa: Number(formData.total_siswa),
-                disability_types: disabilityList
+                disability_types: disabilityList.map(d => ({
+                    jenis_disabilitas: d.jenis_disabilitas,
+                    jumlah_siswa: Number(d.jumlah_siswa)
+                }))
             };
 
             const response = await fetchWithAuth("/profile", {
@@ -154,9 +162,10 @@ const InformasiSekolah = () => {
                 body: JSON.stringify(payload)
             });
 
+            const result = await response.json();
+
             if (!response.ok) {
-                const errRes = await response.json();
-                throw new Error(errRes.message || "Gagal menyimpan perubahan.");
+                throw new Error(result.message || "Gagal menyimpan perubahan.");
             }
 
             setSuccessMessage("Data profil sekolah berhasil diperbarui!");
