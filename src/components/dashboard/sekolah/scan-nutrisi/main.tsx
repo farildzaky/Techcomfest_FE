@@ -7,7 +7,7 @@ import Image from 'next/image';
 // Import Assets
 import bg from "../../../../assets/bg.png";
 import loadingIcon from "../../../../assets/loading.png";
-import alertIcon from "../../../../assets/alert.png"; 
+import alertIcon from "../../../../assets/alert.png";
 import jam from "../../../../assets/dashboard/sppg/jam.png";
 
 // Config
@@ -54,7 +54,7 @@ const ScanNutrisiMain = () => {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string>("");
     const [fileObj, setFileObj] = useState<File | null>(null);
-    
+
     // MODAL STATES
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'loading' | 'error' | null>(null);
@@ -73,7 +73,7 @@ const ScanNutrisiMain = () => {
     };
 
     const closeModal = () => {
-        if (modalType === 'loading') return; 
+        if (modalType === 'loading') return;
         setIsModalOpen(false);
         setModalType(null);
     };
@@ -118,7 +118,7 @@ const ScanNutrisiMain = () => {
             const formData = new FormData();
             formData.append('image', compressedFile);
 
-            const response = await fetch("/api/scan-proxy", { 
+            const response = await fetch("/api/scan-proxy", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -141,9 +141,9 @@ const ScanNutrisiMain = () => {
         } catch (error: any) {
             console.error("Error upload:", error);
             // Tutup loading dulu, baru tampilkan error
-            setIsModalOpen(false); 
+            setIsModalOpen(false);
             setTimeout(() => showError(`Pengiriman gagal: ${error.message}`), 100);
-        } 
+        }
     };
 
     return (
@@ -214,15 +214,15 @@ const ScanNutrisiMain = () => {
                     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={closeModal}></div>
 
                     <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
-                        
+
                         {/* ICON SECTION */}
                         <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
                             <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
-                            
+
                             {modalType === 'loading' && (
                                 <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
                             )}
-                            
+
                             {modalType === 'error' && (
                                 <Image src={alertIcon} alt="Error" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute" />
                             )}

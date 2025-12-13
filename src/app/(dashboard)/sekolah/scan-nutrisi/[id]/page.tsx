@@ -2,8 +2,8 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams, notFound } from 'next/navigation';
-import { fetchWithAuth } from '@/src/lib/api'; 
-import warning from '../../../../../assets/dashboard/sekolah/warning-orange.png'; 
+import { fetchWithAuth } from '@/src/lib/api';
+import warning from '../../../../../assets/dashboard/sekolah/warning-orange.png';
 
 interface ScanResultData {
     image_url: string;
@@ -33,10 +33,10 @@ interface ScanResultData {
 const HasilDeteksiSkeleton = () => {
     return (
         <div className="w-full min-h-screen bg-[#E87E2F] py-[6vw] lg:py-[2vw] flex flex-col gap-[6vw] lg:gap-[2vw] animate-pulse">
-            
+
             {/* Title Skeleton */}
             <div className='w-[70vw] lg:w-[30vw] h-[12vw] lg:h-[6vw] bg-[#FFF3EB] rounded-r-[6vw] lg:rounded-r-[3vw] -ml-[3vw] mb-[2vw] shadow-md'></div>
-            
+
             {/* Main Content Skeleton */}
             <div className='w-full px-[5vw] lg:px-[3vw] flex flex-col lg:grid lg:grid-cols-7 gap-[6vw] lg:gap-[1vw]'>
                 {/* Image Placeholder */}
@@ -93,7 +93,7 @@ const HasilDeteksiSkeleton = () => {
 
 const HasilDeteksiPage = () => {
     const router = useRouter();
-    const params = useParams(); 
+    const params = useParams();
     const scanId = params?.id as string | undefined;
 
     if (!scanId || scanId === 'undefined' || scanId === 'null') {
@@ -103,24 +103,24 @@ const HasilDeteksiPage = () => {
     const [loading, setLoading] = useState(true);
     const [imageSrc, setImageSrc] = useState<string>("");
     const [isEditing, setIsEditing] = useState(false);
-    const [isHistoryView, setIsHistoryView] = useState(false); 
-    
+    const [isHistoryView, setIsHistoryView] = useState(false);
+
     const [menuData, setMenuData] = useState({
         namaMakanan: "",
         komponen: [] as { nama: string, berat: string }[],
         gizi: [] as { label: string, value: string, rawValue: number, unit: string }[],
         risiko: {
             alergi: [] as string[],
-            tekstur: [] as string[], 
+            tekstur: [] as string[],
             porsi: [] as string[]
         },
         rekomendasi: "",
-        confidence: 0 
+        confidence: 0
     });
 
     const [rawData, setRawData] = useState<ScanResultData | null>(null);
 
-   useEffect(() => {
+    useEffect(() => {
         const loadData = async () => {
             setLoading(true);
 
@@ -182,7 +182,7 @@ const HasilDeteksiPage = () => {
                         ],
                         risiko: {
                             alergi: parsedData.deteksi_risiko.alergi || [],
-                            tekstur: parsedData.deteksi_risiko.pencernaan || [], 
+                            tekstur: parsedData.deteksi_risiko.pencernaan || [],
                             porsi: parsedData.deteksi_risiko.porsi || []
                         },
                         rekomendasi: parsedData.rekomendasi,
@@ -193,12 +193,12 @@ const HasilDeteksiPage = () => {
             }
         };
         loadData();
-    }, [scanId]); 
+    }, [scanId]);
 
     const handleKomponenChange = (index: number, field: 'nama' | 'berat', value: string) => {
         const newKomponen = [...menuData.komponen];
         if (field === 'nama') newKomponen[index].nama = value;
-        else newKomponen[index].berat = value; 
+        else newKomponen[index].berat = value;
         setMenuData(prev => ({ ...prev, komponen: newKomponen }));
     };
 
@@ -221,7 +221,7 @@ const HasilDeteksiPage = () => {
                 }, {} as any),
                 deteksi_risiko: {
                     alergi: menuData.risiko.alergi,
-                    pencernaan: menuData.risiko.tekstur, 
+                    pencernaan: menuData.risiko.tekstur,
                     porsi: menuData.risiko.porsi,
                     nutrisi: rawData.deteksi_risiko?.nutrisi || []
                 },
@@ -243,7 +243,7 @@ const HasilDeteksiPage = () => {
             localStorage.removeItem('scan_result_temp');
             localStorage.removeItem('dummy_scan_image');
             alert("Hasil scan berhasil disimpan!");
-            router.push('/sekolah/riwayat-scan'); 
+            router.push('/sekolah/riwayat-scan');
         } catch (error: any) {
             console.error("Save Error:", error);
             alert(`Gagal menyimpan: ${error.message}`);
@@ -254,21 +254,21 @@ const HasilDeteksiPage = () => {
 
     return (
         <div className="w-full min-h-screen bg-[#E87E2F] py-[6vw] lg:py-[2vw] flex flex-col gap-[6vw] lg:gap-[2vw]">
-            
+
             {/* Header / Title */}
             <div className='w-full lg:w-fit bg-[#FFF3EB] rounded-r-[5vw] lg:rounded-r-[3vw] py-[3vw] lg:py-[1.5vw] px-[6vw] lg:px-[4vw] -ml-[3vw] mb-[2vw] shadow-md'>
                 <h1 className='satoshiBold text-[5vw] lg:text-[3vw] text-[#E87E2F]'>
                     {isHistoryView ? "Detail Riwayat Makanan" : "Hasil Deteksi Makanan"}
                 </h1>
-            </div>            
-            
+            </div>
+
             {/* Main Content Grid */}
             <div className='w-full px-[5vw] lg:px-[3vw] flex flex-col lg:grid lg:grid-cols-7 gap-[6vw] lg:gap-[1vw]'>
-                
+
                 {/* Image Section */}
                 <div className='lg:col-span-3 border-[1vw] lg:border-5 border-white rounded-[3vw] lg:rounded-[1vw] flex flex-col items-center p-[2vw] lg:p-[1vw] justify-center shadow-sm'>
                     {imageSrc ? (
-                        <img src={imageSrc} alt="Uploaded Food" className='w-full h-auto lg:h-full max-h-[60vh] rounded-[2vw] lg:rounded-[1vw] object-cover'/>
+                        <img src={imageSrc} alt="Uploaded Food" className='w-full h-auto lg:h-full max-h-[60vh] rounded-[2vw] lg:rounded-[1vw] object-cover' />
                     ) : (
                         <div className='w-full h-[50vw] lg:h-[20vw] bg-gray-200 flex items-center justify-center rounded-[2vw] lg:rounded-[1vw]'>
                             <p className='satoshiMedium text-[4vw] lg:text-[1.5vw] text-gray-500'>Tidak ada gambar</p>
@@ -332,7 +332,7 @@ const HasilDeteksiPage = () => {
 
             {/* Bottom Section (Nutrition & Risks) */}
             <div className='flex flex-col lg:grid lg:grid-cols-5 gap-[6vw] lg:gap-[2vw] px-[5vw] lg:px-[3vw] w-full'>
-                
+
                 {/* Tabel Gizi */}
                 <div className='lg:col-span-2 flex flex-col gap-[3vw] lg:gap-[1vw]'>
                     <h1 className='satoshiBold text-[4.5vw] lg:text-[2vw] text-white'>Kandungan Gizi</h1>
@@ -353,7 +353,7 @@ const HasilDeteksiPage = () => {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Deteksi Risiko & Rekomendasi */}
                 <div className='lg:col-span-3 flex flex-col gap-[3vw] lg:gap-[1vw]'>
                     <h1 className='satoshiBold text-[4.5vw] lg:text-[2vw] text-white'>Deteksi Risiko</h1>
@@ -396,7 +396,7 @@ const HasilDeteksiPage = () => {
 
             {/* Footer Buttons */}
             <div className='flex flex-col-reverse lg:flex-row justify-between px-[5vw] lg:px-[3vw] items-center gap-[4vw] lg:gap-0 mt-[2vw]'>
-                
+
                 {menuData.confidence > 0 && (
                     <div className="bg-white/20 text-white px-[4vw] lg:px-[1.5vw] py-[2vw] lg:py-[0.5vw] rounded-full satoshiBold text-[3.5vw] lg:text-[1.1vw] flex items-center gap-[1.5vw] lg:gap-[0.5vw] w-fit">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[4vw] h-[4vw] lg:w-[1.2vw] lg:h-[1.2vw]">
@@ -422,7 +422,7 @@ const HasilDeteksiPage = () => {
                             >
                                 Kembali
                             </button>
-                            
+
                             {!isHistoryView && (
                                 <button
                                     onClick={handleSimpanHasil}

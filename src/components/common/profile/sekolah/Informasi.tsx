@@ -1,9 +1,9 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { fetchWithAuth } from '@/src/lib/api'; 
+import { fetchWithAuth } from '@/src/lib/api';
 import Image from 'next/image';
-import bg from "../../../../assets/bg.png"; 
-import loadingSpinner from "../../../../assets/loading.png"; 
+import bg from "../../../../assets/bg.png";
+import loadingSpinner from "../../../../assets/loading.png";
 
 // --- INTERFACES ---
 interface DisabilityType {
@@ -30,8 +30,8 @@ const FormField = ({ label, name, value, onChange, readOnly, type = "text", plac
                 satoshiMedium text-base lg:text-[1.1vw] text-[#E87E2F] outline-none 
                 transition-all duration-300 placeholder-[#E87E2F]/50
                 ${type === 'number' ? 'remove-arrow' : ''} 
-                ${readOnly 
-                    ? 'bg-white/90 cursor-default' 
+                ${readOnly
+                    ? 'bg-white/90 cursor-default'
                     : 'bg-white shadow-md focus:ring-2 focus:ring-white/50'
                 }
                 ${name === 'email' ? 'opacity-80 cursor-not-allowed' : ''}
@@ -71,12 +71,12 @@ const InformasiSekolah = () => {
                 if (!response.ok) throw new Error("Gagal memuat data.");
 
                 const result = await response.json();
-                
+
                 if (result.success && result.data) {
                     const profile = result.data.profile_data;
-                    
+
                     setEmail(result.data.email || "");
-                    
+
                     setFormData({
                         nama_sekolah: profile.nama_sekolah || "",
                         npsn: profile.npsn || "",
@@ -105,7 +105,7 @@ const InformasiSekolah = () => {
     // --- 2. AUTO CALCULATE TOTAL SISWA ---
     useEffect(() => {
         const total = disabilityList.reduce((acc, curr) => acc + (Number(curr.jumlah_siswa) || 0), 0);
-        
+
         setFormData(prev => ({
             ...prev,
             total_siswa: total
@@ -181,8 +181,8 @@ const InformasiSekolah = () => {
     // --- ICONS ---
     const MinusCircleIcon = () => (
         <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="12" fill="white"/>
-            <path d="M7 12H17" stroke="#D9833E" strokeWidth="2" strokeLinecap="round"/>
+            <circle cx="12" cy="12" r="12" fill="white" />
+            <path d="M7 12H17" stroke="#D9833E" strokeWidth="2" strokeLinecap="round" />
         </svg>
     );
 
@@ -192,7 +192,7 @@ const InformasiSekolah = () => {
     return (
         // Container Utama: p-6 (Mobile) -> p-[3vw] (Desktop)
         <div className="w-full min-h-screen p-6 lg:p-[3vw] font-sans flex flex-col gap-6 lg:gap-[2vw]">
-            
+
             <style jsx global>{`
                 .remove-arrow::-webkit-outer-spin-button,
                 .remove-arrow::-webkit-inner-spin-button {
@@ -209,13 +209,13 @@ const InformasiSekolah = () => {
                 <h1 className="satoshiBold text-3xl lg:text-[3vw] text-white leading-tight">
                     Informasi Sekolah
                 </h1>
-                
+
                 {!isEditing ? (
-                    <button 
-                        onClick={() => setIsEditing(true)} 
+                    <button
+                        onClick={() => setIsEditing(true)}
                         className="text-white/80 italic text-sm lg:text-[1vw] hover:text-white hover:underline mt-1 lg:mt-[0.2vw]"
                     >
-                        Edit 
+                        Edit
                     </button>
                 ) : (
                     <span className="text-white/90 italic text-sm lg:text-[1vw] mt-1 lg:mt-[0.2vw] animate-pulse">Mode Edit Aktif</span>
@@ -225,7 +225,7 @@ const InformasiSekolah = () => {
             {/* --- FORM CONTAINER --- */}
             {/* Width: Full (Mobile) -> 80% (Desktop) */}
             <div className="flex flex-col gap-4 lg:gap-[1.5vw] w-full lg:w-[80%]">
-                
+
                 <FormField label="Email" name="email" value={email} onChange={handleChange} readOnly={true} />
                 <FormField label="Nama Sekolah" name="nama_sekolah" value={formData.nama_sekolah} onChange={handleChange} readOnly={!isEditing} />
                 <FormField label="NPSN" name="npsn" value={formData.npsn} onChange={handleChange} readOnly={!isEditing} />
@@ -243,10 +243,10 @@ const InformasiSekolah = () => {
                     <div className="flex flex-col gap-3 lg:gap-[1vw]">
                         {disabilityList.map((item, index) => (
                             <div key={index} className="flex gap-2 lg:gap-[1vw] w-full items-center">
-                                
+
                                 {/* 1. INPUT JENIS (KIRI) */}
                                 <div className="flex-[3]">
-                                    <input 
+                                    <input
                                         type="text"
                                         value={item.jenis_disabilitas}
                                         onChange={(e) => handleDisabilityChange(index, 'jenis_disabilitas', e.target.value)}
@@ -258,7 +258,7 @@ const InformasiSekolah = () => {
 
                                 {/* 2. INPUT JUMLAH (KANAN) */}
                                 <div className="flex-[1.5] relative">
-                                    <input 
+                                    <input
                                         type="number"
                                         value={item.jumlah_siswa}
                                         onChange={(e) => handleDisabilityChange(index, 'jumlah_siswa', e.target.value)}
@@ -274,7 +274,7 @@ const InformasiSekolah = () => {
 
                                 {/* 3. TOMBOL HAPUS */}
                                 {isEditing && (
-                                    <button 
+                                    <button
                                         onClick={() => removeDisabilityRow(index)}
                                         className="w-8 h-8 lg:w-[2.5vw] lg:h-[2.5vw] hover:scale-110 transition-transform flex-shrink-0"
                                         title="Hapus baris ini"
@@ -288,7 +288,7 @@ const InformasiSekolah = () => {
                         {/* TOMBOL TAMBAH */}
                         {isEditing && (
                             <div className="flex justify-end mt-1 lg:mt-[0.5vw]">
-                                <button 
+                                <button
                                     onClick={addDisabilityRow}
                                     className="bg-white hover:bg-white/30 text-[#E87E2F] px-4 py-2 lg:px-[1.5vw] lg:py-[0.5vw] rounded-lg lg:rounded-[1vw] satoshiBold text-sm lg:text-[1vw] transition-colors"
                                 >
@@ -301,27 +301,27 @@ const InformasiSekolah = () => {
 
                 {/* --- TOTAL SISWA --- */}
                 <div className="">
-                    <FormField 
-                        label="Jumlah Total Siswa" 
-                        name="total_siswa" 
-                        value={formData.total_siswa} 
+                    <FormField
+                        label="Jumlah Total Siswa"
+                        name="total_siswa"
+                        value={formData.total_siswa}
                         onChange={handleChange}
-                        readOnly={true} 
+                        readOnly={true}
                         type="number"
-                        placeholder="0" 
+                        placeholder="0"
                     />
                 </div>
 
                 {/* --- TOMBOL AKSI --- */}
                 {isEditing && (
                     <div className="flex justify-end gap-4 lg:gap-[1.5vw] mt-6 lg:mt-[2vw] mb-10 lg:mb-[5vw]">
-                        <button 
-                            onClick={() => { setIsEditing(false); window.location.reload(); }} 
+                        <button
+                            onClick={() => { setIsEditing(false); window.location.reload(); }}
                             className="bg-transparent border border-white text-white satoshiBold text-base lg:text-[1.2vw] py-3 px-6 lg:py-[0.8vw] lg:px-[3vw] rounded-full hover:bg-white/10 transition-colors"
                         >
                             Batal
                         </button>
-                        <button 
+                        <button
                             onClick={handleSave}
                             disabled={isSaving}
                             className={`bg-white text-[#D9833E] satoshiBold text-base lg:text-[1.2vw] py-3 px-8 lg:py-[0.8vw] lg:px-[4vw] rounded-full shadow-lg transition-transform active:scale-95

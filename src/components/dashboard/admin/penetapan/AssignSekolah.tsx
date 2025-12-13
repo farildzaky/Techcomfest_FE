@@ -7,30 +7,30 @@ import Image from 'next/image';
 // Import Assets
 import bg from "../../../../assets/bg.png";
 import loadingIcon from "../../../../assets/loading.png";
-import alertIcon from "../../../../assets/alert.png"; 
+import alertIcon from "../../../../assets/alert.png";
 
 interface ProfileData {
     nama_sekolah: string;
-    sppg: any | null; 
+    sppg: any | null;
 }
 
 interface SchoolData {
     id: string;
     email: string;
     role: string;
-    profile_data?: ProfileData; 
+    profile_data?: ProfileData;
 }
 
 const AssignSekolah = () => {
     const router = useRouter();
     const params = useParams();
-    const sppgId = params.id as string; 
+    const sppgId = params.id as string;
 
     const [searchQuery, setSearchQuery] = useState("");
     const [schoolList, setSchoolList] = useState<SchoolData[]>([]);
-    const [selectedSchools, setSelectedSchools] = useState<string[]>([]); 
+    const [selectedSchools, setSelectedSchools] = useState<string[]>([]);
     const [loadingData, setLoadingData] = useState(true);
-    
+
     // Modal State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState<'loading' | 'error' | null>(null);
@@ -55,7 +55,7 @@ const AssignSekolah = () => {
                         try {
                             const resDetail = await fetchWithAuth(`/admin/users/${school.id}`, { method: "GET" });
                             const detailJson = await resDetail.json();
-                            return detailJson.data; 
+                            return detailJson.data;
                         } catch (err) {
                             return null;
                         }
@@ -64,10 +64,10 @@ const AssignSekolah = () => {
 
                 const availableSchools = detailedChecks.filter((u: SchoolData | null) => {
                     if (!u) return false;
-                    if (!u.profile_data) return false; 
+                    if (!u.profile_data) return false;
                     return u.profile_data.sppg === null;
                 });
-                
+
                 setSchoolList(availableSchools);
 
             } catch (error) {
@@ -85,12 +85,12 @@ const AssignSekolah = () => {
     const filteredSchools = schoolList.filter(school => {
         const name = school.profile_data?.nama_sekolah || "";
         const email = school.email || "";
-        return (name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                email.toLowerCase().includes(searchQuery.toLowerCase()));
+        return (name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            email.toLowerCase().includes(searchQuery.toLowerCase()));
     });
 
     const toggleSelection = (id: string) => {
-        setSelectedSchools(prev => 
+        setSelectedSchools(prev =>
             prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
         );
     };
@@ -114,7 +114,7 @@ const AssignSekolah = () => {
             });
 
             const responseData = await res.json();
-            
+
             if (!res.ok) {
                 throw new Error(responseData.message || "Gagal menetapkan sekolah.");
             }
@@ -126,7 +126,7 @@ const AssignSekolah = () => {
         } catch (error: any) {
             setModalType('error');
             setModalMessage(error.message || "Terjadi kesalahan sistem.");
-        } 
+        }
     };
 
     const closeModal = () => {
@@ -138,7 +138,7 @@ const AssignSekolah = () => {
 
     return (
         <div className="w-full h-screen flex flex-col font-sans relative bg-white overflow-hidden">
-            
+
             {/* Header Section */}
             <div className="w-full shrink-0 bg-white z-20 pt-4 lg:pt-0 border-b lg:border-none border-gray-100 pb-4 lg:pb-0">
                 <button onClick={() => router.back()} className="hover:bg-gray-100 p-2 lg:p-[0.5vw] rounded-full absolute left-4 lg:left-[2vw] top-4 lg:top-[2vw] transition-colors z-30">
@@ -152,9 +152,9 @@ const AssignSekolah = () => {
                         <h1 className="satoshiBold text-2xl lg:text-[2.5vw] text-black leading-tight">Sekolah Terdaftar</h1>
                         <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-600 mt-1 lg:mt-0">Pilih sekolah yang belum memiliki SPPG</p>
                     </div>
-                    
+
                     <div className="relative w-full lg:w-[30%]">
-                        <input 
+                        <input
                             type="text" placeholder="Cari sekolah..." value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full rounded-lg lg:rounded-[0.8vw] border border-gray-200 py-3 lg:py-[0.8vw] pl-10 lg:pl-[3vw] pr-4 lg:pr-[1vw] text-sm lg:text-[1vw] outline-none focus:border-[#E87E2F] placeholder:text-gray-400 shadow-sm transition-colors"
@@ -175,9 +175,9 @@ const AssignSekolah = () => {
                         {filteredSchools.map((school) => {
                             const isSelected = selectedSchools.includes(school.id);
                             const displayName = school.profile_data?.nama_sekolah || school.email;
-                            
+
                             return (
-                                <div 
+                                <div
                                     key={school.id} onClick={() => toggleSelection(school.id)}
                                     className={`
                                         flex items-center gap-3 lg:gap-[1.5vw] p-4 lg:p-[1.5vw] rounded-xl lg:rounded-[1vw] border-2 lg:border-[0.15vw] 
@@ -197,7 +197,7 @@ const AssignSekolah = () => {
                 {!loadingData && filteredSchools.length === 0 && (
                     <div className={`flex flex-col items-center justify-center text-gray-400 ${filteredSchools.length === 0 ? 'h-full mt-0' : 'h-auto  mt-10 lg:mt-[5vw]'}`}>
                         <p className={`satoshiMedium text-sm lg:text-[1.5vw] text-center`}>
-                           {schoolList.length === 0 ? "Semua sekolah sudah memiliki SPPG" : "Sekolah tidak ditemukan"}
+                            {schoolList.length === 0 ? "Semua sekolah sudah memiliki SPPG" : "Sekolah tidak ditemukan"}
                         </p>
                     </div>
                 )}
@@ -205,8 +205,8 @@ const AssignSekolah = () => {
 
             {/* Footer Button */}
             <div className="relative lg:static flex justify-end px-4 lg:px-[3vw] pb-4 lg:pb-[2vw] pt-4 lg:pt-[1vw] bg-white border-t border-gray-100 z-30 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] lg:shadow-none">
-                <button 
-                    onClick={handleSelesai} 
+                <button
+                    onClick={handleSelesai}
                     disabled={isModalOpen} // Disable saat modal terbuka
                     className={`w-full lg:w-auto text-white satoshiBold text-base lg:text-[1.2vw] py-3 lg:py-[1vw] px-8 lg:px-[5vw] rounded-xl lg:rounded-[1.5vw] shadow-md lg:shadow-xl transition-all active:scale-95 ${isModalOpen ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C67C3E] hover:bg-[#b06a33]'}`}
                 >
@@ -227,26 +227,26 @@ const AssignSekolah = () => {
                         {/* ICON SECTION - MATCHED LAYOUT */}
                         <div className="relative w-20 h-20 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
                             {/* Background Circle */}
-                            <Image 
-                                src={bg} 
-                                alt="Background Shape" 
+                            <Image
+                                src={bg}
+                                alt="Background Shape"
                                 layout="fill"
-                                objectFit="contain" 
+                                objectFit="contain"
                             />
 
                             {/* Overlay Icon based on Modal Type */}
                             {modalType === 'loading' && (
-                                <Image 
-                                    src={loadingIcon} 
-                                    alt="Loading" 
+                                <Image
+                                    src={loadingIcon}
+                                    alt="Loading"
                                     className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute animate-spin"
                                 />
                             )}
-                            
+
                             {modalType === 'error' && (
-                                <Image 
-                                    src={alertIcon} 
-                                    alt="Error" 
+                                <Image
+                                    src={alertIcon}
+                                    alt="Error"
                                     className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute"
                                 />
                             )}

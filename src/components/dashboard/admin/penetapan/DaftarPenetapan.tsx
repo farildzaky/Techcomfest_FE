@@ -40,7 +40,7 @@ const DaftarPenetapan = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState<ModalType>(null);
     const [modalMessage, setModalMessage] = useState({ title: "", desc: "" });
-    
+
     // Action States
     const [itemToDelete, setItemToDelete] = useState<{ id: string, namaSekolah: string } | null>(null);
 
@@ -146,7 +146,7 @@ const DaftarPenetapan = () => {
 
             // Hapus item dari state tabel lokal
             setTableData(prev => prev.filter(row => row.id !== itemToDelete.id));
-            
+
             // Tutup modal setelah sukses
             setIsModalOpen(false);
             setModalType(null);
@@ -192,7 +192,7 @@ const DaftarPenetapan = () => {
                             SPPG
                         </div>
                         <div className="w-[10%] py-4 lg:py-[1vw] flex justify-center items-center satoshiBold text-base lg:text-[1.5vw]">
-                            Hapus 
+                            Hapus
                         </div>
                     </div>
 
@@ -227,8 +227,8 @@ const DaftarPenetapan = () => {
                                             className="group p-2 lg:p-[0.5vw] rounded-lg hover:bg-red-50 transition-colors"
                                             title="Hapus Penetapan"
                                         >
-                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 lg:w-[1.8vw] lg:h-[1.8vw] text-gray-400 group-hover:text-red-500 transition-colors">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 lg:w-[1.8vw] lg:h-[1.8vw] text-gray-400 group-hover:text-red-500 transition-colors">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                             </svg>
                                         </button>
                                     </div>
@@ -301,34 +301,34 @@ const DaftarPenetapan = () => {
                         {/* ICON SECTION */}
                         <div className="relative w-20 h-20 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
                             {/* Background Circle */}
-                            <Image 
-                                src={bg} 
-                                alt="Background Shape" 
+                            <Image
+                                src={bg}
+                                alt="Background Shape"
                                 layout="fill"
-                                objectFit="contain" 
+                                objectFit="contain"
                             />
 
                             {/* Overlay Icon based on Modal Type */}
                             {modalType === 'loading' && (
-                                <Image 
-                                    src={loading} 
-                                    alt="Loading" 
+                                <Image
+                                    src={loading}
+                                    alt="Loading"
                                     className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute animate-spin"
                                 />
                             )}
-                            
+
                             {modalType === 'delete' && (
-                                <Image 
-                                    src={trash} 
-                                    alt="Hapus" 
+                                <Image
+                                    src={trash}
+                                    alt="Hapus"
                                     className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute"
                                 />
                             )}
 
                             {modalType === 'error' && (
-                                <Image 
-                                    src={alertIcon} 
-                                    alt="Error" 
+                                <Image
+                                    src={alertIcon}
+                                    alt="Error"
                                     className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute"
                                 />
                             )}
@@ -393,7 +393,7 @@ const DaftarPenetapan = () => {
                                     Mengerti
                                 </button>
                             )}
-                            
+
                             {/* Loading tidak perlu tombol */}
                         </div>
 

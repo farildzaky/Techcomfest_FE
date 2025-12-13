@@ -8,7 +8,7 @@ import Image from 'next/image';
 // Import Assets
 import bg from "../../../../assets/bg.png";
 import loadingIcon from "../../../../assets/loading.png";
-import alertIcon from "../../../../assets/alert.png"; 
+import alertIcon from "../../../../assets/alert.png";
 
 const MainMenuMbg = () => {
     const router = useRouter();
@@ -17,7 +17,7 @@ const MainMenuMbg = () => {
     const [weeklyMenuData, setWeeklyMenuData] = useState<Record<string, MenuData>>({});
     const [pageLoading, setPageLoading] = useState(true);
     const [resetKey, setResetKey] = useState(0);
-    
+
     // State untuk menyimpan tanggal menu yang sudah ada (Format YYYY-MM-DD)
     const [existingDates, setExistingDates] = useState<Set<string>>(new Set());
 
@@ -31,7 +31,7 @@ const MainMenuMbg = () => {
     const convertApiDateToStandard = (dateStr: string) => {
         try {
             if (!dateStr) return "";
-            
+
             // 1. Pecah string (misal: "Rabu, 21 Januari 2026")
             // Ambil bagian setelah koma jika ada
             const cleanDate = dateStr.includes(',') ? dateStr.split(',')[1].trim() : dateStr;
@@ -45,13 +45,13 @@ const MainMenuMbg = () => {
 
             // Mapping bulan Indo ke Angka
             const monthMap: { [key: string]: string } = {
-                'januari': '01', 'februari': '02', 'maret': '03', 'april': '04', 
-                'mei': '05', 'juni': '06', 'juli': '07', 'agustus': '08', 
+                'januari': '01', 'februari': '02', 'maret': '03', 'april': '04',
+                'mei': '05', 'juni': '06', 'juli': '07', 'agustus': '08',
                 'september': '09', 'oktober': '10', 'november': '11', 'desember': '12'
             };
 
             const month = monthMap[monthStr];
-            
+
             if (!month) return ""; // Jika bulan tidak valid
 
             return `${year}-${month}-${day}`; // Format standar YYYY-MM-DD
@@ -66,7 +66,7 @@ const MainMenuMbg = () => {
             try {
                 const res = await fetchWithAuth("/sppg/menus", { method: "GET" });
                 const json = await res.json();
-                
+
                 if (res.ok && Array.isArray(json.data)) {
                     // Konversi semua tanggal dari API ke format standar YYYY-MM-DD
                     const dates = new Set<string>();
@@ -74,9 +74,9 @@ const MainMenuMbg = () => {
                         const standardDate = convertApiDateToStandard(item.tanggal);
                         if (standardDate) dates.add(standardDate);
                     });
-                    
+
                     setExistingDates(dates);
-                    console.log("Tanggal terdaftar (Formatted):", Array.from(dates)); 
+                    console.log("Tanggal terdaftar (Formatted):", Array.from(dates));
                 }
             } catch (error) {
                 console.error("Gagal memuat data menu existing:", error);
@@ -111,14 +111,14 @@ const MainMenuMbg = () => {
         setModalType('success');
         setModalMessage({ title: "Berhasil Disimpan", desc: "Menu mingguan berhasil ditambahkan." });
         setIsModalOpen(true);
-        
+
         setTimeout(() => {
             router.push("/sppg/menu-mbg/weekly-menu");
         }, 1500);
     };
 
     const closeModal = () => {
-        if (modalType === 'loading' || modalType === 'success') return; 
+        if (modalType === 'loading' || modalType === 'success') return;
         setIsModalOpen(false);
         setModalType(null);
     };
@@ -140,21 +140,21 @@ const MainMenuMbg = () => {
         const duplicateEntries = filledDaysEntries.filter(([hari, item]) => {
             return existingDates.has(item.tanggal); // item.tanggal dari input type="date" biasanya sudah YYYY-MM-DD
         });
-        
+
         if (duplicateEntries.length > 0) {
             const conflictDetails = duplicateEntries
                 .map(([hari, item]) => `${hari} (${item.tanggal})`)
                 .join(", ");
-            
+
             showErrorModal(
-                "Tanggal Sudah Terisi", 
+                "Tanggal Sudah Terisi",
                 `Tidak boleh mengisi di tanggal yang sama. Menu untuk tanggal berikut sudah ada di database: ${conflictDetails}. Silakan pilih tanggal lain.`
             );
             return; // STOP proses
         }
 
         showLoadingModal();
-        
+
         try {
             const results = await Promise.all(filledDaysEntries.map(async ([hari, menuData]) => {
                 try {
@@ -165,12 +165,12 @@ const MainMenuMbg = () => {
                     });
 
                     const responseJson = await res.json();
-                    
+
                     if (!res.ok) {
-                        return { 
-                            success: false, 
-                            hari, 
-                            message: responseJson.message || "Gagal menyimpan." 
+                        return {
+                            success: false,
+                            hari,
+                            message: responseJson.message || "Gagal menyimpan."
                         };
                     }
                     return { success: true, hari, message: "Berhasil" };
@@ -199,7 +199,7 @@ const MainMenuMbg = () => {
 
     return (
         <div className="w-full h-screen flex flex-col lg:grid lg:grid-cols-7 bg-white relative">
-            
+
             <div className="w-full lg:col-span-5 h-full flex flex-col gap-4 lg:gap-[2vw]">
                 {/* Header Fixed */}
                 <div className="flex flex-col bg-white w-full z-10 fixed px-4 py-4 lg:px-[2vw] lg:py-0 shadow-sm lg:shadow-none">
@@ -272,15 +272,15 @@ const MainMenuMbg = () => {
                     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={closeModal}></div>
 
                     <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
-                        
+
                         {/* ICON SECTION */}
                         <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
                             <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
-                            
+
                             {modalType === 'loading' && (
                                 <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
                             )}
-                            
+
                             {(modalType === 'error' || modalType === 'success') && (
                                 <Image src={alertIcon} alt="Alert" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute" />
                             )}
@@ -303,7 +303,7 @@ const MainMenuMbg = () => {
                                     <p className="satoshiMedium text-sm lg:text-[1.2vw] text-[#B56225] px-4">{modalMessage.desc}</p>
                                 </>
                             )}
-                            
+
                             {modalType === 'success' && (
                                 <>
                                     <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#E87E2F]">{modalMessage.title}</h3>

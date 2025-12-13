@@ -16,18 +16,18 @@ const RegisterSppgPage = () => {
 
     // --- MODAL STATE (Menggantikan showPopup & isLoading UI) ---
     const [modalType, setModalType] = useState<'loading' | 'success' | null>(null);
-    
+
     const [apiError, setApiError] = useState("");
 
     const [formData, setFormData] = useState({
-        namaInstansi: "",   
-        wilayahKerja: "",  
-        alamat: "",        
-        email: "",          
-        password: "",      
+        namaInstansi: "",
+        wilayahKerja: "",
+        alamat: "",
+        email: "",
+        password: "",
         penanggungJawab: "",
-        jabatan: "",        
-        nomor: ""           
+        jabatan: "",
+        nomor: ""
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -125,30 +125,30 @@ const RegisterSppgPage = () => {
 
                     {/* Modal Content */}
                     <div className="relative bg-white rounded-2xl md:rounded-[1.5vw] p-6 md:p-[2vw] w-full max-w-md md:w-[30vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-3 md:gap-[1vw]">
-                        
+
                         {/* ICON SECTION */}
                         <div className="relative w-20 h-20 md:w-[10vw] md:h-[10vw] flex items-center justify-center">
                             {/* Background Circle */}
-                            <Image 
-                                src={bg} 
-                                alt="Background Shape" 
+                            <Image
+                                src={bg}
+                                alt="Background Shape"
                                 layout="fill"
-                                objectFit="contain" 
+                                objectFit="contain"
                             />
 
                             {/* Overlay Icon */}
                             {modalType === 'loading' && (
-                                <Image 
-                                    src={loadingIcon} 
-                                    alt="Loading" 
+                                <Image
+                                    src={loadingIcon}
+                                    alt="Loading"
                                     className="w-10 h-10 md:w-[4vw] md:h-[4vw] object-contain absolute animate-spin"
                                 />
                             )}
-                            
+
                             {modalType === 'success' && (
-                                <Image 
-                                    src={proses} 
-                                    alt="Proses" 
+                                <Image
+                                    src={proses}
+                                    alt="Proses"
                                     className="w-10 h-10 md:w-[6vw] md:h-[6vw] object-contain absolute"
                                 />
                             )}
