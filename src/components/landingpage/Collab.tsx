@@ -104,7 +104,24 @@ const Collab = () => {
                 >
                     Kolaborasi dengan SPPG
                 </span>
+                <div className="mt-[1vw] animate-bounce">
+        <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            className="w-[3.5vw] h-[3.5vw]" // Menggunakan VW agar proporsional dengan teks
+            style={{ filter: 'drop-shadow(0 0 5px rgba(255,255,255,0.5))' }} // Efek glow agar senada dengan teks
+        >
+            <path d="M12 5v14" />
+            <path d="M19 12l-7 7-7-7" />
+        </svg>
+    </div>
             </h2>
+            
 
             <div ref={descRef} className="absolute bottom-[5vw] right-[5vw] w-[66%] z-20 text-right">
                 <p className="text-white satoshiMedium text-[1.5vw] px-[0.5vw]">
