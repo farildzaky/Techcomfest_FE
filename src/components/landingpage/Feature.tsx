@@ -177,6 +177,8 @@ const Feature = () => {
                     <Image
                         src={mock}
                         alt="circle"
+                        width={1200}
+                        height={1000}
                         className="w-full h-full object-contain"
                         sizes="70vw"
                         loading="lazy"

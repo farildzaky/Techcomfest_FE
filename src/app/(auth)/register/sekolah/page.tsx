@@ -16,7 +16,7 @@ const RegisterSekolahPage = () => {
 
     // --- MODAL STATE (Menggantikan showPopup & isLoading UI) ---
     const [modalType, setModalType] = useState<'loading' | 'success' | null>(null);
-    
+
     const [apiError, setApiError] = useState("");
 
     const [formData, setFormData] = useState({
@@ -162,15 +162,17 @@ const RegisterSekolahPage = () => {
 
                     {/* Modal Content */}
                     <div className="relative bg-white rounded-2xl md:rounded-[2vw] p-6 md:p-[3vw] w-full max-w-lg md:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center ">
-                        
+
                         {/* ICON SECTION */}
                         <div className="relative w-24 h-24 md:w-[15vw] md:h-[15vw] flex items-center justify-center">
                             {/* Background Circle */}
-                            <Image 
-                                src={bg} 
-                                alt="Background Shape" 
-                                layout="fill"
-                                objectFit="contain" 
+                            <Image
+                                src={bg}
+                                alt="Background Shape"
+                                fill
+                                sizes="(max-width: 768px) 96px, 15vw"
+                                className="object-contain"
+                                priority
                             />
 
                             {/* Overlay Icon */}
@@ -181,11 +183,14 @@ const RegisterSekolahPage = () => {
                                     className="w-12 h-12 md:w-[5vw] md:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
                                 />
                             )} */}
-                            
+
                             {modalType === 'success' && (
-                                <Image 
-                                    src={proses} 
-                                    alt="Proses" 
+                                <Image
+                                    src={proses}
+                                    alt="Proses"
+                                    width={128}
+                                    height={128}
+                                    sizes="(max-width: 768px) 48px, 8vw"
                                     className="w-12 h-12 md:w-[8vw] md:h-[8vw] translate-y-[-0.3vw] object-contain absolute"
                                 />
                             )}
@@ -262,7 +267,7 @@ const RegisterSekolahPage = () => {
                     {step === 1 && (
                         <>
                             <h3 className="satoshiBold text-[#D9833E] text-lg md:text-[1.5vw] mb-1 md:mb-[0.5vw]">Identitas Sekolah</h3>
-                            
+
                             <InputGroup label="Nama Sekolah" name="namaSekolah" value={formData.namaSekolah} onChange={handleChange} placeholder="Masukkan nama sekolah" error={errors.namaSekolah} />
                             <InputGroup label="Jenis Sekolah" name="jenisSekolah" value={formData.jenisSekolah} onChange={handleChange} placeholder="Masukkan jenis sekolah" error={errors.jenisSekolah} />
                             <InputGroup label="NPSN" name="npsn" value={formData.npsn} onChange={handleNumberChange} placeholder="Masukkan NPSN sekolah" type="text" error={errors.npsn} />
@@ -277,19 +282,19 @@ const RegisterSekolahPage = () => {
                                 <div className="flex flex-col gap-3 md:gap-[0.8vw]">
                                     {disabilitasList.map((item, index) => (
                                         <div key={index} className="flex flex-row gap-2 md:gap-[1vw] items-start">
-                                            <input 
-                                                type="text" 
-                                                value={item.jenis} 
-                                                onChange={(e) => handleDisabilitasChange(index, 'jenis', e.target.value)} 
-                                                placeholder={`Masukkan jenis disabilitas `} 
-                                                className="w-[70%] border-2 md:border-[0.15vw] border-[#D9833E] rounded-lg md:rounded-[0.6vw] px-4 md:px-[1vw] py-3 md:py-[0.8vw] text-base md:text-[1vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.15vw] focus:ring-[#E87E2F]" 
+                                            <input
+                                                type="text"
+                                                value={item.jenis}
+                                                onChange={(e) => handleDisabilitasChange(index, 'jenis', e.target.value)}
+                                                placeholder={`Masukkan jenis disabilitas `}
+                                                className="w-[70%] border-2 md:border-[0.15vw] border-[#D9833E] rounded-lg md:rounded-[0.6vw] px-4 md:px-[1vw] py-3 md:py-[0.8vw] text-base md:text-[1vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.15vw] focus:ring-[#E87E2F]"
                                             />
-                                            <input 
-                                                type="text" 
-                                                value={item.jumlah} 
-                                                onChange={(e) => handleDisabilitasChange(index, 'jumlah', e.target.value)} 
-                                                placeholder="Jumlah siswa" 
-                                                className="w-[30%] border-2 md:border-[0.15vw] border-[#D9833E] rounded-lg md:rounded-[0.6vw] px-2 md:px-[1vw] py-3 md:py-[0.8vw] text-base md:text-[1vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.15vw] focus:ring-[#E87E2F] text-center" 
+                                            <input
+                                                type="text"
+                                                value={item.jumlah}
+                                                onChange={(e) => handleDisabilitasChange(index, 'jumlah', e.target.value)}
+                                                placeholder="Jumlah siswa"
+                                                className="w-[30%] border-2 md:border-[0.15vw] border-[#D9833E] rounded-lg md:rounded-[0.6vw] px-2 md:px-[1vw] py-3 md:py-[0.8vw] text-base md:text-[1vw] text-[#B56225] placeholder:text-gray-400 focus:outline-none focus:ring-2 md:focus:ring-[0.15vw] focus:ring-[#E87E2F] text-center"
                                             />
                                         </div>
                                     ))}

@@ -121,8 +121,10 @@ const Hero = () => {
                     <Image
                         src={dokter}
                         alt="Dokter"
+                        width={150}
+                        height={200}
                         className="h-full w-auto rounded-[1vw] ml-[1vw]"
-                        sizes="15vw"
+                        sizes="(max-width: 768px) 20vw, 15vw"
                     />
                     <div className="flex flex-col gap-[0.5vw] justify-center">
                         <div className="">

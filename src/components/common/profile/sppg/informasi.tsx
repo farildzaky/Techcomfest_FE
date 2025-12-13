@@ -1,15 +1,15 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { fetchWithAuth } from '@/src/lib/api'; 
+import { fetchWithAuth } from '@/src/lib/api';
 import Image from 'next/image';
-import bg from "../../../../assets/bg.png"; 
-import loadingSpinner from "../../../../assets/loading.png"; 
+import bg from "../../../../assets/bg.png";
+import loadingSpinner from "../../../../assets/loading.png";
 
 const InformasiInstansiPage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [loadingData, setLoadingData] = useState(true);
     const [fetchError, setFetchError] = useState<string | null>(null);
-    const [isSaving, setIsSaving] = useState(false); 
+    const [isSaving, setIsSaving] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
@@ -33,15 +33,15 @@ const InformasiInstansiPage = () => {
 
                 const result = await response.json();
                 const profile = result.data.profile_data || {};
-                const userEmail = result.data.email || ''; 
-                
+                const userEmail = result.data.email || '';
+
                 setFormData({
                     namaInstansi: profile.nama_instansi || '',
                     wilayahKerja: profile.wilayah_kerja || '',
                     alamat: profile.alamat || '',
                     email: userEmail,
-                    penanggungJawab: profile.penanggung_jawab || '', 
-                    nomorKontak: profile.nomor_kontak || profile.no_kontak || '' 
+                    penanggungJawab: profile.penanggung_jawab || '',
+                    nomorKontak: profile.nomor_kontak || profile.no_kontak || ''
                 });
 
             } catch (err: any) {
@@ -61,21 +61,21 @@ const InformasiInstansiPage = () => {
 
     const handleSuccessConfirm = () => {
         setSuccessMessage(null);
-        setIsEditing(false); 
+        setIsEditing(false);
     };
 
     const handleSave = async () => {
-        setIsSaving(true); 
+        setIsSaving(true);
         try {
             const response = await fetchWithAuth("/profile", {
-                method: "PATCH", 
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     nama_instansi: formData.namaInstansi,
                     wilayah_kerja: formData.wilayahKerja,
                     alamat: formData.alamat,
                     penanggung_jawab: formData.penanggungJawab,
-                    nomor_kontak: formData.nomorKontak 
+                    nomor_kontak: formData.nomorKontak
                 })
             });
 
@@ -87,9 +87,9 @@ const InformasiInstansiPage = () => {
             setSuccessMessage("Data profil instansi berhasil diperbarui!");
 
         } catch (error: any) {
-            alert(error.message); 
+            alert(error.message);
         } finally {
-            setIsSaving(false); 
+            setIsSaving(false);
         }
     };
 
@@ -127,18 +127,18 @@ const InformasiInstansiPage = () => {
     return (
         // Padding: 24px (mobile) -> 3vw (desktop)
         <div className="w-full min-h-screen p-6 lg:p-[3vw] font-sans">
-            
+
             <div className="flex flex-col gap-6 lg:gap-[2vw]">
-                
+
                 {/* Header Section */}
                 <div className="flex flex-col">
                     {/* H1: Text 30px (mobile) -> 2.5vw (desktop) */}
                     <h1 className="satoshiBold text-3xl lg:text-[2.5vw] text-white leading-tight">
                         Informasi Instansi
                     </h1>
-                    
+
                     {!isEditing && (
-                        <button 
+                        <button
                             onClick={() => setIsEditing(true)}
                             // Text small (mobile) -> 1vw (desktop)
                             className="text-white italic text-sm lg:text-[1vw] opacity-80 hover:opacity-100 hover:underline w-fit mt-1 lg:mt-[0.2vw]"
@@ -155,15 +155,15 @@ const InformasiInstansiPage = () => {
 
                 {/* Form Container: Width Full (mobile) -> 80% (desktop) */}
                 <div className="flex flex-col gap-4 lg:gap-[1.5vw] w-full lg:w-[80%]">
-                    
+
                     {/* Input Field Component (Repeated Logic) */}
                     <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
                         <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Email</label>
-                        <input 
-                            type="email" 
+                        <input
+                            type="email"
                             name="email"
                             value={formData.email}
-                            readOnly={true} 
+                            readOnly={true}
                             // Input Styles: Rounded-lg, Text-base, Padding standard -> VW on desktop
                             className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
                                 satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
@@ -173,16 +173,16 @@ const InformasiInstansiPage = () => {
 
                     <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
                         <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Nama Instansi</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             name="namaInstansi"
                             value={formData.namaInstansi}
                             onChange={handleChange}
                             readOnly={!isEditing}
                             className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
                                 satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
-                                ${isEditing 
-                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
+                                ${isEditing
+                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50'
                                     : 'bg-white/90 cursor-default'
                                 }`}
                         />
@@ -190,16 +190,16 @@ const InformasiInstansiPage = () => {
 
                     <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
                         <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Wilayah Kerja</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             name="wilayahKerja"
                             value={formData.wilayahKerja}
                             onChange={handleChange}
                             readOnly={!isEditing}
                             className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
                                 satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
-                                ${isEditing 
-                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
+                                ${isEditing
+                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50'
                                     : 'bg-white/90 cursor-default'
                                 }`}
                         />
@@ -207,16 +207,16 @@ const InformasiInstansiPage = () => {
 
                     <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
                         <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Penanggung Jawab</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             name="penanggungJawab"
                             value={formData.penanggungJawab}
                             onChange={handleChange}
                             readOnly={!isEditing}
                             className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
                                 satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
-                                ${isEditing 
-                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
+                                ${isEditing
+                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50'
                                     : 'bg-white/90 cursor-default'
                                 }`}
                         />
@@ -224,16 +224,16 @@ const InformasiInstansiPage = () => {
 
                     <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
                         <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Nomor Kontak</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             name="nomorKontak"
                             value={formData.nomorKontak}
                             onChange={handleChange}
                             readOnly={!isEditing}
                             className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
                                 satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
-                                ${isEditing 
-                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
+                                ${isEditing
+                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50'
                                     : 'bg-white/90 cursor-default'
                                 }`}
                         />
@@ -241,16 +241,16 @@ const InformasiInstansiPage = () => {
 
                     <div className="flex flex-col gap-2 lg:gap-[0.5vw]">
                         <label className="satoshiBold text-base lg:text-[1.2vw] text-white">Alamat</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             name="alamat"
                             value={formData.alamat}
                             onChange={handleChange}
                             readOnly={!isEditing}
                             className={`w-full rounded-lg lg:rounded-[0.8vw] px-4 py-3 lg:px-[1.5vw] lg:py-[0.8vw] 
                                 satoshiMedium text-base lg:text-[1.1vw] text-[#B56225] outline-none transition-all duration-300
-                                ${isEditing 
-                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50' 
+                                ${isEditing
+                                    ? 'bg-white shadow-md focus:ring-2 focus:ring-white/50'
                                     : 'bg-white/90 cursor-default'
                                 }`}
                         />
@@ -260,7 +260,7 @@ const InformasiInstansiPage = () => {
 
                 {isEditing && (
                     <div className="flex justify-end w-full lg:w-[80%] mt-6 lg:mt-[2vw]">
-                        <button 
+                        <button
                             onClick={handleSave}
                             disabled={isSaving}
                             className={`bg-white text-[#D9833E] satoshiBold text-base lg:text-[1.2vw] 
@@ -275,26 +275,30 @@ const InformasiInstansiPage = () => {
                 )}
 
             </div>
-            
+
             {/* Loading Modal Overlay */}
             {isSaving && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[35vw] shadow-2xl flex flex-col items-center text-center">
-                        
+
                         <div className="relative w-24 h-24 lg:w-[12vw] lg:h-[12vw] flex items-center justify-center">
-                            <Image 
-                                src={bg} 
-                                alt="Background Shape" 
-                                layout="fill"
-                                objectFit="contain"
+                            <Image
+                                src={bg}
+                                alt="Background Shape"
+                                fill
+                                sizes="(max-width: 1024px) 96px, 12vw"
+                                className="object-contain"
                             />
-                            <Image 
-                                src={loadingSpinner} 
-                                alt="Spinner" 
+                            <Image
+                                src={loadingSpinner}
+                                alt="Spinner"
+                                width={80}
+                                height={80}
+                                sizes="(max-width: 1024px) 40px, 5vw"
                                 className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute inset-0 m-auto animate-spin"
                             />
                         </div>
-                        
+
                         <h3 className="satoshiBold text-2xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
                         <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
                             Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
@@ -307,15 +311,15 @@ const InformasiInstansiPage = () => {
             {successMessage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <div className="relative bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[28vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
-                        
+
                         <div className="w-16 h-16 lg:w-[5vw] lg:h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8 lg:w-[3vw] lg:h-[3vw] text-green-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                         </div>
-                        
+
                         <h3 className="satoshiBold text-xl lg:text-[1.8vw] text-gray-800">{successMessage}</h3>
-                        
+
                         <button
                             onClick={handleSuccessConfirm}
                             className="py-2 px-6 lg:py-[0.8vw] lg:px-[3vw] rounded-lg lg:rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"

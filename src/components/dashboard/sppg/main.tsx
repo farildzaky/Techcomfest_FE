@@ -60,15 +60,16 @@ interface SchoolDetail {
 // --- Skeleton Loading ---
 const DashboardSkeleton = () => {
     return (
-        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-8 lg:pb-[1vw] animate-pulse gap-6 lg:gap-0">
+        <div className="flex flex-col lg:grid lg:grid-cols-7 pb-8 lg:pb-[1vw] animate-pulse gap-6 lg:gap-0 min-h-screen">
             <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-6 lg:gap-[2vw] flex flex-col">
-                <div className="w-full h-10 lg:h-[3vw] bg-gray-300 rounded-full" />
-                <div className="w-full h-48 lg:h-[15vw] bg-gray-300 rounded-2xl lg:rounded-[2vw]" />
-                <div className="w-48 lg:w-[15vw] h-8 lg:h-[3vw] bg-gray-300 rounded-md" />
+                <div className="w-full h-10 lg:h-[2.5vw] bg-gray-300 rounded-full" />
+                <div className="w-full aspect-[2.5/1] bg-gray-300 rounded-2xl lg:rounded-[2vw]" />
+                <div className="w-48 lg:w-[15vw] h-8 lg:h-[2.5vw] bg-gray-300 rounded-md" />
+                <div className="w-full aspect-[3.5/1] bg-gray-300 rounded-2xl lg:rounded-[2vw]" />
             </div>
             <div className="lg:col-span-2 px-4 lg:pr-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col">
                 <div className="w-full h-12 lg:h-[4vw] bg-gray-300 rounded-md" />
-                <div className="bg-gray-300 rounded-2xl lg:rounded-[2vw] p-4 h-96 lg:h-[30vw]" />
+                <div className="bg-gray-300 rounded-2xl lg:rounded-[2vw] p-4 aspect-[1/1.2] lg:h-[30vw]" />
             </div>
         </div>
     );
@@ -111,7 +112,7 @@ const MainDashboardSppg = () => {
                         date: item.tanggal,
                         menu: item.nama_menu
                     }));
-                    
+
                     const dayOrder: { [key: string]: number } = { "senin": 1, "selasa": 2, "rabu": 3, "kamis": 4, "jumat": 5, "sabtu": 6, "minggu": 7 };
                     formattedMenus.sort((a: MenuItem, b: MenuItem) => (dayOrder[a.day] || 8) - (dayOrder[b.day] || 8));
                     setMenus(formattedMenus.slice(0, 5));
@@ -151,10 +152,10 @@ const MainDashboardSppg = () => {
                         .map((item: any) => {
                             const rawSchoolList = Array.isArray(schoolResult.data) ? schoolResult.data : (schoolResult.data ? [schoolResult.data] : []);
                             // Pencocokan sekolah
-                            const matchedSchool = rawSchoolList.find((s: any) => 
+                            const matchedSchool = rawSchoolList.find((s: any) =>
                                 s.nama_sekolah === item.school_name || s.school_name === item.school_name
                             );
-                            
+
                             // Gunakan user_id jika ada, jika tidak fallback ke id biasa
                             const targetId = matchedSchool ? (matchedSchool.user_id || matchedSchool.id) : null;
 
@@ -189,14 +190,14 @@ const MainDashboardSppg = () => {
         try {
             // [FIX] Menggunakan ID yang dikirim (sekarang user_id)
             const res = await fetchWithAuth(`/sppg/schools/${targetId}`, { method: 'GET' });
-            
+
             if (!res.ok) {
-                if(res.status === 404) throw new Error("Data sekolah tidak ditemukan (404).");
+                if (res.status === 404) throw new Error("Data sekolah tidak ditemukan (404).");
                 throw new Error(`Gagal memuat data (Status: ${res.status})`);
             }
 
             const json = await res.json();
-            
+
             if (json.success) {
                 setSelectedSchool(json.data);
             } else {
@@ -224,7 +225,7 @@ const MainDashboardSppg = () => {
             <div className="lg:col-span-5 p-4 lg:p-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col">
                 {/* Alert Bar */}
                 <div className="bg-[#D7762E] w-full rounded-full px-4 lg:px-[1vw] py-2 lg:py-[0.5vw] satoshiMedium text-white text-sm lg:text-[1vw] items-center flex flex-row shadow-md" style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
-                    <Image src={information} alt="information" className="mr-2 lg:mr-[0.5vw] w-5 lg:w-[1.5vw] h-5 lg:h-[1.5vw]" />
+                    <Image src={information} alt="information" width={24} height={24} className="mr-2 lg:mr-[0.5vw] w-5 lg:w-[1.5vw] h-5 lg:h-[1.5vw]" />
                     <span className="truncate">{alertMsg}</span>
                 </div>
 
@@ -238,8 +239,8 @@ const MainDashboardSppg = () => {
                             Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.
                         </p>
                     </div>
-                    <div className="w-[45%] relative h-auto">
-                        <Image src={menuImg} alt="menu image" className="object-contain w-full h-full" />
+                    <div className="w-[45%] relative aspect-square">
+                        <Image src={menuImg} alt="menu image" fill sizes="(max-width: 1024px) 45vw, 25vw" className="object-contain" priority />
                     </div>
                 </div>
 
@@ -265,7 +266,7 @@ const MainDashboardSppg = () => {
             {/* --- KOLOM KANAN (SIDEBAR) Span 2 --- */}
             <div className="lg:col-span-2 px-4 lg:pr-[1vw] pt-4 lg:pt-[1vw] gap-4 lg:gap-[1vw] flex flex-col mb-8 lg:mb-0">
                 <div className="w-full text-2xl lg:text-[4vw] satoshiBold lg:flex lg:flex-row hidden items-center justify-center lg:justify-start ">
-                    <Image src={logoOrange} alt="logo" className="w-12 lg:w-[5vw] mr-2 lg:mr-[0.5vw]" />
+                    <Image src={logoOrange} alt="logo" width={80} height={80} className="w-12 lg:w-[5vw] mr-2 lg:mr-[0.5vw]" />
                     <h1 className="text-[#E87E2F] satoshiBold tracking-wider">INKLUZI</h1>
                 </div>
 
@@ -277,15 +278,15 @@ const MainDashboardSppg = () => {
                     <div className="w-full flex-1 relative overflow-y-auto lg:p-[0vw] flex flex-col gap-3 lg:gap-[0.5vw] custom-scrollbar">
                         {schools.length > 0 ? (
                             schools.map((school, index) => (
-                                <div 
-                                    key={school.id} 
+                                <div
+                                    key={school.id}
                                     // [FIX] Mengirim user_id, bukan id biasa
                                     onClick={() => handleSchoolClick(school.user_id)}
                                     className="w-full p-2 lg:p-[0.8vw] rounded-xl lg:rounded-[1vw] flex items-center gap-3 lg:gap-[0.8vw] cursor-pointer hover:bg-orange-100/50 transition-colors"
                                 >
                                     <div className="w-16 h-16 lg:w-[4vw] lg:h-[4vw] relative shrink-0">
                                         {school.photo_url ? (
-                                            <Image src={school.photo_url} alt={school.nama_sekolah} fill className="rounded-full object-cover " />
+                                            <Image src={school.photo_url} alt={school.nama_sekolah} fill sizes="(max-width: 1024px) 64px, 4vw" className="rounded-full object-cover" />
                                         ) : (
                                             <div className="w-full h-full bg-[#E87E2F] rounded-full flex items-center justify-center text-white satoshiBold text-[5vw] lg:text-[2.5vw]">
                                                 {index + 1}
@@ -331,7 +332,7 @@ const MainDashboardSppg = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeModal} />
                     <div className="relative bg-white w-full max-w-2xl lg:max-w-[50vw] rounded-2xl lg:rounded-[2vw] shadow-2xl  flex flex-col gap-4 lg:gap-[1.5vw] max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-200">
-                        
+
                         <button onClick={closeModal} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 lg:w-[1.5vw] lg:h-[1.5vw]">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -354,9 +355,9 @@ const MainDashboardSppg = () => {
                                 <div className="flex flex-col items-center gap-3 lg:gap-[1vw]">
                                     <div className="relative w-24 h-24 lg:w-[6vw] lg:h-[6vw] shrink-0">
                                         {selectedSchool.photo_url ? (
-                                            <Image src={selectedSchool.photo_url} alt={selectedSchool.nama_sekolah} fill className="rounded-full object-cover " />
+                                            <Image src={selectedSchool.photo_url} alt={selectedSchool.nama_sekolah} fill sizes="(max-width: 1024px) 96px, 6vw" className="rounded-full object-cover" />
                                         ) : (
-                                            <div className="w-full bg-[#E87E2F] rounded-full flex items-center justify-center text-white satoshiBold text-3xl">
+                                            <div className="w-full h-full bg-[#E87E2F] rounded-full flex items-center justify-center text-white satoshiBold text-3xl">
                                                 {selectedSchool.nama_sekolah.charAt(0)}
                                             </div>
                                         )}
