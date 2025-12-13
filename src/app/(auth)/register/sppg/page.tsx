@@ -124,10 +124,10 @@ const RegisterSppgPage = () => {
                     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
 
                     {/* Modal Content */}
-                    <div className="relative bg-white rounded-2xl md:rounded-[2vw] p-6 md:p-[3vw] w-full max-w-lg md:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center ">
+                    <div className="relative bg-white rounded-2xl md:rounded-[1.5vw] p-6 md:p-[2vw] w-full max-w-md md:w-[30vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-3 md:gap-[1vw]">
                         
                         {/* ICON SECTION */}
-                        <div className="relative w-24 h-24 md:w-[15vw] md:h-[15vw] flex items-center justify-center">
+                        <div className="relative w-20 h-20 md:w-[10vw] md:h-[10vw] flex items-center justify-center">
                             {/* Background Circle */}
                             <Image 
                                 src={bg} 
@@ -141,7 +141,7 @@ const RegisterSppgPage = () => {
                                 <Image 
                                     src={loadingIcon} 
                                     alt="Loading" 
-                                    className="w-12 h-12 md:w-[5vw] md:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
+                                    className="w-10 h-10 md:w-[4vw] md:h-[4vw] object-contain absolute animate-spin"
                                 />
                             )}
                             
@@ -149,17 +149,17 @@ const RegisterSppgPage = () => {
                                 <Image 
                                     src={proses} 
                                     alt="Proses" 
-                                    className="w-12 h-12 md:w-[8vw] md:h-[8vw] translate-y-[-0.3vw] object-contain absolute"
+                                    className="w-10 h-10 md:w-[6vw] md:h-[6vw] object-contain absolute"
                                 />
                             )}
                         </div>
 
                         {/* TEXT CONTENT */}
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-1">
                             {modalType === 'loading' && (
                                 <>
-                                    <h3 className="satoshiBold text-xl md:text-[2.5vw] text-[#E87E2F] mt-4 md:mt-[2vw]">Sedang Memproses</h3>
-                                    <p className="satoshiMedium text-sm md:text-[1.2vw] text-gray-500 mt-2 md:mt-[0.5vw]">
+                                    <h3 className="satoshiBold text-lg md:text-[1.8vw] text-[#E87E2F]">Sedang Memproses</h3>
+                                    <p className="satoshiMedium text-sm md:text-[1vw] text-gray-500">
                                         Mohon tunggu, data pendaftaran Anda sedang dikirim...
                                     </p>
                                 </>
@@ -167,8 +167,8 @@ const RegisterSppgPage = () => {
 
                             {modalType === 'success' && (
                                 <>
-                                    <h3 className="satoshiBold text-xl md:text-[2.5vw] text-[#B56225] mt-4 md:mt-[2vw]">Pendaftaran Berhasil!</h3>
-                                    <p className="satoshiMedium text-sm md:text-[1.2vw] text-[#B56225] mt-2 md:mt-[0.5vw]">
+                                    <h3 className="satoshiBold text-lg md:text-[1.8vw] text-[#B56225]">Pendaftaran Berhasil!</h3>
+                                    <p className="satoshiMedium text-sm md:text-[1vw] text-[#B56225]">
                                         Akun Anda sedang diproses. Admin akan memverifikasi dalam waktu 1x24 jam.
                                     </p>
                                 </>
@@ -179,7 +179,7 @@ const RegisterSppgPage = () => {
                         {modalType === 'success' && (
                             <button
                                 onClick={() => router.push('/login')}
-                                className="w-full bg-[#D9833E] text-white satoshiBold text-base md:text-[1.2vw] py-3 md:py-[1vw] rounded-xl md:rounded-[1vw] hover:bg-[#c27233] transition-colors shadow-md mt-4 md:mt-[1vw]"
+                                className="w-full bg-[#D9833E] text-white satoshiBold text-base md:text-[1vw] py-2.5 md:py-[0.8vw] rounded-xl md:rounded-[0.8vw] hover:bg-[#c27233] transition-colors shadow-md"
                             >
                                 Kembali ke Login
                             </button>

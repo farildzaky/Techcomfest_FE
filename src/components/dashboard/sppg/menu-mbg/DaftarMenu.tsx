@@ -254,9 +254,9 @@ const DaftarMenu = () => {
             </div>
 
             {isUpdatingId && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="relative bg-white rounded-[2vw] p-[3vw] w-[35vw] shadow-2xl flex flex-col items-center text-center">
-                        <div className="relative w-[12vw] h-[12vw] flex items-center justify-center">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-md lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
+                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
                             <Image
                                 src={bg}
                                 alt="Background Shape"
@@ -266,29 +266,31 @@ const DaftarMenu = () => {
                             <Image
                                 src={loadingSpinner}
                                 alt="Spinner"
-                                className="w-[5vw] h-[5vw] object-contain absolute translate-y-[0.4vw] translate-x-[0.4vw] animate-spin"
+                                className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] object-contain absolute animate-spin"
                             />
                         </div>
-                        <h3 className="satoshiBold text-[2.5vw] text-[#E87E2F] mt-[2vw]">Sedang Diproses</h3>
-                        <p className="satoshiMedium text-[1.2vw] text-gray-500 mt-[0.5vw]">
-                            Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
-                        </p>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F]">Sedang Diproses</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500">
+                                Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}
 
             {successMessage && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                    <div className="relative bg-white rounded-[1.5vw] p-[3vw] w-[28vw] shadow-2xl flex flex-col items-center text-center gap-[2vw]">
-                        <div className="w-[5vw] h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-[3vw] h-[3vw] text-green-600">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[28vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
+                        <div className="w-16 h-16 lg:w-[5vw] lg:h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-10 h-10 lg:w-[3vw] lg:h-[3vw] text-green-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                         </div>
-                        <h3 className="satoshiBold text-[1.8vw] text-gray-800">{successMessage}</h3>
+                        <h3 className="satoshiBold text-lg lg:text-[1.8vw] text-gray-800">{successMessage}</h3>
                         <button
                             onClick={() => setSuccessMessage(null)}
-                            className="py-[0.8vw] px-[3vw] rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                            className="py-2 lg:py-[0.8vw] px-8 lg:px-[3vw] rounded-xl lg:rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
                         >
                             OKE
                         </button>

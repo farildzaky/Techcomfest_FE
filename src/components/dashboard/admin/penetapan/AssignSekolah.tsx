@@ -222,10 +222,10 @@ const AssignSekolah = () => {
                         onClick={closeModal}
                     ></div>
 
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center ">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[2vw] w-full max-w-md lg:w-[30vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
 
                         {/* ICON SECTION - MATCHED LAYOUT */}
-                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                        <div className="relative w-20 h-20 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
                             {/* Background Circle */}
                             <Image 
                                 src={bg} 
@@ -239,7 +239,7 @@ const AssignSekolah = () => {
                                 <Image 
                                     src={loadingIcon} 
                                     alt="Loading" 
-                                    className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin"
+                                    className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute animate-spin"
                                 />
                             )}
                             
@@ -247,17 +247,17 @@ const AssignSekolah = () => {
                                 <Image 
                                     src={alertIcon} 
                                     alt="Error" 
-                                    className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute"
+                                    className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute"
                                 />
                             )}
                         </div>
 
                         {/* TEXT CONTENT SECTION */}
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-1">
                             {modalType === 'loading' && (
                                 <>
-                                    <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
-                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                    <h3 className="satoshiBold text-lg lg:text-[1.8vw] text-[#E87E2F]">Sedang Diproses</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1vw] text-gray-500">
                                         Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
                                     </p>
                                 </>
@@ -265,8 +265,8 @@ const AssignSekolah = () => {
 
                             {modalType === 'error' && (
                                 <>
-                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#B56225]">Gagal Menyimpan</h3>
-                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-[#B56225] px-4">
+                                    <h3 className="satoshiBold text-lg lg:text-[1.8vw] text-[#B56225]">Gagal Menyimpan</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1vw] text-[#B56225] px-4">
                                         {modalMessage}
                                     </p>
                                 </>
@@ -274,11 +274,11 @@ const AssignSekolah = () => {
                         </div>
 
                         {/* BUTTON ACTION SECTION */}
-                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                        <div className="flex w-full gap-4 lg:gap-[1vw]">
                             {modalType === 'error' && (
                                 <button
                                     onClick={closeModal}
-                                    className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                                    className="w-full py-2.5 lg:py-[0.8vw] rounded-xl lg:rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1vw] hover:bg-[#c27233] transition-colors shadow-md"
                                 >
                                     Mengerti
                                 </button>

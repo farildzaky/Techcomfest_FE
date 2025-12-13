@@ -338,22 +338,22 @@ const InformasiSekolah = () => {
             {/* --- MODALS (Loading & Success) --- */}
             {isSaving && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[35vw] shadow-2xl flex flex-col items-center text-center">
-                        <div className="relative w-24 h-24 lg:w-[12vw] lg:h-[12vw]">
-                            <Image src={bg} alt="bg" layout="fill" objectFit="contain" />
-                            <Image src={loadingSpinner} alt="spinner" className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute inset-0 m-auto animate-spin" />
+                    <div className="relative bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[2vw] w-full max-w-sm lg:max-w-none lg:w-[28vw] shadow-2xl flex flex-col items-center text-center gap-3 lg:gap-[1vw]">
+                        <div className="relative w-20 h-20 lg:w-[8vw] lg:h-[8vw]">
+                            <Image src={bg} alt="bg" fill className="object-contain" />
+                            <Image src={loadingSpinner} alt="spinner" width={64} height={64} className="w-8 h-8 lg:w-[4vw] lg:h-[4vw] object-contain absolute inset-0 m-auto animate-spin" />
                         </div>
-                        <h3 className="satoshiBold text-2xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
+                        <h3 className="satoshiBold text-xl lg:text-[1.5vw] text-[#E87E2F]">Sedang Diproses</h3>
                     </div>
                 </div>
             )}
 
             {successMessage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[28vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
-                        <div className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-xl lg:text-[2vw]">✓</div>
-                        <h3 className="satoshiBold text-xl lg:text-[1.8vw] text-gray-800">{successMessage}</h3>
-                        <button onClick={() => setSuccessMessage(null)} className="py-2 px-6 lg:py-[0.8vw] lg:px-[3vw] rounded-lg lg:rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md">OKE</button>
+                    <div className="bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[2vw] w-full max-w-sm lg:max-w-none lg:w-[25vw] shadow-2xl flex flex-col items-center text-center gap-3 lg:gap-[1vw]">
+                        <div className="w-12 h-12 lg:w-[4vw] lg:h-[4vw] rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-xl lg:text-[1.5vw]">✓</div>
+                        <h3 className="satoshiBold text-lg lg:text-[1.5vw] text-gray-800">{successMessage}</h3>
+                        <button onClick={() => setSuccessMessage(null)} className="py-2 px-6 lg:py-[0.6vw] lg:px-[2vw] rounded-lg lg:rounded-[0.6vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1vw] hover:bg-[#c27233] transition-colors shadow-md">OKE</button>
                     </div>
                 </div>
             )}

@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, notFound } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api'; 
 import warning from '../../../../../assets/dashboard/sekolah/warning-orange.png'; 
 
@@ -95,6 +95,10 @@ const HasilDeteksiPage = () => {
     const router = useRouter();
     const params = useParams(); 
     const scanId = params?.id as string | undefined;
+
+    if (!scanId || scanId === 'undefined' || scanId === 'null') {
+        notFound();
+    }
 
     const [loading, setLoading] = useState(true);
     const [imageSrc, setImageSrc] = useState<string>("");

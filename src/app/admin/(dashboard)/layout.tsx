@@ -63,7 +63,7 @@ export default function AdminDashboardLayout({
                     </button>
 
                     <div className='flex flex-row items-center justify-center w-full gap-[1vw] pr-[10vw]'>
-                        <Image src={logoOrange} alt="Logo" className='w-[8vw]' />
+                        <Image src={logoOrange} alt="Logo" width={868} height={870} className='w-[8vw] h-auto' />
                         <p className="text-[5vw] font-bold text-[#E87E2F] text-center leading-none">INKLUZI</p>
                     </div>
                 </header>

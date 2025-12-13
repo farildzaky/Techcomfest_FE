@@ -279,14 +279,14 @@ const InformasiInstansiPage = () => {
             {/* Loading Modal Overlay */}
             {isSaving && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[35vw] shadow-2xl flex flex-col items-center text-center">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[2vw] w-full max-w-sm lg:max-w-none lg:w-[30vw] shadow-2xl flex flex-col items-center text-center gap-3 lg:gap-[1vw]">
 
-                        <div className="relative w-24 h-24 lg:w-[12vw] lg:h-[12vw] flex items-center justify-center">
+                        <div className="relative w-20 h-20 lg:w-[8vw] lg:h-[8vw] flex items-center justify-center">
                             <Image
                                 src={bg}
                                 alt="Background Shape"
                                 fill
-                                sizes="(max-width: 1024px) 96px, 12vw"
+                                sizes="(max-width: 1024px) 80px, 8vw"
                                 className="object-contain"
                             />
                             <Image
@@ -294,13 +294,13 @@ const InformasiInstansiPage = () => {
                                 alt="Spinner"
                                 width={80}
                                 height={80}
-                                sizes="(max-width: 1024px) 40px, 5vw"
-                                className="w-10 h-10 lg:w-[5vw] lg:h-[5vw] object-contain absolute inset-0 m-auto animate-spin"
+                                sizes="(max-width: 1024px) 32px, 4vw"
+                                className="w-8 h-8 lg:w-[4vw] lg:h-[4vw] object-contain absolute inset-0 m-auto animate-spin"
                             />
                         </div>
 
-                        <h3 className="satoshiBold text-2xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
-                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                        <h3 className="satoshiBold text-xl lg:text-[1.8vw] text-[#E87E2F]">Sedang Diproses</h3>
+                        <p className="satoshiMedium text-sm lg:text-[1vw] text-gray-500">
                             Perubahan Anda sedang diproses. Pastikan koneksi Anda stabil.
                         </p>
                     </div>
@@ -310,19 +310,19 @@ const InformasiInstansiPage = () => {
             {/* Success Modal Overlay */}
             {successMessage && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="relative bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[3vw] w-full max-w-sm lg:max-w-none lg:w-[28vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[2vw]">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[1.5vw] p-6 lg:p-[2vw] w-full max-w-sm lg:max-w-none lg:w-[25vw] shadow-2xl flex flex-col items-center text-center gap-3 lg:gap-[1vw]">
 
-                        <div className="w-16 h-16 lg:w-[5vw] lg:h-[5vw] rounded-full bg-green-100 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-8 h-8 lg:w-[3vw] lg:h-[3vw] text-green-600">
+                        <div className="w-14 h-14 lg:w-[4vw] lg:h-[4vw] rounded-full bg-green-100 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-7 h-7 lg:w-[2.5vw] lg:h-[2.5vw] text-green-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                             </svg>
                         </div>
 
-                        <h3 className="satoshiBold text-xl lg:text-[1.8vw] text-gray-800">{successMessage}</h3>
+                        <h3 className="satoshiBold text-lg lg:text-[1.5vw] text-gray-800">{successMessage}</h3>
 
                         <button
                             onClick={handleSuccessConfirm}
-                            className="py-2 px-6 lg:py-[0.8vw] lg:px-[3vw] rounded-lg lg:rounded-[0.8vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                            className="py-2 px-6 lg:py-[0.6vw] lg:px-[2vw] rounded-lg lg:rounded-[0.6vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1vw] hover:bg-[#c27233] transition-colors shadow-md"
                         >
                             OKE
                         </button>
