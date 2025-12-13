@@ -47,6 +47,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
+        <meta name="google-site-verification" content="zZNy6AtuSaBBq0u0QPpu2hI5WHvmPeUJBBxst2S8JS8" />
         <link
           rel="preload"
           href="/fonts/SatoshiBold.otf"
