@@ -1,7 +1,7 @@
-# 🍽️ NutriScan - Sistem Monitoring Gizi MBG (Makan Bergizi Gratis)
+# 🍽️ Inkluzi - Sistem Monitoring Gizi MBG (Makan Bergizi Gratis)
 
 <p align="center">
-  <img src="public/favicon.ico" alt="NutriScan Logo" width="80" />
+  <img src="public/favicon.ico" alt="Inkluzi Logo" width="80" />
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 
 ## 📋 Deskripsi
 
-**NutriScan** adalah aplikasi web yang dikembangkan untuk mendukung program **Makan Bergizi Gratis (MBG)** pemerintah Indonesia, khususnya untuk sekolah-sekolah inklusi yang memiliki siswa dengan kebutuhan khusus (disabilitas). 
+**Inkluzi** adalah aplikasi web yang dikembangkan untuk mendukung program **Makan Bergizi Gratis (MBG)** pemerintah Indonesia, khususnya untuk sekolah-sekolah inklusi yang memiliki siswa dengan kebutuhan khusus (disabilitas). 
 
 Aplikasi ini memungkinkan:
 - **Sekolah** untuk melaporkan pelaksanaan MBG dan memindai kandungan gizi makanan
@@ -55,7 +55,8 @@ Aplikasi ini memungkinkan:
 - **Role-based Access** - Hak akses berdasarkan peran (Admin, Sekolah, SPPG)
 - **Responsive Design** - Optimal di desktop dan mobile
 - **Custom Modal System** - Modal loading, success, error yang terstandarisasi
-- **PWA Ready** - Dapat diinstall sebagai aplikasi
+- **Scan Menu** - Scan nutrisi dengan bantuan AI
+- **Analisis Menu** - Menganalisis menu sesuai kebutuhan disabilitas sekolah 
 
 ## 🛠️ Tech Stack
 
