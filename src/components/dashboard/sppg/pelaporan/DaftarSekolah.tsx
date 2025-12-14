@@ -1,15 +1,12 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { fetchWithAuth } from "@/src/lib/api"; 
-import Image from 'next/image';
-import bg from "../../../../assets/bg.png";
-import loadingSpinner from "../../../../assets/loading.png"; 
+import { fetchWithAuth } from "@/src/lib/api";
 
 // Interface data sekolah
 interface SchoolData {
     id: string;
-    nama_sekolah: string; 
+    nama_sekolah: string;
 }
 
 const DaftarSekolah = () => {
@@ -19,13 +16,13 @@ const DaftarSekolah = () => {
     useEffect(() => {
         const fetchSekolah = async () => {
             try {
-                const response = await fetchWithAuth('/sppg/schools', { 
-                    method: 'GET' 
+                const response = await fetchWithAuth('/sppg/schools', {
+                    method: 'GET'
                 });
 
                 if (response.ok) {
                     const result = await response.json();
-                    setSekolahList(result.data || []); 
+                    setSekolahList(result.data || []);
                 } else {
                     console.error("Gagal mengambil data sekolah");
                 }
@@ -39,22 +36,21 @@ const DaftarSekolah = () => {
         fetchSekolah();
     }, []);
 
-    // Loading State dengan Modal
+    // Loading State dengan Skeleton
     if (loading) {
         return (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
-                <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
-                    <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
-                        <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
-                        <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Memuat Data</h3>
-                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
-                            Sedang mengambil daftar sekolah...
-                        </p>
-                    </div>
+            <div className="flex flex-col p-6 gap-6 min-h-screen lg:p-[3vw] lg:gap-[3vw]">
+                {/* Title Skeleton */}
+                <div className="h-8 lg:h-[2.5vw] w-48 lg:w-[15vw] bg-gray-300 rounded animate-pulse"></div>
+                
+                {/* List Skeleton */}
+                <div className="flex flex-col gap-4 lg:gap-[2vw]">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div 
+                            key={i} 
+                            className="h-14 lg:h-[4vw] bg-gray-200 rounded-xl lg:rounded-[1vw] animate-pulse"
+                        ></div>
+                    ))}
                 </div>
             </div>
         );
@@ -83,12 +79,12 @@ const DaftarSekolah = () => {
             >
                 {sekolahList.length > 0 ? (
                     sekolahList.map((item) => (
-                        <Link 
-                            href={`/sppg/pelaporan/${item.id}`} 
-                            key={item.id} 
+                        <Link
+                            href={`/sppg/pelaporan/${item.id}`}
+                            key={item.id}
                             className="block transition-transform hover:scale-[1.01]"
                         >
-                            <h1 
+                            <h1
                                 className="satoshiBold bg-[#E87E2F] text-white 
                                     text-lg p-4 px-6 rounded-xl 
                                     lg:text-[1.8vw] lg:p-[1vw] lg:px-[2vw] lg:rounded-[1vw]"

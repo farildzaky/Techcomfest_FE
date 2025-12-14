@@ -2,9 +2,6 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import Link from "next/link"; 
 import { fetchWithAuth } from '@/src/lib/api'; 
-import Image from 'next/image';
-import bg from "../../../../assets/bg.png";
-import loadingSpinner from "../../../../assets/loading.png";
 
 interface ReportData {
     id: string;
@@ -377,61 +374,29 @@ const DataLaporanSppg = () => {
             )}
 
             {/* Modal Detail Responsif */}
-            {/* MODAL LOADING DATA */}
-            {loading && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
-                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
-                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
-                            <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Memuat Data</h3>
-                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
-                                Sedang mengambil data pelaporan...
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* MODAL LOADING DETAIL */}
-            {loadingDetail && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
-                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
-                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
-                            <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Memuat Detail</h3>
-                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
-                                Mengambil detail laporan...
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {selectedDetail && !loadingDetail && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 lg:p-[3vw]">
+            {selectedDetail && (
+                <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 lg:p-[3vw]">
                     <div className="bg-[#E87E2F] w-full max-w-lg lg:max-w-none lg:w-[50vw] max-h-[90vh] overflow-y-auto rounded-xl lg:rounded-[2vw] p-6 lg:p-[3vw] shadow-2xl relative flex flex-col gap-4 lg:gap-[1.5vw] animate-in fade-in zoom-in-95 duration-200">
-                        <h2 className="text-white satoshiBold text-xl lg:text-[2vw] text-center">{selectedDetail.menu}</h2>
-                        {selectedDetail.foto_report && (
-                            <div className="w-full h-48 lg:h-[20vw] bg-white rounded-lg lg:rounded-[1vw] overflow-hidden mb-2 lg:mb-[1vw] flex items-center justify-center">
-                                <img src={selectedDetail.foto_report} alt="Bukti Laporan" className="w-full h-full object-cover" />
-                            </div>
+                        {loadingDetail ? (
+                            <div className="text-white text-center satoshiBold text-lg lg:text-[1.5vw]">Mengambil Data Detail...</div>
+                        ) : (
+                            <>
+                                <h2 className="text-white satoshiBold text-xl lg:text-[2vw] text-center">{selectedDetail.menu}</h2>
+                                {selectedDetail.foto_report && (
+                                    <div className="w-full h-48 lg:h-[20vw] bg-white rounded-lg lg:rounded-[1vw] overflow-hidden mb-2 lg:mb-[1vw] flex items-center justify-center">
+                                        <img src={selectedDetail.foto_report} alt="Bukti Laporan" className="w-full h-full object-cover" />
+                                    </div>
+                                )}
+                                <p className="text-white satoshiMedium text-sm lg:text-[1.2vw]">Catatan & Komponen:</p>
+                                <div className="bg-white rounded-lg lg:rounded-[1.5vw] p-4 lg:p-[2vw] min-h-[8rem] lg:min-h-[10vw]">
+                                    <ul className="list-none flex flex-col gap-2 lg:gap-[0.8vw]">
+                                        {selectedDetail.catatan.map((line, idx) => (
+                                            <li key={idx} className="text-[#8B4513] satoshiMedium text-sm lg:text-[1.2vw] leading-relaxed">{line}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </>
                         )}
-                        <p className="text-white satoshiMedium text-sm lg:text-[1.2vw]">Catatan & Komponen:</p>
-                        <div className="bg-white rounded-lg lg:rounded-[1.5vw] p-4 lg:p-[2vw] min-h-[8rem] lg:min-h-[10vw]">
-                            <ul className="list-none flex flex-col gap-2 lg:gap-[0.8vw]">
-                                {selectedDetail.catatan.map((line, idx) => (
-                                    <li key={idx} className="text-[#8B4513] satoshiMedium text-sm lg:text-[1.2vw] leading-relaxed">{line}</li>
-                                ))}
-                            </ul>
-                        </div>
                         <button 
                             onClick={() => setSelectedDetail(null)} 
                             className="absolute top-4 right-4 lg:top-[1.5vw] lg:right-[2vw] text-white hover:text-gray-200 cursor-pointer transition-transform hover:scale-110"

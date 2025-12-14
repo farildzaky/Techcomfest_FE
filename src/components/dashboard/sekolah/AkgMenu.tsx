@@ -146,17 +146,51 @@ const AkgMenu = () => {
 
     if (loading) {
         return (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen bg-white">
-                <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
-                    <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
-                        <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
-                        <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+            <div className="flex flex-col gap-6 lg:gap-[5vw] w-full min-h-screen bg-white pb-8 lg:pb-[5vw] font-sans relative">
+                {/* Background skeleton samar */}
+                <div className="w-full relative opacity-30">
+                    <div className="w-full p-6 lg:p-[2vw] px-4 lg:px-[3vw] bg-[#E87E2F] rounded-b-3xl lg:rounded-b-[2vw] flex shadow-md">
+                        <div className="h-8 lg:h-[3vw] bg-white/30 rounded w-1/2 lg:w-[40%]" />
                     </div>
-                    <div className="flex flex-col gap-2">
-                        <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Memuat Data Nutrisi</h3>
-                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
-                            Sedang mengambil informasi nutrisi menu...
-                        </p>
+                </div>
+
+                <div className="px-4 lg:px-[3vw] flex flex-col gap-8 lg:gap-[3vw] opacity-30">
+                    <div className="flex flex-col lg:flex-row gap-8 lg:gap-[2vw] items-center">
+                        <div className="w-full flex items-center justify-center relative">
+                            <div className="w-64 h-64 lg:w-[25vw] lg:h-[25vw] rounded-full relative bg-gray-300"></div>
+                        </div>
+
+                        <div className="w-full bg-[#E87E2F] rounded-2xl lg:rounded-[2vw] gap-4 lg:gap-[1vw] p-6 lg:p-[2vw] flex flex-col shadow-md">
+                            <div className="h-8 lg:h-[3vw] bg-white/30 rounded w-[70%]" />
+                            <div className="flex flex-col lg:flex-row gap-4 lg:gap-[1vw] items-center">
+                                <div className="w-full space-y-2 lg:space-y-[0.5vw]">
+                                    {[1, 2, 3].map(i => <div key={i} className="h-4 lg:h-[1.1vw] bg-white/30 rounded w-full" />)}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-[2vw]">
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} className="h-12 lg:h-[3vw] bg-gray-200 rounded-lg" />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Modal Loading di atas skeleton */}
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Memuat Data Nutrisi</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                Sedang mengambil informasi nutrisi menu...
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
