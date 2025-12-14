@@ -1,14 +1,14 @@
 import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
-// Increase body size limit for file uploads
-export const config = {
-    api: {
-        bodyParser: {
-            sizeLimit: '10mb',
-        },
-    },
-};
+// Use Edge runtime is optional - Node runtime handles larger bodies
+// export const runtime = 'nodejs'; // default
+
+// Disable body size limit for file uploads in App Router
+export const dynamic = 'force-dynamic';
+
+// For App Router: maximum request body size (in bytes) - 10MB
+export const maxDuration = 60;
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
     const resolvedParams = await params;
