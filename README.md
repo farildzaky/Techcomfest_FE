@@ -92,27 +92,18 @@ Aplikasi ini memungkinkan:
    pnpm install
    ```
 
-3. **Setup environment variables**
-   
-   Buat file `.env.local` di root project:
-   ```env
-   # API Backend URL
-   NEXT_PUBLIC_API_URL=https://your-backend-api.com
-   
-   # Scan API URL (untuk AI food scanning)
-   NEXT_PUBLIC_SCAN_API_URL=https://your-scan-api.com
-   ```
-
-4. **Jalankan development server**
+3. **Jalankan development server**
    ```bash
    npm run dev
    # atau
    yarn dev
    ```
 
-5. **Buka browser**
+4. **Buka browser**
    
    Akses [http://localhost:3000](http://localhost:3000)
+
+> **Note:** Project ini menggunakan API proxy route internal (`/api/proxy/`) sehingga tidak memerlukan file `.env.local` untuk konfigurasi URL backend.
 
 ## 📁 Struktur Project
 
