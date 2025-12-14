@@ -230,19 +230,18 @@ const MainDashboardSppg = () => {
                 </div>
 
                 {/* Hero */}
-                <div className="bg-[#E87E2F] w-full rounded-2xl lg:rounded-[2vw] pl-4 lg:pl-[2vw] flex flex-row items-center shadow-md" style={{ boxShadow: '0px 4px 4px 0px #00000040' }}>
+                <div className="bg-[#E87E2F] w-full rounded-2xl lg:rounded-[2vw] pl-4 lg:pl-[2vw] flex flex-row items-center shadow-md lg:shadow-none"
+                    style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
+                >
                     <div className="flex flex-col w-[55%] py-4 lg:py-0">
-                        <h1 className="satoshiBold text-[4.5vw] lg:text-[2.5vw] text-white leading-tight mb-2 lg:mb-0">
-                            Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif
-                        </h1>
-                        <p className="satoshiMedium text-[3vw] lg:text-[1.3vw] text-white">
-                            Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.
-                        </p>
+                        <h1 className="satoshiBold text-[4.5vw] lg:text-[2.5vw] text-white leading-tight mb-2 lg:mb-0">Validasi Gizi Cerdas untuk Siswa Sekolah Inklusif</h1>
+                        <p className="satoshiMedium text-[3vw] lg:text-[1.3vw] text-white">Memastikan setiap menu MBG aman, sesuai, dan ramah untuk anak disabilitas.</p>
                     </div>
-                    <div className="w-[45%] relative aspect-square">
-                        <Image src={menuImg} alt="menu image" fill sizes="(max-width: 1024px) 45vw, 25vw" className="object-contain" priority />
+                    <div className="w-[45%] relative h-auto">
+                        <Image src={menuImg} alt="menu image" className="object-contain w-full h-full" />
                     </div>
                 </div>
+
 
                 {/* Menu Minggu Depan */}
                 <h2 className="satoshiBold text-[4.5vw] md:text-[3vw] lg:text-[2vw] mt-2 lg:mt-0">
