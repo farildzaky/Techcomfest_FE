@@ -16,14 +16,14 @@ export default function ProfileLayout({
             {/* Sidebar Wrapper */}
             {/* Mobile: Lebar full */}
             {/* Desktop (lg): Ambil 3 kolom, Sticky, Full Height */}
-            <div className="w-full lg:col-span-3 lg:sticky lg:top-0 lg:h-screen z-50 ">
+            <div className="w-full lg:col-span-3 lg:sticky lg:top-0 lg:h-screen z-50 relative">
                 <SidebarProfileSppg />
             </div>
 
             {/* Content Wrapper */}
             {/* Mobile: Lebar full, tinggi auto (scroll body normal) */}
             {/* Desktop (lg): Ambil 6 kolom, Internal Scroll, Full Height */}
-            <div className="w-full lg:col-span-6 lg:overflow-y-auto lg:h-screen">
+            <div className="w-full lg:col-span-6 lg:overflow-y-auto lg:h-screen z-40 relative">
                 {children}
             </div>
 
