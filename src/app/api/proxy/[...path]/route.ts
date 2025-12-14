@@ -1,6 +1,15 @@
 import { NextResponse, NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
+// Increase body size limit for file uploads
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '10mb',
+        },
+    },
+};
+
 export async function GET(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
     const resolvedParams = await params;
     return handleProxy(request, resolvedParams);
@@ -45,20 +54,36 @@ async function handleProxy(request: NextRequest, params: { path: string[] }) {
         accessToken = cookieToken;
     }
 
+    const contentType = request.headers.get("Content-Type") || "";
+    const isFormData = contentType.includes("multipart/form-data");
+
     console.log(`[PROXY] ${request.method} ${targetUrl}`);
+    console.log(`[PROXY] Content-Type: ${contentType} | isFormData: ${isFormData}`);
     console.log(`[PROXY] Header Token: ${authHeader ? 'YES' : 'NO'} | Cookie Token: ${cookieToken ? 'YES' : 'NO'}`);
     console.log(`[PROXY] Using Token: ${accessToken ? accessToken.substring(0, 30) + '...' : 'NONE'}`);
 
-    const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-    };
+    const headers: Record<string, string> = {};
 
     if (accessToken) {
         headers["Authorization"] = `Bearer ${accessToken}`;
     }
 
+    // Jika bukan FormData, set Content-Type ke JSON
+    if (!isFormData) {
+        headers["Content-Type"] = "application/json";
+    }
+
     try {
-        const body = request.method !== "GET" && request.method !== "HEAD" ? await request.text() : undefined;
+        let body: BodyInit | undefined;
+
+        if (request.method !== "GET" && request.method !== "HEAD") {
+            if (isFormData) {
+                // Forward FormData as-is
+                body = await request.formData();
+            } else {
+                body = await request.text();
+            }
+        }
 
         const res = await fetch(targetUrl, {
             method: request.method,
