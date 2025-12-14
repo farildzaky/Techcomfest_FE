@@ -41,6 +41,7 @@ const DaftarMenu = () => {
     const [isUpdatingId, setIsUpdatingId] = useState<string | null>(null);
     const router = useRouter();
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     // State untuk modal delete
     const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
@@ -142,10 +143,11 @@ const DaftarMenu = () => {
                 setMenus(prev => prev.map(item => item.menu_id === id ? { ...item, komponen_menu: updatedComponents } : item));
                 setSuccessMessage("Menu berhasil diperbarui!");
             } else {
-                alert(`Gagal update`);
+                setErrorMessage("Gagal memperbarui menu.");
             }
         } catch (error) {
             console.error("Error updating:", error);
+            setErrorMessage("Terjadi kesalahan saat memperbarui.");
         } finally {
             setIsUpdatingId(null);
         }
@@ -164,11 +166,11 @@ const DaftarMenu = () => {
                 setMenus(prev => prev.filter(item => item.menu_id !== id));
                 setSuccessMessage("Menu berhasil dihapus!");
             } else {
-                alert("Gagal menghapus menu.");
+                setErrorMessage("Gagal menghapus menu.");
             }
         } catch (error) {
             console.error("Error deleting:", error);
-            alert("Terjadi kesalahan saat menghapus.");
+            setErrorMessage("Terjadi kesalahan saat menghapus.");
         } finally {
             setIsUpdatingId(null);
         }
@@ -343,6 +345,36 @@ const DaftarMenu = () => {
                                 className="flex-1 py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-red-600 text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-red-700 transition-colors shadow-md"
                             >
                                 Ya, Hapus
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL ERROR */}
+            {errorMessage && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setErrorMessage(null)}></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] max-w-lg lg:max-w-[30vw] w-full shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                        
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-12 h-12 lg:w-[6vw] lg:h-[6vw] text-red-500 absolute">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-lg lg:text-[2vw] text-red-500">Terjadi Kesalahan</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{errorMessage}</p>
+                        </div>
+
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            <button
+                                onClick={() => setErrorMessage(null)}
+                                className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-red-500 text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-red-600 transition-colors shadow-md"
+                            >
+                                Tutup
                             </button>
                         </div>
                     </div>

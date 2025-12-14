@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams, notFound } from 'next/navigation';
 import { fetchWithAuth } from '@/src/lib/api';
 import warning from '../../../../../assets/dashboard/sekolah/warning-orange.png';
+import loadingImg from '../../../../../assets/loading.png';
 
 interface ScanResultData {
     image_url: string;
@@ -105,6 +106,11 @@ const HasilDeteksiPage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isHistoryView, setIsHistoryView] = useState(false);
 
+    // Modal state
+    const [showModal, setShowModal] = useState(false);
+    const [modalType, setModalType] = useState<'loading' | 'success' | 'error'>('loading');
+    const [modalMessage, setModalMessage] = useState('');
+
     const [menuData, setMenuData] = useState({
         namaMakanan: "",
         komponen: [] as { nama: string, berat: string }[],
@@ -157,7 +163,9 @@ const HasilDeteksiPage = () => {
 
                 } catch (error) {
                     console.error("Error fetching detail:", error);
-                    alert("Gagal memuat data riwayat.");
+                    setModalType('error');
+                    setModalMessage('Gagal memuat data riwayat.');
+                    setShowModal(true);
                 } finally {
                     setLoading(false);
                 }
@@ -203,7 +211,17 @@ const HasilDeteksiPage = () => {
     };
 
     const handleSimpanHasil = async () => {
-        if (!rawData) return alert("Data tidak ditemukan.");
+        if (!rawData) {
+            setModalType('error');
+            setModalMessage('Data tidak ditemukan.');
+            setShowModal(true);
+            return;
+        }
+
+        setModalType('loading');
+        setModalMessage('Menyimpan hasil scan...');
+        setShowModal(true);
+
         try {
             const payload = {
                 image_url: rawData.image_url,
@@ -242,11 +260,18 @@ const HasilDeteksiPage = () => {
 
             localStorage.removeItem('scan_result_temp');
             localStorage.removeItem('dummy_scan_image');
-            alert("Hasil scan berhasil disimpan!");
-            router.push('/sekolah/riwayat-scan');
+            
+            setModalType('success');
+            setModalMessage('Hasil scan berhasil disimpan!');
+            // Redirect setelah delay agar user bisa melihat modal success
+            setTimeout(() => {
+                setShowModal(false);
+                router.push('/sekolah/riwayat-scan');
+            }, 1500);
         } catch (error: any) {
             console.error("Save Error:", error);
-            alert(`Gagal menyimpan: ${error.message}`);
+            setModalType('error');
+            setModalMessage(`Gagal menyimpan: ${error.message}`);
         }
     };
 
@@ -435,6 +460,42 @@ const HasilDeteksiPage = () => {
                     )}
                 </div>
             </div>
+
+            {/* Loading / Success / Error Modal */}
+            {showModal && (
+                <div className='fixed inset-0 flex items-center justify-center z-[9999] backdrop-blur-sm bg-black/30'>
+                    <div className='bg-white rounded-[4vw] lg:rounded-[1.5vw] shadow-xl p-[6vw] lg:p-[2.5vw] flex flex-col items-center gap-[3vw] lg:gap-[1.2vw] min-w-[60vw] lg:min-w-[22vw]'>
+                        {modalType === 'loading' && (
+                            <>
+                                <Image src={loadingImg} alt="Loading" className='w-[12vw] h-[12vw] lg:w-[4vw] lg:h-[4vw] animate-spin' />
+                                <p className='text-center text-[4vw] lg:text-[1.2vw] text-[#E87E2F] satoshiBold'>{modalMessage}</p>
+                            </>
+                        )}
+                        {modalType === 'success' && (
+                            <>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[12vw] h-[12vw] lg:w-[4vw] lg:h-[4vw] text-green-500">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5 10a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <p className='text-center text-[4vw] lg:text-[1.2vw] text-[#333] satoshiBold'>{modalMessage}</p>
+                            </>
+                        )}
+                        {modalType === 'error' && (
+                            <>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[12vw] h-[12vw] lg:w-[4vw] lg:h-[4vw] text-red-500">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                                </svg>
+                                <p className='text-center text-[4vw] lg:text-[1.2vw] text-[#333] satoshiBold'>{modalMessage}</p>
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className='w-full bg-[#E87E2F] text-white rounded-[2vw] lg:rounded-[0.8vw] py-[2.5vw] lg:py-[0.7vw] text-[3.5vw] lg:text-[1.1vw] satoshiBold hover:bg-[#d7762e] transition-colors mt-[1vw]'
+                                >
+                                    Tutup
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
