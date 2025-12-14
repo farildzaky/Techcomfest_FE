@@ -10,7 +10,7 @@ export default function ProfileLayout({
     return (
         <div className="flex flex-col lg:grid lg:grid-cols-9 min-h-screen bg-[#E87E2F] w-full">
 
-            <div className="w-full lg:col-span-3 lg:sticky lg:top-0 lg:h-screen z-10">
+            <div className="w-full lg:col-span-3 lg:sticky lg:top-0 lg:h-screen z-50">
                 <SidebarProfileSekolah />
             </div>
 
