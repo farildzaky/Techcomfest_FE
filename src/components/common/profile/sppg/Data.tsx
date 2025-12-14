@@ -284,7 +284,7 @@ const DataLaporanSppg = () => {
             </div>
 
             {/* Table Container Responsif */}
-            <div className='w-full bg-white rounded-xl lg:rounded-[1vw] overflow-hidden border-2 lg:border-[0.3vw] border-[#E87E2F] shadow-lg relative z-0 overflow-x-auto'>
+            <div className='w-full bg-white rounded-xl lg:rounded-[1vw] overflow-hidden border-2 lg:border-[0.3vw] border-[#E87E2F] shadow-lg relative z-30 overflow-x-auto'>
                 {/* Min-width digunakan agar tabel tidak hancur di HP, user scroll ke samping */}
                 <div className="min-w-[600px] w-full">
                     <div className='flex w-full bg-[#FFF3EB] border-b-2 lg:border-b-[0.2vw] border-[#E87E2F]'>
