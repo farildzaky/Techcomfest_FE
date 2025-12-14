@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import bg from "../../../../assets/bg.png"
 import loadingSpinner from "../../../../assets/loading.png"
+import trashIcon from "../../../../assets/trash.png"
 
 interface Komponen {
     nama: string;
@@ -40,6 +41,9 @@ const DaftarMenu = () => {
     const [isUpdatingId, setIsUpdatingId] = useState<string | null>(null);
     const router = useRouter();
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    // State untuk modal delete
+    const [itemToDelete, setItemToDelete] = useState<{ id: string; name: string } | null>(null);
 
     const parseIndonesianDate = (dateStr: string) => {
         if (!dateStr) return new Date(0);
@@ -148,6 +152,7 @@ const DaftarMenu = () => {
     };
 
     const handleDeleteMenu = async (id: string) => {
+        setItemToDelete(null); // Tutup modal konfirmasi
         setIsUpdatingId(id); // Gunakan indikator loading yang sama
         try {
             const response = await fetchWithAuth(`/sppg/menus/${id}`, {
@@ -167,6 +172,11 @@ const DaftarMenu = () => {
         } finally {
             setIsUpdatingId(null);
         }
+    };
+
+    // Fungsi untuk menampilkan modal konfirmasi delete
+    const showDeleteConfirm = (id: string, name: string) => {
+        setItemToDelete({ id, name });
     };
 
     const renderContent = () => {
@@ -229,7 +239,7 @@ const DaftarMenu = () => {
                         risk={riskList}
                         nutrition={nutritionList}
                         onSave={(updated) => handleUpdateMenu(item.menu_id, updated)}
-                        onDelete={() => handleDeleteMenu(item.menu_id)}
+                        onDelete={() => showDeleteConfirm(item.menu_id, item.nama_menu)}
                     />
                 </Link>
             );
@@ -296,6 +306,43 @@ const DaftarMenu = () => {
                                 className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
                             >
                                 Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL KONFIRMASI DELETE */}
+            {itemToDelete && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setItemToDelete(null)}></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw]  w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <Image src={trashIcon} alt="Delete" className="w-12 h-12 lg:w-[6vw] lg:h-[6vw] translate-y-[-0.3vw] object-contain absolute" />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#E87E2F]">Yakin Ingin Menghapus?</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">
+                                Anda yakin ingin menghapus menu <br />
+                                <span className="satoshiBold text-red-500">{itemToDelete.name}</span>?
+                            </p>
+                        </div>
+
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            <button
+                                onClick={() => setItemToDelete(null)}
+                                className="flex-1 py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] border-2 border-gray-300 text-gray-700 satoshiBold text-sm lg:text-[1.2vw] hover:bg-gray-100 transition-colors"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                onClick={() => handleDeleteMenu(itemToDelete.id)}
+                                className="flex-1 py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-red-600 text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-red-700 transition-colors shadow-md"
+                            >
+                                Ya, Hapus
                             </button>
                         </div>
                     </div>
