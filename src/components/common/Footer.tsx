@@ -41,17 +41,6 @@ const Footer = () => {
                         {/* Baris 2: Grid Link (Menu, Sekolah, SPPG) */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-4">
 
-                            {/* Menu */}
-                            <div className="flex flex-col gap-4">
-                                <h3 className="satoshiBold text-xl lg:text-2xl">Menu</h3>
-                                <ul className="flex flex-col gap-2 satoshiRegular text-base lg:text-lg opacity-90">
-                                    <li><Link href="/" className="hover:underline">Beranda</Link></li>
-                                    <li><Link href="/fitur" className="hover:underline">Fitur</Link></li>
-                                    <li><Link href="/cara-kerja" className="hover:underline">Cara Kerja</Link></li>
-                                    <li><Link href="/tentang" className="hover:underline">Tentang Sistem</Link></li>
-                                    <li><Link href="/kontak" className="hover:underline">Kontak</Link></li>
-                                </ul>
-                            </div>
 
                             {/* Sekolah */}
                             <div className="flex flex-col gap-4">
