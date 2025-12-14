@@ -67,20 +67,20 @@ const MainPelaporanSekolah = () => {
 
     const [reports, setReports] = useState<ReportListItem[]>([]);
     const [loadingList, setLoadingList] = useState(true);
-    
+
     // State Modal Detail Laporan (Tombol "Lihat Detail")
     const [selectedItem, setSelectedItem] = useState<ReportDetail | null>(null);
-    
+
     // State Modal Respon SPPG (Klik Status "Selesai")
     const [selectedResponse, setSelectedResponse] = useState<ReportDetail['respon_sppg'] | null>(null);
-    
+
     // State Modal Info (Klik Status "Processing")
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-    
+
     const [loadingDetail, setLoadingDetail] = useState(false);
 
     // --- Dynamic Items Per Page Logic ---
-    const [itemsPerPage, setItemsPerPage] = useState(10); 
+    const [itemsPerPage, setItemsPerPage] = useState(10);
 
     useEffect(() => {
         const handleResize = () => {
@@ -142,7 +142,7 @@ const MainPelaporanSekolah = () => {
             if (response.ok) {
                 const json = await response.json();
                 const data = json.data;
-                
+
                 return {
                     menu: data.menu?.nama_menu || "Menu Tidak Dikenal",
                     catatan: data.laporan?.catatan
@@ -259,7 +259,7 @@ const MainPelaporanSekolah = () => {
                                         <div className="w-[30%] py-4 lg:py-[1.5vw] px-2 lg:px-[1vw] flex justify-center items-center text-center border-r border-[#E87E2F] satoshiMedium text-sm lg:text-[1.2vw] text-black">{item.menu}</div>
                                         <div className="w-[20%] px-4 lg:px-[2vw] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F]">
                                             {/* Status Button (Clickable) */}
-                                            <button 
+                                            <button
                                                 onClick={() => handleStatusClick(item)}
                                                 className={`${getStatusColor(item.status)} text-white satoshiBold text-xs lg:text-[1vw] px-4 lg:px-[2vw] py-1.5 lg:py-[0.5vw] rounded-full lg:rounded-[1vw] shadow-sm w-full text-center capitalize transition-colors`}
                                             >
@@ -327,22 +327,30 @@ const MainPelaporanSekolah = () => {
 
             {/* --- MODAL INFO (UNTUK STATUS PROCESSING) --- */}
             {isInfoModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsInfoModalOpen(false)}></div>
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
-                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
-                            <Image src={bg} alt="bg" layout="fill" objectFit="contain" className="opacity-70"/>
-                            <Image src={alertIcon} alt="alert" className="w-10 h-10 lg:w-[4vw] lg:h-[4vw] absolute" />
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={() => setIsInfoModalOpen(false)}></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <Image src={alertIcon} alt="Alert" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute" />
                         </div>
-                        <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-2 lg:mt-[1vw]">
-                            Belum Ada Respon
-                        </h3>
-                        <p className="text-gray-500 satoshiMedium text-sm lg:text-[1.2vw]">
-                            Laporan Anda masih dalam proses. Mohon tunggu respon dari pihak SPPG.
-                        </p>
-                        <button onClick={() => setIsInfoModalOpen(false)} className="bg-[#E87E2F] text-white px-6 py-2 lg:px-[2vw] lg:py-[0.8vw] rounded-xl lg:rounded-[1vw] w-full shadow-md hover:bg-[#c96d28] satoshiBold text-sm lg:text-[1.2vw] mt-2 lg:mt-[1vw]">
-                            Mengerti
-                        </button>
+
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#E87E2F]">Belum Ada Respon</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">
+                                Laporan Anda masih dalam proses. Mohon tunggu respon dari pihak SPPG.
+                            </p>
+                        </div>
+
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            <button
+                                onClick={() => setIsInfoModalOpen(false)}
+                                className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                            >
+                                Mengerti
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
@@ -351,9 +359,9 @@ const MainPelaporanSekolah = () => {
             {selectedResponse && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 lg:p-[3vw]" onClick={() => setSelectedResponse(null)}>
                     <div className="bg-white w-full max-w-md lg:max-w-[40vw] rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] shadow-2xl relative flex flex-col gap-4 lg:gap-[1.5vw] text-center" onClick={(e) => e.stopPropagation()}>
-                        
+
                         <h2 className="text-[#D7762E] satoshiBold text-xl lg:text-[2.5vw]">Respon SPPG</h2>
-                        
+
                         <div className="flex flex-col gap-2 lg:gap-[1vw] bg-orange-50 p-4 lg:p-[1.5vw] rounded-xl lg:rounded-[1.5vw] border border-orange-100 text-left">
                             <div>
                                 <p className="text-gray-400 text-xs lg:text-[0.9vw] satoshiMedium mb-1">Tanggal Respon:</p>

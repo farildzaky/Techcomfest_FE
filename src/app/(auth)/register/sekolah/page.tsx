@@ -156,49 +156,57 @@ const RegisterSekolahPage = () => {
 
             {/* --- UNIFIED MODAL SYSTEM (LOADING & SUCCESS) --- */}
             {modalType && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"></div>
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
 
-                    <div className="relative bg-white rounded-2xl md:rounded-[1.5vw] p-6 md:p-[2vw] w-full max-w-md md:w-[30vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-3 md:gap-[1vw]">
+                    <div className="relative bg-white rounded-2xl md:rounded-[2vw] p-6 md:p-[3vw] w-full max-w-sm md:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 md:gap-[1.5vw] animate-in zoom-in duration-200">
 
-                        <div className="relative w-20 h-20 md:w-[10vw] md:h-[10vw] flex items-center justify-center">
-                            <Image
-                                src={bg}
-                                alt="Background Shape"
-                                fill
-                                sizes="(max-width: 768px) 80px, 10vw"
-                                className="object-contain"
-                                priority
-                            />
+                        {/* ICON SECTION */}
+                        <div className="relative w-24 h-24 md:w-[15vw] md:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" fill sizes="(max-width: 768px) 96px, 15vw" className="object-contain" priority />
+
+                            {modalType === 'loading' && (
+                                <Image src={loadingIcon} alt="Loading" width={128} height={128} className="w-12 h-12 md:w-[8vw] md:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                            )}
 
                             {modalType === 'success' && (
-                                <Image
-                                    src={proses}
-                                    alt="Proses"
-                                    width={128}
-                                    height={128}
-                                    sizes="(max-width: 768px) 40px, 6vw"
-                                    className="w-10 h-10 md:w-[6vw] md:h-[6vw] object-contain absolute"
-                                />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-12 h-12 md:w-[8vw] md:h-[8vw] translate-y-[-0.3vw] absolute text-[#E87E2F]">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                </svg>
                             )}
                         </div>
 
-                        {modalType === 'success' && (
-                            <div className="flex flex-col gap-1">
-                                <h3 className="satoshiBold text-lg md:text-[1.8vw] text-[#B56225]">Pendaftaran Berhasil!</h3>
-                                <p className="satoshiMedium text-sm md:text-[1vw] text-[#B56225]">
-                                    Akun Anda sedang diproses. Admin akan memverifikasi dalam waktu 1x24 jam.
-                                </p>
-                            </div>
-                        )}
+                        {/* TEXT CONTENT */}
+                        <div className="flex flex-col gap-2">
+                            {modalType === 'loading' && (
+                                <>
+                                    <h3 className="satoshiBold text-xl md:text-[2.5vw] text-[#E87E2F] mt-4 md:mt-[2vw]">Sedang Memproses</h3>
+                                    <p className="satoshiMedium text-sm md:text-[1.2vw] text-gray-500 mt-2 md:mt-[0.5vw]">
+                                        Mohon tunggu, data pendaftaran Anda sedang dikirim...
+                                    </p>
+                                </>
+                            )}
 
+                            {modalType === 'success' && (
+                                <>
+                                    <h3 className="satoshiBold text-lg md:text-[2vw] text-[#E87E2F]">Pendaftaran Berhasil!</h3>
+                                    <p className="satoshiMedium text-sm md:text-[1.2vw] text-gray-500 px-4">
+                                        Akun Anda sedang diproses. Admin akan memverifikasi dalam waktu 1x24 jam.
+                                    </p>
+                                </>
+                            )}
+                        </div>
+
+                        {/* BUTTON ACTION */}
                         {modalType === 'success' && (
-                            <button
-                                onClick={() => router.push('/login')}
-                                className="w-full bg-[#D9833E] text-white satoshiBold text-base md:text-[1vw] py-2.5 md:py-[0.8vw] rounded-xl md:rounded-[0.8vw] hover:bg-[#c27233] transition-colors shadow-md"
-                            >
-                                Kembali ke Login
-                            </button>
+                            <div className="flex w-full gap-4 md:gap-[1.5vw] mt-2 md:mt-[1vw]">
+                                <button
+                                    onClick={() => router.push('/login')}
+                                    className="w-full py-3 md:py-[1vw] rounded-xl md:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm md:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                                >
+                                    Kembali ke Login
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>

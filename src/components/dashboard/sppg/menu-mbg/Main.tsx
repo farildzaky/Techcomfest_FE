@@ -268,21 +268,27 @@ const MainMenuMbg = () => {
 
             {/* --- UNIVERSAL MODAL SYSTEM --- */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={closeModal}></div>
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeModal}></div>
 
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-lg lg:w-[40vw] shadow-2xl transform transition-all scale-100 flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
 
                         {/* ICON SECTION */}
-                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
                             <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
 
                             {modalType === 'loading' && (
-                                <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                                <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
                             )}
 
-                            {(modalType === 'error' || modalType === 'success') && (
-                                <Image src={alertIcon} alt="Alert" className="w-12 h-12 lg:w-[5vw] lg:h-[5vw] translate-y-[-0.3vw] object-contain absolute" />
+                            {modalType === 'success' && (
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] absolute text-[#E87E2F]">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                </svg>
+                            )}
+
+                            {modalType === 'error' && (
+                                <Image src={alertIcon} alt="Error" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute" />
                             )}
                         </div>
 
@@ -297,32 +303,32 @@ const MainMenuMbg = () => {
                                 </>
                             )}
 
-                            {modalType === 'error' && (
-                                <>
-                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#B56225]">{modalMessage.title}</h3>
-                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-[#B56225] px-4">{modalMessage.desc}</p>
-                                </>
-                            )}
-
                             {modalType === 'success' && (
                                 <>
                                     <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#E87E2F]">{modalMessage.title}</h3>
                                     <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">Mengalihkan ke halaman daftar menu...</p>
                                 </>
                             )}
+
+                            {modalType === 'error' && (
+                                <>
+                                    <h3 className="satoshiBold text-lg lg:text-[2vw] text-red-500">{modalMessage.title}</h3>
+                                    <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{modalMessage.desc}</p>
+                                </>
+                            )}
                         </div>
 
                         {/* BUTTON ACTION */}
-                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
-                            {modalType === 'error' && (
+                        {modalType !== 'loading' && modalType !== 'success' && (
+                            <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
                                 <button
                                     onClick={closeModal}
                                     className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
                                 >
-                                    Mengerti
+                                    Tutup
                                 </button>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

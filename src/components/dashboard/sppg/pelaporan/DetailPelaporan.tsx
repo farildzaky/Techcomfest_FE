@@ -23,13 +23,13 @@ interface ReportListItem {
 
 interface ReportDetailData {
     menu: string;
-    catatan: string[]; 
+    catatan: string[];
     foto_report: string | null;
 }
 
 interface SchoolData {
     id: string;
-    nama_sekolah: string; 
+    nama_sekolah: string;
 }
 
 interface CustomDropdownProps {
@@ -45,7 +45,7 @@ const monthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Jul
 const DetailPelaporanSekolahSppg = () => {
     const router = useRouter();
     const params = useParams();
-    const targetSchoolId = params?.id as string; 
+    const targetSchoolId = params?.id as string;
 
     // State Data
     const [reports, setReports] = useState<ReportListItem[]>([]);
@@ -57,15 +57,15 @@ const DetailPelaporanSekolahSppg = () => {
     const [loadingDetail, setLoadingDetail] = useState(false);
 
     const [itemToUpdate, setItemToUpdate] = useState<ReportListItem | null>(null);
-    const [responseText, setResponseText] = useState(""); 
-    
+    const [responseText, setResponseText] = useState("");
+
     // --- MODAL STATES ---
     const [isProcessing, setIsProcessing] = useState(false); // Modal Loading
     const [errorData, setErrorData] = useState<string | null>(null); // HANYA UNTUK ERROR
 
     // State Filter & Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5; 
+    const itemsPerPage = 5;
     const [selectedDate, setSelectedDate] = useState("Tanggal");
     const [selectedMonth, setSelectedMonth] = useState("Bulan");
     const [selectedYear, setSelectedYear] = useState("Tahun");
@@ -91,12 +91,12 @@ const DetailPelaporanSekolahSppg = () => {
                 setSchoolName(currentSchoolName);
 
                 const responseReports = await fetchWithAuth('/sppg/reports', { method: 'GET' });
-                
+
                 if (responseReports.ok) {
                     const resultReports = await responseReports.json();
                     const rawReports = resultReports.data || [];
 
-                    const filteredBySchool = rawReports.filter((item: any) => 
+                    const filteredBySchool = rawReports.filter((item: any) =>
                         item.school_name === currentSchoolName
                     );
 
@@ -127,11 +127,11 @@ const DetailPelaporanSekolahSppg = () => {
 
     const handleViewDetail = async (id: string) => {
         setLoadingDetail(true);
-        setSelectedDetail({ menu: "Memuat...", catatan: [], foto_report: null }); 
+        setSelectedDetail({ menu: "Memuat...", catatan: [], foto_report: null });
 
         try {
             const response = await fetchWithAuth(`/sppg/reports/${id}`, { method: 'GET' });
-            
+
             if (response.ok) {
                 const json = await response.json();
                 const data = json.data;
@@ -142,7 +142,7 @@ const DetailPelaporanSekolahSppg = () => {
                 setSelectedDetail({
                     menu: data.menu?.nama_menu || "Menu Tidak Dikenal",
                     catatan: catatanList.length > 0 ? catatanList : ["Tidak ada catatan."],
-                    foto_report: data.laporan?.foto_menu || null 
+                    foto_report: data.laporan?.foto_menu || null
                 });
             } else {
                 alert("Gagal mengambil detail laporan.");
@@ -158,16 +158,16 @@ const DetailPelaporanSekolahSppg = () => {
 
     const handleStatusClick = (item: ReportListItem) => {
         if (item.status.toLowerCase() === 'completed' || item.status.toLowerCase() === 'selesai') {
-            return; 
+            return;
         }
-        setResponseText(""); 
+        setResponseText("");
         setItemToUpdate(item);
     };
 
     // --- LOGIKA BARU: LOADING -> SUKSES (TUTUP) / ERROR (MODAL) ---
     const handleConfirmUpdate = async () => {
         if (!itemToUpdate) return;
-        
+
         if (!responseText.trim()) {
             alert("Mohon isi tanggapan terlebih dahulu.");
             return;
@@ -181,14 +181,14 @@ const DetailPelaporanSekolahSppg = () => {
         try {
             const response = await fetchWithAuth(`/sppg/reports/${itemToUpdate.id}`, {
                 method: 'PUT',
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     sppg_response: responseText
                 })
             });
 
             if (response.ok) {
                 // SUKSES: Update data lokal & Tutup Loading langsung
-                setReports(prev => prev.map(item => 
+                setReports(prev => prev.map(item =>
                     item.id === itemToUpdate.id ? { ...item, status: "completed" } : item
                 ));
                 // Tidak ada setSuccessData, langsung tutup
@@ -214,7 +214,7 @@ const DetailPelaporanSekolahSppg = () => {
     });
 
     const isFilterActive = selectedDate !== "Tanggal" || selectedMonth !== "Bulan" || selectedYear !== "Tahun";
-    
+
     const handleClearFilter = () => {
         setSelectedDate("Tanggal"); setSelectedMonth("Bulan"); setSelectedYear("Tahun");
         setCurrentPage(1); setOpenDropdown(null);
@@ -227,7 +227,7 @@ const DetailPelaporanSekolahSppg = () => {
 
     const getStatusColor = (status: string) => {
         const s = status.toLowerCase();
-        if (s === 'completed' || s === 'selesai') return "bg-[#4CAF50] cursor-default"; 
+        if (s === 'completed' || s === 'selesai') return "bg-[#4CAF50] cursor-default";
         if (s === 'processing' || s === 'proses' || s === 'pending') return "bg-[#F2C94C] cursor-pointer hover:bg-[#e0b840]";
         return "bg-gray-400 cursor-pointer";
     };
@@ -236,7 +236,7 @@ const DetailPelaporanSekolahSppg = () => {
 
     return (
         <div className="flex-1 w-full min-h-screen p-4 lg:p-[3vw] flex flex-col font-sans relative" onClick={() => setOpenDropdown(null)}>
-            
+
             {/* Header Title (TETAP SAMA) */}
             <div className="mb-6 lg:mb-[2vw]">
                 {/* Tombol Back Mobile */}
@@ -264,8 +264,8 @@ const DetailPelaporanSekolahSppg = () => {
                     <CustomDropdown label={selectedYear} options={years} isOpen={openDropdown === 'year'} onToggle={() => toggleDropdown('year')} onSelect={(val) => { setSelectedYear(val); setCurrentPage(1); setOpenDropdown(null); }} />
                 </div>
                 {isFilterActive && (
-                     <button 
-                        onClick={handleClearFilter} 
+                    <button
+                        onClick={handleClearFilter}
                         className="bg-white cursor-pointer mb-4 lg:mb-[2vw] w-fit text-[#E87E2F] satoshiMedium text-sm lg:text-[1.2vw] py-2 px-4 lg:py-[0.8vw] lg:px-[1.5vw] rounded-lg lg:rounded-[1vw] flex items-center gap-2 lg:gap-[0.5vw] shadow-sm hover:bg-[#E87E2F] hover:text-white transition-colors"
                         style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                     >
@@ -287,7 +287,7 @@ const DetailPelaporanSekolahSppg = () => {
 
                     <div className="flex flex-col bg-white">
                         {loading ? (
-                             [...Array(5)].map((_, i) => (
+                            [...Array(5)].map((_, i) => (
                                 <div key={i} className="flex border-b border-[#E87E2F] lg:border-b-[0.15vw] bg-white animate-pulse">
                                     <div className="w-[10%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]"><div className="w-4 h-4 lg:w-[1.5vw] lg:h-[1.5vw] bg-gray-200 rounded"></div></div>
                                     <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]"><div className="w-24 h-4 lg:w-[10vw] lg:h-[1.2vw] bg-gray-200 rounded"></div></div>
@@ -303,9 +303,9 @@ const DetailPelaporanSekolahSppg = () => {
                                     <div className="w-[25%] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">{item.tanggal} {item.bulan} {item.tahun}</div>
                                     <div className="w-[30%] py-4 lg:py-[1.5vw] px-2 lg:px-[1vw] flex justify-center items-center text-center border-r border-[#E87E2F] lg:border-r-[0.15vw] satoshiMedium text-sm lg:text-[1.2vw] text-black">{item.menu}</div>
                                     <div className="w-[20%] px-2 lg:px-[2vw] py-4 lg:py-[1.5vw] flex justify-center items-center border-r border-[#E87E2F] lg:border-r-[0.15vw]">
-                                        <button 
+                                        <button
                                             onClick={() => handleStatusClick(item)}
-                                            className={`${getStatusColor(item.status)} text-white satoshiBold text-xs lg:text-[1vw] px-3 py-1 lg:px-[2vw] lg:py-[0.5vw] rounded-lg lg:rounded-[1vw] shadow-sm w-full text-center capitalize transition-colors`} 
+                                            className={`${getStatusColor(item.status)} text-white satoshiBold text-xs lg:text-[1vw] px-3 py-1 lg:px-[2vw] lg:py-[0.5vw] rounded-lg lg:rounded-[1vw] shadow-sm w-full text-center capitalize transition-colors`}
                                             style={{ boxShadow: '0px 4px 4px 0px #00000040' }}
                                             title={item.status === 'processing' ? "Klik untuk selesaikan" : "Sudah selesai"}
                                         >
@@ -326,7 +326,7 @@ const DetailPelaporanSekolahSppg = () => {
 
             {/* Pagination & Back Button (TETAP SAMA) */}
             <div className="flex justify-between items-center mt-4 lg:mt-[2vw] mb-8 lg:mb-[3vw]">
-                <div className="flex-1"></div> 
+                <div className="flex-1"></div>
                 {totalPages > 0 && (
                     <div className="flex items-center gap-4 lg:gap-[1vw]">
                         <span className="text-[#E87E2F] satoshiMedium text-sm lg:text-[1.2vw]">Halaman {currentPage} dari {totalPages}</span>
@@ -339,8 +339,8 @@ const DetailPelaporanSekolahSppg = () => {
             </div>
 
             <div className="flex justify-end pb-8 lg:pb-[2vw]">
-                <button 
-                    onClick={() => router.back()} 
+                <button
+                    onClick={() => router.back()}
                     className="bg-white border-2 border-[#E87E2F] text-[#E87E2F] hover:bg-[#E87E2F] hover:text-white transition-colors satoshiBold text-sm lg:text-[1.2vw] px-6 py-2 lg:px-[2vw] lg:py-[0.8vw] rounded-xl lg:rounded-[1vw] shadow-md flex items-center gap-2 lg:gap-[0.5vw]"
                 >
                     Kembali
@@ -386,20 +386,20 @@ const DetailPelaporanSekolahSppg = () => {
                         <p className="text-gray-500 satoshiMedium text-sm lg:text-[1.2vw] text-left">
                             Silakan masukkan tanggapan atau catatan untuk sekolah terkait menu ini sebelum menyelesaikan laporan.
                         </p>
-                        <textarea 
+                        <textarea
                             value={responseText}
                             onChange={(e) => setResponseText(e.target.value)}
                             placeholder="Tulis tanggapan Anda di sini..."
                             className="w-full h-32 lg:h-[10vw] p-3 lg:p-[1vw] border-[0.15vw] border-[#E87E2F] rounded-xl lg:rounded-[1vw] text-black satoshiMedium text-sm lg:text-[1.2vw] focus:outline-none focus:ring-2 focus:ring-[#E87E2F] resize-none"
                         />
                         <div className="flex gap-4 lg:gap-[1vw] justify-end mt-2 lg:mt-[1vw]">
-                            <button 
+                            <button
                                 onClick={() => { setItemToUpdate(null); setResponseText(""); }}
                                 className="bg-white text-[#E87E2F] border-2 lg:border-[0.15vw] border-[#E87E2F] px-6 lg:px-[2vw] py-2 lg:py-[0.8vw] rounded-xl lg:rounded-[1.5vw] satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#FFF3EB] transition-colors"
                             >
                                 Batal
                             </button>
-                            <button 
+                            <button
                                 onClick={handleConfirmUpdate}
                                 className="text-white bg-[#E87E2F] hover:bg-[#E87E2FCC] px-6 lg:px-[2vw] py-2 lg:py-[0.8vw] rounded-xl lg:rounded-[1.5vw] satoshiBold text-sm lg:text-[1.2vw] transition-all shadow-md"
                             >
@@ -412,33 +412,49 @@ const DetailPelaporanSekolahSppg = () => {
 
             {/* --- MODAL LOADING (HANYA MUNCUL SAAT PROSES) --- */}
             {isProcessing && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 lg:p-[3vw]">
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
-                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
-                            <Image src={bg} alt="bg" layout="fill" objectFit="contain" className="opacity-70"/>
-                            <Image src={loadingIcon} alt="loading" className="w-10 h-10 lg:w-[4vw] lg:h-[4vw] absolute animate-spin" />
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <Image src={loadingIcon} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
                         </div>
-                        <h3 className="text-[#D7762E] satoshiBold text-xl lg:text-[2.5vw] mt-2 lg:mt-[1vw]">Sedang Diproses</h3>
-                        <p className="text-gray-500 satoshiMedium text-sm lg:text-[1.2vw]">Mohon tunggu sebentar...</p>
+
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Sedang Diproses</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                Mohon tunggu sebentar...
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}
 
             {/* --- MODAL ERROR (HANYA MUNCUL JIKA GAGAL) --- */}
             {errorData && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 lg:p-[3vw]">
-                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw]">
-                        <div className="relative w-24 h-24 lg:w-[10vw] lg:h-[10vw] flex items-center justify-center">
-                            <Image src={bg} alt="bg" layout="fill" objectFit="contain" className="opacity-70"/>
-                            <Image src={alertIcon} alt="alert" className="w-10 h-10 lg:w-[4vw] lg:h-[4vw] absolute" />
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <Image src={alertIcon} alt="Error" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute" />
                         </div>
-                        <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-red-500 mt-2 lg:mt-[1vw]">
-                            Gagal
-                        </h3>
-                        <p className="text-gray-500 satoshiMedium text-sm lg:text-[1.2vw]">{errorData}</p>
-                        <button onClick={() => setErrorData(null)} className="bg-[#E87E2F] text-white px-6 py-2 lg:px-[2vw] lg:py-[0.8vw] rounded-xl lg:rounded-[1vw] w-full shadow-md hover:bg-[#c96d28] satoshiBold text-sm lg:text-[1.2vw] mt-2 lg:mt-[1vw]">
-                            Tutup
-                        </button>
+
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-lg lg:text-[2vw] text-red-500">Gagal</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{errorData}</p>
+                        </div>
+
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            <button
+                                onClick={() => setErrorData(null)}
+                                className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                            >
+                                Tutup
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
