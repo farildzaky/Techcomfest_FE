@@ -168,7 +168,7 @@ const DataLaporanSekolah = () => {
                 <p className="text-white text-sm lg:text-[1.2vw] opacity-80 satoshiMedium mt-2 lg:mt-[0.5vw]">Data berupa riwayat pengajuan laporan yang telah selesai dilakukan.</p>
             </div>
 
-            <div ref={filterContainerRef} className="flex flex-col items-start relative z-50 mb-6 lg:mb-[2vw]">
+            <div ref={filterContainerRef} className="flex flex-col items-start relative z-30 mb-6 lg:mb-[2vw]">
                 {/* Filter: Stack di mobile, Baris di Desktop */}
                 <div className="flex flex-col lg:flex-row gap-3 lg:gap-[1.5vw] mb-4 lg:mb-[1.5vw] items-center w-full">
                     <div className="w-full lg:w-auto flex-1">

@@ -2,6 +2,8 @@
 import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
 import { fetchWithAuth } from '@/src/lib/api'; 
 import Image from 'next/image';
+import bg from "../../../../assets/bg.png";
+import loadingSpinner from "../../../../assets/loading.png";
 
 interface MenuData {
     id: string;
@@ -71,6 +73,10 @@ const FormPelaporan = () => {
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // State untuk modal
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchMenus = async () => {
@@ -156,7 +162,7 @@ const FormPelaporan = () => {
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
-            alert("Mohon lengkapi data.");
+            setErrorMessage("Mohon lengkapi semua data yang diperlukan.");
             return;
         }
 
@@ -182,19 +188,36 @@ const FormPelaporan = () => {
                 throw new Error(Array.isArray(errorMsg) ? errorMsg.join(', ') : errorMsg);
             }
 
-            alert("Laporan berhasil dikirim!");
+            setSuccessMessage("Laporan berhasil dikirim!");
             setFormData({ menuId: '', menuUtama: '', komponen: '', catatan: '' });
             setFileObj(null); setFotoName(""); setFotoPreview(null);
             
         } catch (error: any) {
             console.error("Submit Error:", error);
-            alert(`Gagal: ${error.message}`);
+            setErrorMessage(error.message || "Terjadi kesalahan saat mengirim laporan.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    if (loadingMenu) return <FormPelaporanSkeleton />;
+    if (loadingMenu) {
+        return (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen bg-white">
+                <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                    <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                        <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                        <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Memuat Data</h3>
+                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                            Sedang mengambil daftar menu...
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         // Wrapper Utama: Padding responsive (p-4 mobile, p-[3vw] desktop)
@@ -355,6 +378,79 @@ const FormPelaporan = () => {
                     {isSubmitting ? "Mengirim..." : "Kirim"}
                 </button>
             </div>
+
+            {/* MODAL LOADING */}
+            {isSubmitting && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Mengirim Laporan</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                                Mohon tunggu, laporan sedang dikirim...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL SUCCESS */}
+            {successMessage && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] absolute text-[#E87E2F]">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-lg lg:text-[2vw] text-[#E87E2F]">Berhasil!</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{successMessage}</p>
+                        </div>
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            <button
+                                onClick={() => setSuccessMessage(null)}
+                                className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-[#E87E2F] text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-[#c27233] transition-colors shadow-md"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL ERROR */}
+            {errorMessage && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+                    <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                        <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                            <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] absolute text-red-500">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <h3 className="satoshiBold text-lg lg:text-[2vw] text-red-500">Gagal!</h3>
+                            <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 px-4">{errorMessage}</p>
+                        </div>
+                        <div className="flex w-full gap-4 lg:gap-[1.5vw] mt-2 lg:mt-[1vw]">
+                            <button
+                                onClick={() => setErrorMessage(null)}
+                                className="w-full py-3 lg:py-[1vw] rounded-xl lg:rounded-[1vw] bg-red-500 text-white satoshiBold text-sm lg:text-[1.2vw] hover:bg-red-600 transition-colors shadow-md"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

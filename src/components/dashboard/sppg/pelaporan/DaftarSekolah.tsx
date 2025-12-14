@@ -2,6 +2,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchWithAuth } from "@/src/lib/api"; 
+import Image from 'next/image';
+import bg from "../../../../assets/bg.png";
+import loadingSpinner from "../../../../assets/loading.png"; 
 
 // Interface data sekolah
 interface SchoolData {
@@ -36,19 +39,23 @@ const DaftarSekolah = () => {
         fetchSekolah();
     }, []);
 
-    // Loading State (Sudah di tengah)
+    // Loading State dengan Modal
     if (loading) {
         return (
-            <div className="flex flex-col min-h-screen items-center justify-center 
-                p-6 gap-6 
-                lg:p-[3vw] lg:gap-[3vw]"
-            >
-                <p className="satoshiBold text-[#E87E2F] 
-                    text-xl 
-                    lg:text-[2vw]"
-                >
-                    Memuat Data Sekolah...
-                </p>
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 w-screen h-screen">
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"></div>
+                <div className="relative bg-white rounded-2xl lg:rounded-[2vw] p-6 lg:p-[3vw] w-full max-w-sm lg:w-[35vw] shadow-2xl flex flex-col items-center text-center gap-4 lg:gap-[1.5vw] animate-in zoom-in duration-200">
+                    <div className="relative w-24 h-24 lg:w-[15vw] lg:h-[15vw] flex items-center justify-center">
+                        <Image src={bg} alt="Background Shape" layout="fill" objectFit="contain" />
+                        <Image src={loadingSpinner} alt="Loading" className="w-12 h-12 lg:w-[8vw] lg:h-[8vw] translate-y-[-0.3vw] object-contain absolute animate-spin" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h3 className="satoshiBold text-xl lg:text-[2.5vw] text-[#E87E2F] mt-4 lg:mt-[2vw]">Memuat Data</h3>
+                        <p className="satoshiMedium text-sm lg:text-[1.2vw] text-gray-500 mt-2 lg:mt-[0.5vw]">
+                            Sedang mengambil daftar sekolah...
+                        </p>
+                    </div>
+                </div>
             </div>
         );
     }
